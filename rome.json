@@ -1,0 +1,25 @@
+{
+	"formatter": {
+		"enabled": true,
+		"indentStyle": "tab",
+		"lineWidth": 80,
+		"indentSize": 2
+	},
+	"linter": {
+		"enabled": true,
+		"rules": {
+			"recommended": true,
+			"nursery": {
+				"noExplicitAny": "warn",
+				"useExhaustiveDependencies": "error"
+			}
+		}
+	},
+	"javascript": {
+		"formatter": {
+			"quoteProperties": "asNeeded",
+			"quoteStyle": "double",
+			"trailingComma": "none"
+		}
+	}
+}
