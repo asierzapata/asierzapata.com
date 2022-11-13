@@ -1,47 +1,60 @@
+import { PostStatus } from "@prisma/client";
 import { prisma } from "~/db.server";
 
-async function getPosts(
-	cursor?: number,
-	order?: "asc" | "desc",
-	limit?: number
-) {
-	const _limit = limit || 5;
-	const _order = order || "asc";
+async function getPublishedPosts({
+	includeTranslatedPosts,
+	cursor,
+	order,
+	limit
+}: {
+	includeTranslatedPosts: boolean;
+	cursor?: number;
+	order?: "asc" | "desc";
+	limit?: number;
+}) {
+	const limitStatement = limit || 5;
+	const orderStatement = {
+		createdAt: order || "asc"
+	};
+	const whereStatement = {
+		status: PostStatus.PUBLISHED
+	};
+	const includeStatement = {
+		TranslatedPost: includeTranslatedPosts
+	};
 
 	if (cursor) {
 		return prisma.post.findMany({
-			take: _limit,
+			take: limitStatement,
 			cursor: {
 				id: cursor
 			},
-			orderBy: {
-				createdAt: _order
-			}
+			orderBy: orderStatement,
+			where: whereStatement,
+			include: includeStatement
 		});
 	}
 
 	return prisma.post.findMany({
-		take: _limit,
-		orderBy: {
-			createdAt: _order
-		}
+		take: limitStatement,
+		orderBy: orderStatement,
+		where: whereStatement,
+		include: includeStatement
 	});
 }
 
-async function getPostBySlug(slug: string) {
-	return prisma.post.findFirst({
-		where: {
-			slug
-		}
-	});
-}
-
-async function getPostById(id: number) {
+async function getPostById({
+	id,
+	includeTranslatedPosts
+}: { id: number; includeTranslatedPosts: boolean }) {
 	return prisma.post.findFirst({
 		where: {
 			id
+		},
+		include: {
+			TranslatedPost: includeTranslatedPosts
 		}
 	});
 }
 
-export { getPosts, getPostBySlug, getPostById };
+export { getPublishedPosts, getPostById };

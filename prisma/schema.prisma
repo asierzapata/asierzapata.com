@@ -21,13 +21,28 @@ enum PostStatus {
 }
 
 model Post {
-  id                  Int        @id @default(autoincrement())
-  slug                String     @unique
+  id             Int              @id @default(autoincrement())
+  status         PostStatus       @default(DRAFT)
+  createdAt      DateTime         @default(now())
+  publishedAt    DateTime?
+  updatedAt      DateTime         @updatedAt
+  TranslatedPost TranslatedPost[]
+}
+
+enum Language {
+  ENGLISH @map("en")
+  SPANISH @map("es")
+}
+
+model TranslatedPost {
+  id                  Int      @id @default(autoincrement())
+  post                Post     @relation(fields: [postId], references: [id])
+  postId              Int
+  language            Language
   title               String
   subtitle            String
   estimatedTimeToRead Float // In minutes
-  markdown            String     @db.MediumText
-  status              PostStatus @default(DRAFT)
-  createdAt           DateTime   @default(now())
-  updatedAt           DateTime   @updatedAt
+  content             String   @db.MediumText
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
 }
