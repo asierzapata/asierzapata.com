@@ -1,0 +1,33 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["referentialIntegrity"]
+}
+
+datasource db {
+  provider             = "mysql"
+  url                  = env("DATABASE_URL")
+  referentialIntegrity = "prisma"
+}
+
+enum PostStatus {
+  DRAFT
+  TO_REVIEW
+  REVIEWED
+  TO_PUBLISH
+  PUBLISHED
+}
+
+model Post {
+  id                  Int        @id @default(autoincrement())
+  slug                String     @unique
+  title               String
+  subtitle            String
+  estimatedTimeToRead Float // In minutes
+  markdown            String     @db.MediumText
+  status              PostStatus @default(DRAFT)
+  createdAt           DateTime   @default(now())
+  updatedAt           DateTime   @updatedAt
+}
