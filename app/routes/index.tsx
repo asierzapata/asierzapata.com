@@ -1,14 +1,17 @@
 import { Link } from "@remix-run/react";
 
 export default function Index() {
+	// TODO: Add more presentation text
 	return (
-		<div style={{ fontFamily: "system-ui, sans-serif", lineHeight: "1.4" }}>
-			<h1>Asier Zapata</h1>
-			<div className="mx-auto mt-16 max-w-7xl text-center">
-				<Link to="/posts" className="text-xl text-blue-600 underline">
-					Blog Posts
-				</Link>
+		<main>
+			<div className="px-12 py-6 flex w-full flex-row items-center justify-around">
+				<h1 className="text-xl font-medium">Hi! I'm Asier</h1>
+				<img
+					className="max-h-80"
+					src="/face_drawing.svg"
+					alt="Asier Zapata Drawn Portrait"
+				/>
 			</div>
-		</div>
+		</main>
 	);
 }

@@ -7,6 +7,7 @@ import {
 	Scripts,
 	ScrollRestoration
 } from "@remix-run/react";
+import { PageNavigation } from "./components/page_navigation/page_navigation";
 
 import styles from "./tailwind.css";
 
@@ -26,6 +27,7 @@ export default function App() {
 				<Links />
 			</head>
 			<body>
+				<PageNavigation />
 				<Outlet />
 				<ScrollRestoration />
 				<Scripts />

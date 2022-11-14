@@ -26,9 +26,6 @@ export const loader = async ({ params }: DataFunctionArgs) => {
 
 	const parsedId = parseInt(params.id, 10);
 
-	console.log(">>>>>>", parsedId);
-	console.log(">>>>>>", parsedId < 0);
-
 	invariant(isFinite(parsedId), "Id should be a finite number");
 	invariant(parsedId > 0, "Id should be a positive number");
 
