@@ -4,23 +4,27 @@ import { useLoaderData } from "@remix-run/react";
 import { format } from "date-fns";
 import invariant from "tiny-invariant";
 
-import { Markdown } from "~/components/markdown";
+import { getMDXComponent } from "mdx-bundler/client";
 
 /* ====================================================== */
 /*                        Types                          */
 /* ====================================================== */
 
 import type { DataFunctionArgs } from "@remix-run/node";
-import { Language } from "@prisma/client";
+import { Language, TranslatedPost } from "@prisma/client";
 
 /* ====================================================== */
 /*                     Data Loading                      */
 /* ====================================================== */
 
 import { getPostById } from "~/modules/posts/use_cases/get_post_by_id.server";
+import { renderPost } from "~/services/post_render/index.server";
+import React from "react";
 
 type LoaderData = {
 	post: Awaited<ReturnType<typeof getPostById>>;
+	translatedPostToShow: TranslatedPost;
+	content: Awaited<ReturnType<typeof renderPost>>;
 };
 
 export const loader = async ({ params }: DataFunctionArgs) => {
@@ -38,8 +42,27 @@ export const loader = async ({ params }: DataFunctionArgs) => {
 
 	invariant(post, `Post not found: ${params.id}`);
 
+	// TODO: Change the preference correctly
+	const userLanguage = Language.ENGLISH;
+
+	let translatedPostToShow = post.TranslatedPost.find(
+		(translatedPost) => translatedPost.language === userLanguage
+	);
+
+	if (!translatedPostToShow) {
+		translatedPostToShow = post.TranslatedPost.find(
+			(translatedPost) => translatedPost.language === Language.ENGLISH
+		);
+	}
+
+	invariant(translatedPostToShow, `Translated post not found: ${params.id}`);
+
+	const content = await renderPost(translatedPostToShow.content);
+
 	return json<LoaderData>({
-		post
+		post,
+		translatedPostToShow,
+		content
 	});
 };
 
@@ -48,7 +71,8 @@ export const loader = async ({ params }: DataFunctionArgs) => {
 /* ====================================================== */
 
 export default function PostWithId() {
-	const { post } = useLoaderData<typeof loader>();
+	const { post, translatedPostToShow, content } =
+		useLoaderData<typeof loader>();
 
 	if (!post || post.status !== "PUBLISHED") {
 		return (
@@ -62,11 +86,9 @@ export default function PostWithId() {
 		? format(new Date(post.publishedAt), "MMMM do, yyyy")
 		: "";
 
-	// TODO: Change the preference correctly
-	const userLanguage = Language.ENGLISH;
-
-	const translatedPostToShow = post.TranslatedPost.find(
-		(translatedPost) => translatedPost.language === userLanguage
+	const Component = React.useMemo(
+		() => getMDXComponent(content.code),
+		[content.code]
 	);
 
 	if (!translatedPostToShow) {
@@ -92,7 +114,16 @@ export default function PostWithId() {
 			/>
 
 			<article className="px-12">
-				<Markdown content={translatedPostToShow.content} />
+				<Component
+					components={{
+						// https://mdxjs.com/docs/using-mdx/#components
+						// https://mdxjs.com/table-of-components/
+						h1: (props) => <h1 className="text-3xl mb-4" {...props} />,
+						h2: (props) => <h2 className="text-2xl mb-4" {...props} />,
+						h3: (props) => <h3 className="text-xl mb-4" {...props} />,
+						h4: (props) => <h4 className="text-lg mb-4" {...props} />
+					}}
+				/>
 			</article>
 		</main>
 	);
