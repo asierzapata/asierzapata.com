@@ -47,9 +47,14 @@ const PostCard = ({
 	return (
 		<li key={postId}>
 			<Link to={`${postId}`}>
-				<article className="flex flex-col rounded-md px-4 py-4 max-w-sm bg-neutral-600">
+				<article
+					className="flex flex-col rounded-md px-4 py-4 max-w-sm b
+					g-neutral-600 group transition duration-300 hover:bg-dark
+					border border-transparent hover:border-orange
+				hover:text-orange"
+				>
 					<img
-						className="rounded-md aspect-auto mb-4"
+						className="rounded-md aspect-auto mb-4 "
 						src={postThumbnail}
 						alt={postTitle}
 					/>
@@ -77,6 +82,7 @@ export default function Posts() {
 			<ul>
 				{posts.map((post) => (
 					<PostCard
+						key={post.id}
 						postId={post.id}
 						postThumbnail={post.thumbnail}
 						postTitle={

@@ -41,7 +41,6 @@ model TranslatedPost {
   postId              Int
   language            Language
   title               String
-  subtitle            String
   estimatedTimeToRead Float // In minutes
   content             String   @db.MediumText
   createdAt           DateTime @default(now())

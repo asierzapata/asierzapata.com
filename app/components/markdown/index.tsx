@@ -1,39 +1,28 @@
-import React from "react";
+import React, { type ReactElement } from "react";
 
 /* ====================================================== */
 /*                       Components                      */
 /* ====================================================== */
 
-import { Link } from "@remix-run/react";
+import { renderers } from "@markdoc/markdoc";
+import { markdown } from "~/services/markdown/markdown";
 
 /* ====================================================== */
 /*                    Implementation                     */
 /* ====================================================== */
 
-const PageNavigation = () => {
+type Props = { content: string };
+
+function Markdown({ content }: Props) {
 	return (
-		<div className="px-12 py-6 lg:py-12 w-full">
-			<nav className="mx-auto flex max-w-8xl items-center justify-between">
-				<Link to="/" className="text-2xl font-medium hover:text-orange">
-					Asier Zapata
-				</Link>
-				<ul>
-					<li>
-						<Link
-							to="posts"
-							className="text-blue-600 px-5 py-2 hover:text-orange"
-						>
-							Blog
-						</Link>
-					</li>
-				</ul>
-			</nav>
-		</div>
+		<span className="markdown">
+			{renderers.react(markdown(content), React, {})}
+		</span>
 	);
-};
+}
 
 /* ====================================================== */
 /*                      Public API                        */
 /* ====================================================== */
 
-export { PageNavigation };
+export { Markdown, links };

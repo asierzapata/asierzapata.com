@@ -2,7 +2,35 @@
 module.exports = {
 	content: ["./app/**/*.{ts,tsx,jsx,js}"],
 	theme: {
-		extend: {},
+		colors: {
+			transparent: "transparent",
+			orange: "#F7A145",
+			blue: "#52908B",
+			dark: "#1E1E1E",
+			light: "#DCE1E0",
+			grey: "#2E3033",
+		},
+		extend: {
+			animation: {
+				blob: "blob 7s infinite",
+			},
+			keyframes: {
+				blob: {
+					"0%": {
+						transform: "translate(0px, 0px) scale(1)",
+					},
+					"33%": {
+						transform: "translate(30px, -50px) scale(1.1)",
+					},
+					"66%": {
+						transform: "translate(-20px, 20px) scale(0.9)",
+					},
+					"100%": {
+						transform: "tranlate(0px, 0px) scale(1)",
+					},
+				},
+			},
+		},
 	},
 	plugins: [],
 };
