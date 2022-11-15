@@ -9,7 +9,7 @@
 		"dev:css": "npm run generate:css -- --watch",
 		"dev:remix": "remix dev",
 		"dev:db": "pscale connect asierzapata_com development --port 3309",
-		"generate:css": "npx tailwindcss -w -i ./app/styles/app.css -o ./app/tailwind.css",
+		"generate:css": "npx tailwindcss -i ./app/styles/app.css -o ./app/tailwind.css",
 		"start": "remix-serve build"
 	},
 	"dependencies": {
