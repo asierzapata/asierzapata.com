@@ -1,3 +1,5 @@
+import React from "react";
+
 import { json } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 
@@ -11,7 +13,6 @@ import { getMDXComponent } from "mdx-bundler/client";
 /* ====================================================== */
 
 import type { DataFunctionArgs } from "@remix-run/node";
-import { Language, TranslatedPost } from "@prisma/client";
 
 /* ====================================================== */
 /*                     Data Loading                      */
@@ -19,11 +20,9 @@ import { Language, TranslatedPost } from "@prisma/client";
 
 import { getPostById } from "~/modules/posts/use_cases/get_post_by_id.server";
 import { renderPost } from "~/services/post_render/index.server";
-import React from "react";
 
 type LoaderData = {
 	post: Awaited<ReturnType<typeof getPostById>>;
-	translatedPostToShow: TranslatedPost;
 	content: Awaited<ReturnType<typeof renderPost>>;
 };
 
@@ -42,26 +41,10 @@ export const loader = async ({ params }: DataFunctionArgs) => {
 
 	invariant(post, `Post not found: ${params.id}`);
 
-	// TODO: Change the preference correctly
-	const userLanguage = Language.ENGLISH;
-
-	let translatedPostToShow = post.TranslatedPost.find(
-		(translatedPost) => translatedPost.language === userLanguage
-	);
-
-	if (!translatedPostToShow) {
-		translatedPostToShow = post.TranslatedPost.find(
-			(translatedPost) => translatedPost.language === Language.ENGLISH
-		);
-	}
-
-	invariant(translatedPostToShow, `Translated post not found: ${params.id}`);
-
-	const content = await renderPost(translatedPostToShow.content);
+	const content = await renderPost(post.content);
 
 	return json<LoaderData>({
 		post,
-		translatedPostToShow,
 		content
 	});
 };
@@ -71,8 +54,7 @@ export const loader = async ({ params }: DataFunctionArgs) => {
 /* ====================================================== */
 
 export default function PostWithId() {
-	const { post, translatedPostToShow, content } =
-		useLoaderData<typeof loader>();
+	const { post, content } = useLoaderData<typeof loader>();
 
 	if (!post || post.status !== "PUBLISHED") {
 		return (
@@ -91,26 +73,16 @@ export default function PostWithId() {
 		[content.code]
 	);
 
-	if (!translatedPostToShow) {
-		return (
-			<main>
-				<h1 className="text-2xl">Ops! You shouldn't be here 😱</h1>
-			</main>
-		);
-	}
-
 	return (
 		<main className="py-6 mx-auto w-full md:w-10/12 lg:w-9/12 xl:w-7/12 2xl:w-5/12">
-			<h1 className="text-4xl font-bold mb-2 px-12">
-				{translatedPostToShow.title}
-			</h1>
+			<h1 className="text-4xl font-bold mb-2 px-12">{post.title}</h1>
 			<h3 className="font-thin mb-8 px-12">
-				{formatedPublishedDate} | {translatedPostToShow.estimatedTimeToRead}min
+				{formatedPublishedDate} | {post.estimatedTimeToRead}min
 			</h3>
 			<img
 				className="rounded-md aspect-auto mb-8"
 				src={post.thumbnail}
-				alt={translatedPostToShow.title}
+				alt={post.title}
 			/>
 
 			<article className="px-12">

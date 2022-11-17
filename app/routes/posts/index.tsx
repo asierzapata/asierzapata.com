@@ -4,12 +4,6 @@ import { Link, useLoaderData } from "@remix-run/react";
 import { format } from "date-fns";
 
 /* ====================================================== */
-/*                        Types                          */
-/* ====================================================== */
-
-import { Language } from "@prisma/client";
-
-/* ====================================================== */
 /*                     Data Loading                      */
 /* ====================================================== */
 
@@ -74,9 +68,6 @@ const PostCard = ({
 export default function Posts() {
 	const { posts } = useLoaderData<typeof loader>();
 
-	// TODO: Change the preference correctly
-	const userLanguage = Language.ENGLISH;
-
 	return (
 		<main className="px-12 py-6">
 			<ul>
@@ -85,16 +76,8 @@ export default function Posts() {
 						key={post.id}
 						postId={post.id}
 						postThumbnail={post.thumbnail}
-						postTitle={
-							post.TranslatedPost.find(
-								(translatedPost) => translatedPost.language === userLanguage
-							)!.title
-						}
-						postEstimatedReadingTime={
-							post.TranslatedPost.find(
-								(translatedPost) => translatedPost.language === userLanguage
-							)!.estimatedTimeToRead
-						}
+						postTitle={post.title}
+						postEstimatedReadingTime={post.estimatedTimeToRead}
 						postPublishedDate={post.publishedAt!}
 					/>
 				))}
