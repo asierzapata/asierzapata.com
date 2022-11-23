@@ -2,22 +2,27 @@ import { json } from "@remix-run/node";
 import { Link, useLoaderData } from "@remix-run/react";
 
 import { format } from "date-fns";
+import { getClient } from "~/services/sanity/client";
 
 /* ====================================================== */
 /*                     Data Loading                      */
 /* ====================================================== */
 
-import { getPublishedPosts } from "~/modules/posts/use_cases/get_published_posts.server";
+// type LoaderData = {
+// 	posts: Awaited<ReturnType<typeof getPublishedPosts>>;
+// };
 
-type LoaderData = {
-	posts: Awaited<ReturnType<typeof getPublishedPosts>>;
-};
+// TODO: start here
 
 export const loader = async () => {
+	const movies = await getClient().fetch(
+		`*[_type == "movie"]{ _id, title, slug }`
+	);
+
 	return json<LoaderData>({
 		posts: await getPublishedPosts({
-			includeTranslatedPosts: true
-		})
+			includeTranslatedPosts: true,
+		}),
 	});
 };
 
@@ -30,7 +35,7 @@ const PostCard = ({
 	postThumbnail,
 	postTitle,
 	postEstimatedReadingTime,
-	postPublishedDate
+	postPublishedDate,
 }: {
 	postId: number;
 	postThumbnail: string;
