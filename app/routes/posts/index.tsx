@@ -2,22 +2,21 @@ import { json } from "@remix-run/node";
 import { Link, useLoaderData } from "@remix-run/react";
 
 import { format } from "date-fns";
+import { getPostsUseCase } from "~/modules/posts/get_posts_use_case.server";
 
 /* ====================================================== */
 /*                     Data Loading                      */
 /* ====================================================== */
 
-import { getPublishedPosts } from "~/modules/posts/use_cases/get_published_posts.server";
-
 type LoaderData = {
-	posts: Awaited<ReturnType<typeof getPublishedPosts>>;
+	posts: Awaited<ReturnType<typeof getPostsUseCase>>;
 };
 
 export const loader = async () => {
+	const posts = await getPostsUseCase();
+
 	return json<LoaderData>({
-		posts: await getPublishedPosts({
-			includeTranslatedPosts: true
-		})
+		posts,
 	});
 };
 
@@ -26,21 +25,21 @@ export const loader = async () => {
 /* ====================================================== */
 
 const PostCard = ({
-	postId,
-	postThumbnail,
-	postTitle,
-	postEstimatedReadingTime,
-	postPublishedDate
+	slug,
+	thumbnail,
+	title,
+	estimatedReadingTime,
+	publishedDate,
 }: {
-	postId: number;
-	postThumbnail: string;
-	postTitle: string;
-	postEstimatedReadingTime: number;
-	postPublishedDate: string;
+	slug: string;
+	thumbnail: string;
+	title: string;
+	estimatedReadingTime: number;
+	publishedDate: string;
 }) => {
 	return (
-		<li key={postId}>
-			<Link to={`${postId}`}>
+		<li key={slug}>
+			<Link to={slug}>
 				<article
 					className="flex flex-col rounded-md px-4 py-4 max-w-sm b
 					g-neutral-600 group transition duration-300 hover:bg-dark
@@ -49,16 +48,14 @@ const PostCard = ({
 				>
 					<img
 						className="rounded-md aspect-auto mb-4 "
-						src={postThumbnail}
-						alt={postTitle}
+						src={thumbnail}
+						alt={title}
 					/>
 					<span className="font-medium text-sm text-neutral-300 mb-4">
-						{format(new Date(postPublishedDate), "MMMM do, yyyy")} |{" "}
-						{postEstimatedReadingTime}min
+						{format(new Date(publishedDate), "MMMM do, yyyy")} |{" "}
+						{estimatedReadingTime}min
 					</span>
-					<span className="font-medium text-xl text-neutral-300">
-						{postTitle}
-					</span>
+					<span className="font-medium text-xl text-neutral-300">{title}</span>
 				</article>
 			</Link>
 		</li>
@@ -73,12 +70,12 @@ export default function Posts() {
 			<ul>
 				{posts.map((post) => (
 					<PostCard
-						key={post.id}
-						postId={post.id}
-						postThumbnail={post.thumbnail}
-						postTitle={post.title}
-						postEstimatedReadingTime={post.estimatedTimeToRead}
-						postPublishedDate={post.publishedAt!}
+						key={post.slug}
+						slug={post.slug}
+						thumbnail={post.mainImage}
+						title={post.title}
+						estimatedReadingTime={post.estimatedTimeToRead}
+						publishedDate={post.publishedAt!}
 					/>
 				))}
 			</ul>

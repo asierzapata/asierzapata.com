@@ -8,7 +8,6 @@
 		"dev": "run-p \"dev:*\"",
 		"dev:css": "npm run generate:css -- --watch",
 		"dev:remix": "remix dev",
-		"dev:db": "pscale connect asierzapata_com development --port 3309",
 		"generate:css": "npx tailwindcss -i ./app/styles/app.css -o ./app/tailwind.css",
 		"start": "remix-serve build"
 	},
@@ -20,9 +19,11 @@
 		"@vercel/node": "2.4.4",
 		"date-fns": "2.29.3",
 		"mdx-bundler": "^9.0.1",
+		"picosanity": "^4.0.0",
 		"react": "18.2.0",
 		"react-dom": "18.2.0",
-		"tiny-invariant": "1.3.1"
+		"tiny-invariant": "1.3.1",
+		"zod": "^3.19.1"
 	},
 	"devDependencies": {
 		"@remix-run/dev": "1.7.5",

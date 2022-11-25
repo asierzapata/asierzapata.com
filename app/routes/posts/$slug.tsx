@@ -18,34 +18,31 @@ import type { DataFunctionArgs } from "@remix-run/node";
 /*                     Data Loading                      */
 /* ====================================================== */
 
-import { getPostById } from "~/modules/posts/use_cases/get_post_by_id.server";
 import { renderPost } from "~/services/post_render/index.server";
+import { getPostBySlugUseCase } from "~/modules/posts/get_post_by_slug_use_case.server";
 
 type LoaderData = {
-	post: Awaited<ReturnType<typeof getPostById>>;
+	post: Awaited<ReturnType<typeof getPostBySlugUseCase>>;
 	content: Awaited<ReturnType<typeof renderPost>>;
 };
 
 export const loader = async ({ params }: DataFunctionArgs) => {
-	invariant(params.id, "params.id is required");
+	invariant(params.slug, "params.slug is required");
 
-	const parsedId = parseInt(params.id, 10);
+	const post = await getPostBySlugUseCase(params.slug);
 
-	invariant(isFinite(parsedId), "Id should be a finite number");
-	invariant(parsedId > 0, "Id should be a positive number");
+	invariant(post, `Post not found: ${params.slug}`);
 
-	const post = await getPostById({
-		id: parsedId,
-		includeTranslatedPosts: true
+	const content = await renderPost(post.body);
+
+	console.log(">>>>>>", {
+		post,
+		content,
 	});
-
-	invariant(post, `Post not found: ${params.id}`);
-
-	const content = await renderPost(post.content);
 
 	return json<LoaderData>({
 		post,
-		content
+		content,
 	});
 };
 
@@ -56,13 +53,14 @@ export const loader = async ({ params }: DataFunctionArgs) => {
 export default function PostWithId() {
 	const { post, content } = useLoaderData<typeof loader>();
 
-	if (!post || post.status !== "PUBLISHED") {
-		return (
-			<main>
-				<h1 className="text-2xl">Ops! You shouldn't be here 😱</h1>
-			</main>
-		);
-	}
+	// TODO: see if published posts can get here
+	// if (!post || post.status !== "PUBLISHED") {
+	// 	return (
+	// 		<main>
+	// 			<h1 className="text-2xl">Ops! You shouldn't be here 😱</h1>
+	// 		</main>
+	// 	);
+	// }
 
 	const formatedPublishedDate = post.publishedAt
 		? format(new Date(post.publishedAt), "MMMM do, yyyy")
@@ -81,7 +79,7 @@ export default function PostWithId() {
 			</h3>
 			<img
 				className="rounded-md aspect-auto mb-8"
-				src={post.thumbnail}
+				src={post.mainImage}
 				alt={post.title}
 			/>
 
@@ -93,7 +91,7 @@ export default function PostWithId() {
 						h1: (props) => <h1 className="text-3xl mb-4" {...props} />,
 						h2: (props) => <h2 className="text-2xl mb-4" {...props} />,
 						h3: (props) => <h3 className="text-xl mb-4" {...props} />,
-						h4: (props) => <h4 className="text-lg mb-4" {...props} />
+						h4: (props) => <h4 className="text-lg mb-4" {...props} />,
 					}}
 				/>
 			</article>
