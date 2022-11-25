@@ -43,6 +43,11 @@ export default {
 			type: "datetime",
 		},
 		{
+			name: "estimatedTimeToRead",
+			title: "Estimated time to read in minutes",
+			type: "number",
+		},
+		{
 			name: "body",
 			title: "Body",
 			type: "markdown",
