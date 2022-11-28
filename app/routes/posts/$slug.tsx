@@ -33,12 +33,9 @@ export const loader = async ({ params }: DataFunctionArgs) => {
 
 	invariant(post, `Post not found: ${params.slug}`);
 
-	const content = await renderPost(post.body);
+	console.log(">>>>>>", post.body);
 
-	console.log(">>>>>>", {
-		post,
-		content,
-	});
+	const content = await renderPost(post.body);
 
 	return json<LoaderData>({
 		post,
@@ -92,6 +89,17 @@ export default function PostWithId() {
 						h2: (props) => <h2 className="text-2xl mb-4" {...props} />,
 						h3: (props) => <h3 className="text-xl mb-4" {...props} />,
 						h4: (props) => <h4 className="text-lg mb-4" {...props} />,
+						a: (props) => <a className="text-orange underline" {...props} />,
+						strong: (props) => (
+							<strong className="text-orange font-bold" {...props} />
+						),
+						em: (props) => <em className="text-orange" {...props} />,
+						blockquote: (props) => (
+							<blockquote
+								className="bg-blue bg-opacity-50 text-light rounded my-4 py-4 px-6 border-l-4 border-l-orange"
+								{...props}
+							/>
+						),
 					}}
 				/>
 			</article>
