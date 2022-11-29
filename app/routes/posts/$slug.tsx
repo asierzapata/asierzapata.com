@@ -8,6 +8,9 @@ import invariant from "tiny-invariant";
 
 import { getMDXComponent } from "mdx-bundler/client";
 
+import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
+import { okaidia } from "react-syntax-highlighter/dist/cjs/styles/prism";
+
 /* ====================================================== */
 /*                        Types                          */
 /* ====================================================== */
@@ -32,8 +35,6 @@ export const loader = async ({ params }: DataFunctionArgs) => {
 	const post = await getPostBySlugUseCase(params.slug);
 
 	invariant(post, `Post not found: ${params.slug}`);
-
-	console.log(">>>>>>", post.body);
 
 	const content = await renderPost(post.body);
 
@@ -80,7 +81,7 @@ export default function PostWithId() {
 				alt={post.title}
 			/>
 
-			<article className="px-12">
+			<article className="px-12 mb-8">
 				<Component
 					components={{
 						// https://mdxjs.com/docs/using-mdx/#components
@@ -100,6 +101,22 @@ export default function PostWithId() {
 								{...props}
 							/>
 						),
+						code: ({ className, ...props }) => {
+							const match = /language-(\w+)/.exec(className || "");
+							return match ? (
+								<SyntaxHighlighter
+									language={match[1]}
+									PreTag="div"
+									style={okaidia}
+									{...props}
+								/>
+							) : (
+								<code
+									className={`${className} bg-dark text-orange rounded px-0.5 py-0.5`}
+									{...props}
+								/>
+							);
+						},
 					}}
 				/>
 			</article>
