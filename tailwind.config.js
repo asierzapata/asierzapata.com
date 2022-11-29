@@ -1,9 +1,20 @@
 /** @type {import('tailwindcss').Config} */
+const colors = require("tailwindcss/colors");
+
 module.exports = {
 	content: ["./app/**/*.{ts,tsx,jsx,js}"],
 	theme: {
 		colors: {
 			transparent: "transparent",
+			current: "currentColor",
+			black: colors.black,
+			white: colors.white,
+			gray: colors.gray,
+			emerald: colors.emerald,
+			indigo: colors.indigo,
+			yellow: colors.yellow,
+			purple: colors.purple,
+			// Custom
 			orange: "#F7A145",
 			blue: "#52908B",
 			dark: "#1E1E1E",
@@ -12,21 +23,17 @@ module.exports = {
 		},
 		extend: {
 			animation: {
-				blob: "blob 7s infinite",
+				text: "text 5s ease infinite",
 			},
 			keyframes: {
-				blob: {
-					"0%": {
-						transform: "translate(0px, 0px) scale(1)",
+				text: {
+					"0%, 100%": {
+						"background-size": "200% 200%",
+						"background-position": "left center",
 					},
-					"33%": {
-						transform: "translate(30px, -50px) scale(1.1)",
-					},
-					"66%": {
-						transform: "translate(-20px, 20px) scale(0.9)",
-					},
-					"100%": {
-						transform: "tranlate(0px, 0px) scale(1)",
+					"50%": {
+						"background-size": "200% 200%",
+						"background-position": "right center",
 					},
 				},
 			},

@@ -14,7 +14,7 @@ const PageNavigation = () => {
 	return (
 		<div className="px-12 py-6 lg:py-12 w-full">
 			<nav className="mx-auto flex max-w-8xl items-center justify-between">
-				<Link to="/" className="text-2xl font-medium hover:text-orange">
+				<Link to="/" className="text-2xl font-medium text-orange">
 					Asier Zapata
 				</Link>
 				<ul>
