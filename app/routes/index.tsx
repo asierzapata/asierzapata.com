@@ -19,12 +19,15 @@ export default function Index() {
 					<h2 className="text-xl text-center">
 						I'm a Tech Lead and Fullstack Web Developer using JavaScript
 						currently working at{" "}
-						<a className="hover:text-primary font-semibold" href="edpuzzle.com">
+						<a
+							className="hover:text-primary font-semibold"
+							href="https://edpuzzle.com"
+						>
 							Edpuzzle
 						</a>
 					</h2>
 				</div>
-				<div className="bg-avatarBackground rounded-lg shadow-2xl">
+				<div className="bg-text rounded-lg shadow-2xl">
 					<img
 						className="max-h-60 md:max-h-80"
 						src="/face_drawing.svg"

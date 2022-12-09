@@ -164,21 +164,34 @@ export default function PostWithId() {
 				alt={post.title}
 			/>
 
-			<article className="px-12 mb-8">
+			<article className="px-12 mb-8 selection:bg-darkPrimary selection:text-background">
 				<Component
 					components={{
 						// https://mdxjs.com/docs/using-mdx/#components
 						// https://mdxjs.com/table-of-components/
-						h1: (props) => <h1 className="text-3xl mb-4" {...props} />,
-						h2: (props) => <h2 className="text-2xl mb-4" {...props} />,
-						h3: (props) => <h3 className="text-xl mb-4" {...props} />,
-						h4: (props) => <h4 className="text-lg mb-4" {...props} />,
+						h1: (props) => <h1 className="text-3xl my-4" {...props} />,
+						h2: (props) => <h2 className="text-2xl my-4" {...props} />,
+						h3: (props) => <h3 className="text-xl my-4" {...props} />,
+						h4: (props) => <h4 className="text-lg my-4" {...props} />,
+						p: (props) => <p className="my-2" {...props} />,
 						// rome-ignore lint/a11y/useAnchorContent: on the props it is included
 						a: (props) => <a className="text-primary underline" {...props} />,
 						strong: (props) => (
 							<strong className="text-primary font-bold" {...props} />
 						),
 						em: (props) => <em className="text-primary" {...props} />,
+						ul: (props) => (
+							<ul
+								className="my-4 marker:text-primary list-disc list-inside"
+								{...props}
+							/>
+						),
+						ol: (props) => (
+							<ol
+								className="my-4 marker:text-primary list-decimal"
+								{...props}
+							/>
+						),
 						blockquote: (props) => (
 							<blockquote
 								className="bg-lightBackground bg-opacity-50 text-light rounded my-4 py-4 px-6 border-l-4 border-l-primary"
