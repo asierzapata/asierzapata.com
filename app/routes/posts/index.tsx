@@ -42,10 +42,10 @@ const PostCard = ({
 		<li key={slug}>
 			<Link className="w-full flex justify-center" to={slug}>
 				<article
-					className="flex flex-col rounded-md px-4 py-4 h-full max-w-sm b
-					g-neutral-600 group transition duration-300 hover:bg-dark
-					border border-transparent hover:border-orange
-				hover:text-orange"
+					className="flex flex-col rounded-md px-4 py-4 h-full w-full max-w-sm
+					group transition duration-300 hover:bg-lightBackground
+					border border-transparent hover:border-primary
+				hover:text-primary"
 				>
 					<img
 						loading="lazy"
@@ -53,11 +53,11 @@ const PostCard = ({
 						src={`${thumbnail}?auto=format&h=350&dpr=3`}
 						alt={title}
 					/>
-					<span className="font-medium text-sm text-neutral-300 mb-4">
+					<span className="font-light text-sm text-text mb-4">
 						{format(new Date(publishedDate), "MMMM do, yyyy")} |{" "}
 						{estimatedReadingTime}min
 					</span>
-					<span className="font-medium text-xl text-neutral-300">{title}</span>
+					<span className="font-medium text-xl text-text">{title}</span>
 				</article>
 			</Link>
 		</li>
@@ -68,7 +68,7 @@ export default function Posts() {
 	const { posts } = useLoaderData<typeof loader>();
 
 	return (
-		<main className="py-6">
+		<main className="p-6">
 			<ul className="grid gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 auto-rows-max">
 				{posts.map((post) => (
 					<PostCard

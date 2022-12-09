@@ -5,9 +5,10 @@ import {
 	Meta,
 	Outlet,
 	Scripts,
-	ScrollRestoration
+	ScrollRestoration,
 } from "@remix-run/react";
-import { PageNavigation } from "./components/page_navigation/page_navigation";
+import { GlobalLoading } from "./components/global_loading";
+import { PageNavigation } from "./components/page_navigation";
 
 import styles from "./tailwind.css";
 
@@ -16,7 +17,7 @@ export const links: LinksFunction = () => [{ rel: "stylesheet", href: styles }];
 export const meta: MetaFunction = () => ({
 	charset: "utf-8",
 	title: "Asier Zapata",
-	viewport: "width=device-width,initial-scale=1"
+	viewport: "width=device-width,initial-scale=1",
 });
 
 export default function App() {
@@ -26,7 +27,8 @@ export default function App() {
 				<Meta />
 				<Links />
 			</head>
-			<body className="bg-grey text-light">
+			<body className="bg-background text-text">
+				<GlobalLoading />
 				<PageNavigation />
 				<Outlet />
 				<ScrollRestoration />

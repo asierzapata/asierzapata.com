@@ -47,7 +47,9 @@ export function get<
 		.split(/[.[\]]/)
 		.filter(Boolean)
 		.reduce<GetFieldType<TData, TPath>>(
+			// rome-ignore lint/suspicious/noExplicitAny: <explanation>
 			(value, key) => (value as any)?.[key],
+			// rome-ignore lint/suspicious/noExplicitAny: <explanation>
 			data as any
 		);
 

@@ -9,7 +9,7 @@ export default function Index() {
 					<h1
 						className="text-5xl font-extrabold
 						bg-gradient-to-br bg-clip-text text-transparent
-						from-light via-orange to-light
+						from-secondary to-primary
 						animate-text
 						mb-4
 					"
@@ -19,12 +19,12 @@ export default function Index() {
 					<h2 className="text-xl text-center">
 						I'm a Tech Lead and Fullstack Web Developer using JavaScript
 						currently working at{" "}
-						<a className="hover:text-orange font-semibold" href="edpuzzle.com">
+						<a className="hover:text-primary font-semibold" href="edpuzzle.com">
 							Edpuzzle
 						</a>
 					</h2>
 				</div>
-				<div className="bg-light rounded-lg shadow-2xl">
+				<div className="bg-avatarBackground rounded-lg shadow-2xl">
 					<img
 						className="max-h-60 md:max-h-80"
 						src="/face_drawing.svg"
