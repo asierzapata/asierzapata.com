@@ -8,8 +8,100 @@ import invariant from "tiny-invariant";
 
 import { getMDXComponent } from "mdx-bundler/client";
 
-import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
-import { okaidia } from "react-syntax-highlighter/dist/cjs/styles/prism";
+import SyntaxHighlighter from "react-syntax-highlighter";
+
+const codeStyle = {
+	hljs: {
+		display: "block",
+		overflowX: "auto",
+		borderRadius: "0.25rem",
+		padding: "1em 1.5rem",
+		background: "#2e2f3e",
+		color: "#fffffe",
+	},
+	"hljs-keyword": {
+		color: "#e53170",
+		fontWeight: "bold",
+	},
+	"hljs-selector-tag": {
+		color: "#fffffe",
+		fontWeight: "bold",
+	},
+	"hljs-literal": {
+		color: "#fffffe",
+		fontWeight: "bold",
+	},
+	"hljs-section": {
+		color: "#fffffe",
+		fontWeight: "bold",
+	},
+	"hljs-link": {
+		color: "#fffffe",
+	},
+	"hljs-subst": {
+		color: "#fffffe",
+	},
+	"hljs-string": {
+		color: "#f25f4c",
+	},
+	"hljs-title": {
+		color: "#ff8906",
+		fontWeight: "bold",
+	},
+	"hljs-name": {
+		color: "#ff8906",
+		fontWeight: "bold",
+	},
+	"hljs-type": {
+		color: "#ff8906",
+		fontWeight: "bold",
+	},
+	"hljs-attribute": {
+		color: "#e53170",
+	},
+	"hljs-symbol": {
+		color: "#e53170",
+	},
+	"hljs-bullet": {
+		color: "#e53170",
+	},
+	"hljs-built_in": {
+		color: "#e53170",
+	},
+	"hljs-addition": {
+		color: "#e53170",
+	},
+	"hljs-variable": {
+		color: "#e53170",
+	},
+	"hljs-template-tag": {
+		color: "#e53170",
+	},
+	"hljs-template-variable": {
+		color: "#e53170",
+	},
+	"hljs-comment": {
+		color: "#0f0e17",
+	},
+	"hljs-quote": {
+		color: "#0f0e17",
+	},
+	"hljs-deletion": {
+		color: "#0f0e17",
+	},
+	"hljs-meta": {
+		color: "#0f0e17",
+	},
+	"hljs-doctag": {
+		fontWeight: "bold",
+	},
+	"hljs-strong": {
+		fontWeight: "bold",
+	},
+	"hljs-emphasis": {
+		fontStyle: "italic",
+	},
+};
 
 /* ====================================================== */
 /*                        Types                          */
@@ -50,15 +142,6 @@ export const loader = async ({ params }: DataFunctionArgs) => {
 
 export default function PostWithId() {
 	const { post, content } = useLoaderData<typeof loader>();
-
-	// TODO: see if published posts can get here
-	// if (!post || post.status !== "PUBLISHED") {
-	// 	return (
-	// 		<main>
-	// 			<h1 className="text-2xl">Ops! You shouldn't be here 😱</h1>
-	// 		</main>
-	// 	);
-	// }
 
 	const formatedPublishedDate = post.publishedAt
 		? format(new Date(post.publishedAt), "MMMM do, yyyy")
@@ -105,12 +188,14 @@ export default function PostWithId() {
 						code: ({ className, ...props }) => {
 							const match = /language-(\w+)/.exec(className || "");
 							return match ? (
-								<SyntaxHighlighter
-									language={match[1]}
-									PreTag="div"
-									style={okaidia}
-									{...props}
-								/>
+								<div className="my-4">
+									<SyntaxHighlighter
+										language={match[1]}
+										PreTag="div"
+										style={codeStyle}
+										{...props}
+									/>
+								</div>
 							) : (
 								<code
 									className={`${className} bg-dark text-primary rounded px-0.5 py-0.5`}

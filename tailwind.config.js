@@ -23,11 +23,6 @@ module.exports = {
 			primary: "#ff8906",
 			darkPrimary: "#f25f4c",
 			secondary: "#e53170",
-			// orange: "#F7A145",
-			// blue: "#52908B",
-			// dark: "#1E1E1E",
-			// light: "#DCE1E0",
-			// grey: "#2E3033",
 		},
 		extend: {
 			animation: {
