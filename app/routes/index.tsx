@@ -97,12 +97,12 @@ function ProjectCard({
 			<h4 className="mb-4 italic font-light">{project.description}</h4>
 			<div className="flex flex-row items-center justify-around">
 				{project.links.map((link) => (
-					<Link to={link.url}>
+					<a href={link.url} className="hover:text-primary">
 						{link.source === "web" ? <GlobeIcon className="w-5 h-5" /> : null}
 						{link.source === "github" ? (
 							<GitHubLogoIcon className="w-5 h-5" />
 						) : null}
-					</Link>
+					</a>
 				))}
 			</div>
 		</div>
