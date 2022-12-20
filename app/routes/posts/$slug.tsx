@@ -156,7 +156,7 @@ export default function PostWithId() {
 		<main className="py-6 mx-auto w-full md:w-10/12 lg:w-9/12 xl:w-7/12 2xl:w-5/12">
 			<h1 className="text-4xl font-bold mb-2 px-12">{post.title}</h1>
 			<h3 className="font-thin mb-8 px-12">
-				{formatedPublishedDate} | {post.estimatedTimeToRead}min
+				{formatedPublishedDate} | {post.estimatedTimeToRead} min
 			</h3>
 			<img
 				className="rounded-md aspect-auto mb-8"
@@ -169,11 +169,13 @@ export default function PostWithId() {
 					components={{
 						// https://mdxjs.com/docs/using-mdx/#components
 						// https://mdxjs.com/table-of-components/
-						h1: (props) => <h1 className="text-3xl my-4" {...props} />,
-						h2: (props) => <h2 className="text-2xl my-4" {...props} />,
-						h3: (props) => <h3 className="text-xl my-4" {...props} />,
-						h4: (props) => <h4 className="text-lg my-4" {...props} />,
-						p: (props) => <p className="my-2" {...props} />,
+						h1: (props) => <h1 className="text-3xl my-6" {...props} />,
+						h2: (props) => <h2 className="text-2xl my-6" {...props} />,
+						h3: (props) => <h3 className="text-xl my-6" {...props} />,
+						h4: (props) => <h4 className="text-lg my-6" {...props} />,
+						p: (props) => (
+							<p className="my-6 text-justify indent-8" {...props} />
+						),
 						// rome-ignore lint/a11y/useAnchorContent: on the props it is included
 						a: (props) => <a className="text-primary underline" {...props} />,
 						strong: (props) => (

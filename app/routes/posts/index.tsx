@@ -40,7 +40,7 @@ const PostCard = ({
 }) => {
 	return (
 		<li key={slug}>
-			<Link className="w-full flex justify-center" to={slug}>
+			<Link className="w-full flex justify-center" to={slug} prefetch="intent">
 				<article
 					className="flex flex-col rounded-md px-4 py-4 h-full w-full max-w-sm
 					group transition duration-300 hover:bg-lightBackground
