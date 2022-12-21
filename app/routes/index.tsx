@@ -67,13 +67,15 @@ export default function Home() {
 					/>
 				</div>
 			</div>
-			<div className="px-12 py-6 flex w-full flex-col items-start justify-around">
+			<div className="px-12 py-6 w-full">
 				<h1 className="text-3xl text-left font-bold mb-8 text-darkPrimary">
 					Projects
 				</h1>
-				{projects.map((project) => (
-					<ProjectCard key={project._id} project={project} />
-				))}
+				<div className="flex flex-row flex-wrap items-start justify-evenly gap-6">
+					{projects.map((project) => (
+						<ProjectCard key={project._id} project={project} />
+					))}
+				</div>
 			</div>
 		</main>
 	);
@@ -95,7 +97,7 @@ function ProjectCard({
 			</h3>
 			<img src={project.image} alt={project.title} className="rounded mb-4" />
 			<h4 className="mb-4 italic font-light">{project.description}</h4>
-			<div className="flex flex-row items-center justify-around">
+			<div className="flex flex-row items-center justify-center gap-6">
 				{project.links.map((link) => (
 					<a href={link.url} className="hover:text-primary">
 						{link.source === "web" ? <GlobeIcon className="w-5 h-5" /> : null}
