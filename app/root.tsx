@@ -32,6 +32,11 @@ export default function App() {
 				<PageNavigation />
 				<Outlet />
 				<ScrollRestoration />
+				<script
+					defer
+					data-domain="asierzapata.com"
+					src="https://plausible.io/js/script.js"
+				/>
 				<Scripts />
 				<LiveReload />
 			</body>
