@@ -177,7 +177,14 @@ export default function PostWithId() {
 							<p className="my-6 text-justify indent-8" {...props} />
 						),
 						// rome-ignore lint/a11y/useAnchorContent: on the props it is included
-						a: (props) => <a className="text-primary underline" {...props} />,
+						a: (props) => (
+							<a
+								className="text-primary underline"
+								target="_blank"
+								rel="noopener noreferrer"
+								{...props}
+							/>
+						),
 						strong: (props) => (
 							<strong className="text-primary font-bold" {...props} />
 						),

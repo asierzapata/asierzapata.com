@@ -48,6 +48,8 @@ export default function Home() {
 						<a
 							className="hover:text-primary font-semibold"
 							href="https://edpuzzle.com"
+							target="_blank"
+							rel="noopener noreferrer"
 						>
 							Edpuzzle
 						</a>
@@ -99,7 +101,12 @@ function ProjectCard({
 			<h4 className="mb-4 italic font-light">{project.description}</h4>
 			<div className="flex flex-row items-center justify-center gap-6">
 				{project.links.map((link) => (
-					<a href={link.url} className="hover:text-primary">
+					<a
+						className="hover:text-primary"
+						href={link.url}
+						target="_blank"
+						rel="noopener noreferrer"
+					>
 						{link.source === "web" ? <GlobeIcon className="w-5 h-5" /> : null}
 						{link.source === "github" ? (
 							<GitHubLogoIcon className="w-5 h-5" />
