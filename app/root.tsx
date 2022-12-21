@@ -26,17 +26,17 @@ export default function App() {
 			<head>
 				<Meta />
 				<Links />
+				<script
+					defer
+					data-domain="asierzapata.com"
+					src="https://plausible.io/js/script.js"
+				/>
 			</head>
 			<body className="bg-background text-text">
 				<GlobalLoading />
 				<PageNavigation />
 				<Outlet />
 				<ScrollRestoration />
-				<script
-					defer
-					data-domain="asierzapata.com"
-					src="https://plausible.io/js/script.js"
-				/>
 				<Scripts />
 				<LiveReload />
 			</body>
