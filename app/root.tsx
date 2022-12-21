@@ -27,9 +27,9 @@ export default function App() {
 				<Meta />
 				<Links />
 				<script
-					defer
+					src="/stats/js/script.js"
+					data-api="/stats/api/event"
 					data-domain="asierzapata.com"
-					src="https://plausible.io/js/script.js"
 				/>
 			</head>
 			<body className="bg-background text-text">
