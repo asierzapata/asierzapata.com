@@ -10,7 +10,7 @@ import SyntaxHighlighter from "react-syntax-highlighter";
 const codeStyle = {
 	hljs: {
 		display: "block",
-		overflowX: "auto",
+		"overflow-x": "auto",
 		borderRadius: "0.25rem",
 		padding: "1em 1.5rem",
 		background: "#2e2f3e",
@@ -98,7 +98,7 @@ const codeStyle = {
 	"hljs-emphasis": {
 		fontStyle: "italic",
 	},
-};
+} as React.CSSProperties;
 
 /* ====================================================== */
 /*                        Types                          */
@@ -222,16 +222,17 @@ export default function PostWithId({
 								{...props}
 							/>
 						),
-						code: ({ className, ...props }) => {
+						code: ({ className, children, ...props }) => {
 							const match = /language-(\w+)/.exec(className || "");
 							return match ? (
 								<div className="my-4">
 									<SyntaxHighlighter
 										language={match[1]}
 										PreTag="div"
-										style={codeStyle}
-										{...props}
-									/>
+										customStyle={codeStyle}
+									>
+										{children as string}
+									</SyntaxHighlighter>
 								</div>
 							) : (
 								<code
