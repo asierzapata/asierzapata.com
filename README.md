@@ -2,4 +2,4 @@
 
 This is the source code of my personal web page that you can find in https://asierzapata.com
 
-It uses Remix and Sanity as a CMS.
+It uses Next.js and Sanity as a CMS.
