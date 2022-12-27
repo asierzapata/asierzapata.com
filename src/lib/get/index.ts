@@ -47,9 +47,9 @@ export function get<
 		.split(/[.[\]]/)
 		.filter(Boolean)
 		.reduce<GetFieldType<TData, TPath>>(
-			// rome-ignore lint/suspicious/noExplicitAny: <explanation>
+			// eslint-disable-next-line @typescript-eslint/no-explicit-any
 			(value, key) => (value as any)?.[key],
-			// rome-ignore lint/suspicious/noExplicitAny: <explanation>
+			// eslint-disable-next-line @typescript-eslint/no-explicit-any
 			data as any
 		);
 
