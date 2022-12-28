@@ -98,7 +98,7 @@ export default function Posts({
 						slug={post.slug}
 						thumbnail={post.mainImage}
 						title={post.title}
-						estimatedReadingTime={post.estimatedTimeToRead}
+						estimatedReadingTime={post.estimatedDuration}
 						publishedDate={post.publishedAt}
 					/>
 				))}
