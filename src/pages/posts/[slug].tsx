@@ -168,7 +168,7 @@ export default function PostWithId({
 		<main className="mx-auto w-full py-6 md:w-10/12 lg:w-9/12 xl:w-7/12 2xl:w-5/12">
 			<h1 className="mb-2 px-12 text-4xl font-bold">{post.title}</h1>
 			<h3 className="mb-8 px-12 font-thin">
-				{formatedPublishedDate} | {post.estimatedTimeToRead} min
+				{formatedPublishedDate} | {post.estimatedDuration} min
 			</h3>
 			<Image
 				className="mb-8 aspect-auto h-auto w-full rounded-md"
