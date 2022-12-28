@@ -1,36 +1,122 @@
 import React from "react";
 
+import { classnames } from "@/lib/classnames";
+
 /* ====================================================== */
 /*                       Components                      */
 /* ====================================================== */
 
 import Link from "next/link";
+import {
+	HomeIcon,
+	FileTextIcon,
+	LayersIcon,
+	Pencil2Icon,
+	BookmarkIcon,
+	HamburgerMenuIcon,
+} from "@radix-ui/react-icons";
+import { motion } from "framer-motion";
 
 /* ====================================================== */
 /*                    Implementation                     */
 /* ====================================================== */
 
-const PageNavigation = () => {
+type PageNavigationProps = {
+	children: React.ReactNode;
+};
+
+const PageNavigation = ({ children }: PageNavigationProps) => {
+	const [isSidebarOpen, setIsSidebarOpen] = React.useState(false);
+
+	const handleToggleSidebar = React.useCallback(() => {
+		setIsSidebarOpen((_isSidebarOpen) => !_isSidebarOpen);
+	}, []);
+
+	const handleClickOnContent = React.useCallback(() => {
+		if (isSidebarOpen) handleToggleSidebar();
+	}, [handleToggleSidebar, isSidebarOpen]);
+
+	const childrenContainerClassnames = classnames(
+		"w-full overflow-x-scroll transition-opacity ease-in-out duration-300 pt-[88px]",
+		isSidebarOpen && "opacity-25 lg:opacity-100"
+	);
+
+	const sidebarClassnames = classnames(
+		"px-4 lg:flex w-72 flex-col bg-lightBackground fixed left-0 top-0 z-10 h-screen lg:relative lg:z-0",
+		!isSidebarOpen && "left-[-300px] lg:left-0",
+		isSidebarOpen && "left-0"
+	);
+
 	return (
-		<div className="w-full px-12 py-6 lg:py-12">
-			<nav className="max-w-8xl mx-auto flex items-center justify-between">
-				<Link
-					href="/"
-					className="text-2xl font-medium text-primary hover:text-darkPrimary"
-				>
-					Asier Zapata
-				</Link>
-				<ul>
-					<li>
-						<Link
-							href="/posts"
-							className="px-5 py-2 text-primary hover:text-darkPrimary"
-						>
-							Blog
-						</Link>
-					</li>
-				</ul>
-			</nav>
+		<div className="flex max-h-screen min-h-full w-full flex-col lg:flex-row">
+			<motion.nav layout className={sidebarClassnames}>
+				<div className="flex flex-row items-center justify-start py-5 lg:px-6 ">
+					<button
+						className="rounded px-3 py-1 text-sm hover:bg-background hover:text-primary lg:hidden"
+						onClick={handleToggleSidebar}
+					>
+						<HamburgerMenuIcon />
+					</button>
+					<h1 className="px-3 text-base font-semibold text-primary">
+						Asier Zapata
+					</h1>
+				</div>
+				<div className="flex w-full flex-col gap-2 px-3 py-2">
+					<Link
+						href="/"
+						className="transition-color flex w-full flex-row items-center justify-start gap-4 rounded px-3 py-1 text-sm duration-300 ease-in-out hover:bg-background hover:text-primary"
+						onClick={handleClickOnContent}
+					>
+						<HomeIcon />
+						Home
+					</Link>
+					<Link
+						href="/posts"
+						className="transition-color flex w-full flex-row items-center justify-start gap-4 rounded px-3 py-1 text-sm duration-300 ease-in-out hover:bg-background hover:text-primary"
+						onClick={handleClickOnContent}
+					>
+						<FileTextIcon />
+						Posts
+					</Link>
+					<Link
+						href="/stack"
+						className="transition-color flex w-full flex-row items-center justify-start gap-4 rounded px-3 py-1 text-sm duration-300 ease-in-out hover:bg-background hover:text-primary"
+						onClick={handleClickOnContent}
+					>
+						<LayersIcon />
+						Stack
+					</Link>
+					<Link
+						href="/ama"
+						className="transition-color flex w-full flex-row items-center justify-start gap-4 rounded px-3 py-1 text-sm duration-300 ease-in-out hover:bg-background hover:text-primary"
+						onClick={handleClickOnContent}
+					>
+						<Pencil2Icon />
+						AMA
+					</Link>
+					<Link
+						href="/bookmarks"
+						className="transition-color flex w-full flex-row items-center justify-start gap-4 rounded px-3 py-1 text-sm duration-300 ease-in-out hover:bg-background hover:text-primary"
+						onClick={handleClickOnContent}
+					>
+						<BookmarkIcon /> Bookmarks
+					</Link>
+				</div>
+			</motion.nav>
+			<div
+				className="fixed w-full py-5 px-6 text-xl lg:hidden"
+				onClick={handleClickOnContent}
+			>
+				<button onClick={handleToggleSidebar}>
+					<HamburgerMenuIcon />
+				</button>
+			</div>
+			<div
+				className={childrenContainerClassnames}
+				onClick={handleClickOnContent}
+			>
+				{children}
+			</div>
 		</div>
 	);
 };

@@ -7,7 +7,8 @@ export async function getPostBySlugUseCase(slug: string) {
 			_id,
 			title,
 			"slug": slug.current,
-			estimatedTimeToRead,
+			"authorName": author.name,
+			estimatedDuration,
 			"mainImage": mainImage.asset->url,
 			publishedAt,
 			body

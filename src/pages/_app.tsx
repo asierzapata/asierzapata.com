@@ -24,8 +24,9 @@ const MyApp: AppType<{ session: Session | null }> = ({
 			<PlausibleProvider domain="asierzapata.com">
 				<SessionProvider session={session}>
 					<PageLoading />
-					<PageNavigation />
-					<Component {...pageProps} />
+					<PageNavigation>
+						<Component {...pageProps} />
+					</PageNavigation>
 				</SessionProvider>
 			</PlausibleProvider>
 		</>

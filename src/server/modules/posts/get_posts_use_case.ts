@@ -7,11 +7,12 @@ export async function getPostsUseCase(limit?: string, cursor?: string) {
 			_id,
 			title,
 			"slug": slug.current,
-			estimatedTimeToRead,
+			estimatedDuration,
 			"mainImage": mainImage.asset->url,
 			publishedAt
 		}`,
 		{ lastId: cursor || "", limit: limit || 5 }
 	);
+	console.log('>>>>>>',posts)
 	return parsePostSummaries(posts);
 }

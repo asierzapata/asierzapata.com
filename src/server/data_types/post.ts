@@ -4,7 +4,7 @@ const commonPost = {
 	_id: z.string(),
 	title: z.string(),
 	slug: z.string(),
-	estimatedTimeToRead: z.number(),
+	estimatedDuration: z.number(),
 	mainImage: z.string(),
 	publishedAt: z.string(),
 }

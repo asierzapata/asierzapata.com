@@ -7,6 +7,7 @@ export default {
 			name: "title",
 			title: "Title",
 			type: "string",
+			validation: (Rule) => Rule.required().min(5).max(96),
 		},
 		{
 			name: "slug",
@@ -16,12 +17,14 @@ export default {
 				source: "title",
 				maxLength: 96,
 			},
+			validation: (Rule) => Rule.required(),
 		},
 		{
 			name: "author",
 			title: "Author",
 			type: "reference",
 			to: { type: "author" },
+			validation: (Rule) => Rule.required(),
 		},
 		{
 			name: "mainImage",
@@ -29,19 +32,27 @@ export default {
 			type: "image",
 		},
 		{
-			name: "categories",
-			title: "Categories",
-			type: "array",
-			of: [{ type: "reference", to: { type: "category" } }],
+			name: "type",
+			title: "Type",
+			type: "reference",
+			to: { type: "postType" },
+			validation: (Rule) => Rule.required(),
+		},
+		{
+			name: "publishedOnce",
+			type: "boolean",
+			hidden: true,
 		},
 		{
 			name: "publishedAt",
 			title: "Published at",
 			type: "datetime",
+			readOnly: ({ document }) => !document?.publishedOnce,
+			validation: (Rule) => Rule.required(),
 		},
 		{
-			name: "estimatedTimeToRead",
-			title: "Estimated time to read in minutes",
+			name: "estimatedDuration",
+			title: "Estimated duration of the post",
 			type: "number",
 		},
 		{
@@ -54,14 +65,8 @@ export default {
 	preview: {
 		select: {
 			title: "title",
-			author: "author.name",
+			category: "category.name",
 			media: "mainImage",
-		},
-		prepare(selection) {
-			const { author } = selection;
-			return Object.assign({}, selection, {
-				subtitle: author && `by ${author}`,
-			});
 		},
 	},
 };
