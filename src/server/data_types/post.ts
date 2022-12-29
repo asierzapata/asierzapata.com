@@ -1,12 +1,21 @@
 import { z } from "zod";
 
+const PostTypesEnum = z.enum([
+	'article',
+	'snippet',
+	'tutorial',
+	'book-review'
+])
+
 const commonPost = {
 	_id: z.string(),
 	title: z.string(),
 	slug: z.string(),
 	estimatedDuration: z.number(),
+	authorName: z.string(),
 	mainImage: z.string(),
 	publishedAt: z.string(),
+	type: PostTypesEnum
 }
 
 const PostSchema = z.object({
@@ -34,3 +43,4 @@ export function parsePostSummary(postSummary: unknown): PostSummary {
 
 export type Post = typeof PostSchema._type
 export type PostSummary = typeof PostSummarySchema._type
+export type PostType = z.infer<typeof PostTypesEnum>

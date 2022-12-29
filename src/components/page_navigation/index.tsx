@@ -12,7 +12,7 @@ import {
 	FileTextIcon,
 	LayersIcon,
 	Pencil2Icon,
-	BookmarkIcon,
+	// BookmarkIcon,
 	HamburgerMenuIcon,
 } from "@radix-ui/react-icons";
 import { motion } from "framer-motion";

@@ -15,6 +15,7 @@ module.exports = {
       indigo: colors.indigo,
       yellow: colors.yellow,
       purple: colors.purple,
+			sky: colors.sky,
       // Custom
       background: "#0f0e17",
       lightBackground: "#2e2f3e",

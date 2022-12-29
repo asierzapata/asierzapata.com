@@ -4,8 +4,8 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { ProjectCard } from "@/components/project_card";
 import FaceDrawing from "@/../public/face_drawing.svg";
+import { PostCard } from "@/components/post_card";
 
 /* ====================================================== */
 /*                        Types                          */
@@ -17,14 +17,14 @@ import type { InferGetStaticPropsType } from "next";
 /*                     Data Loading                      */
 /* ====================================================== */
 
-import { getProjectsUserCase } from "@/server/modules/projects/get_projects_use_case";
+import { getPostsUseCase } from "@/server/modules/posts/get_posts_use_case";
 
 export const getStaticProps = async () => {
-	const projects = await getProjectsUserCase();
+	const posts = await getPostsUseCase(5, 0);
 
 	return {
 		props: {
-			projects,
+			posts,
 		},
 	};
 };
@@ -33,7 +33,7 @@ export const getStaticProps = async () => {
 /*                      Component                        */
 /* ====================================================== */
 
-function Home({ projects }: InferGetStaticPropsType<typeof getStaticProps>) {
+function Home({ posts }: InferGetStaticPropsType<typeof getStaticProps>) {
 	return (
 		<main>
 			<div className="mb-6 flex w-full flex-col-reverse items-center justify-around gap-8 px-12 py-6 lg:flex-row">
@@ -79,11 +79,11 @@ function Home({ projects }: InferGetStaticPropsType<typeof getStaticProps>) {
 			</div>
 			<div className="w-full px-12 py-6">
 				<h1 className="mb-8 text-left text-3xl font-bold text-darkPrimary">
-					Projects
+					Latest Posts
 				</h1>
 				<div className="flex flex-row flex-wrap items-start justify-evenly gap-6">
-					{projects.map((project) => (
-						<ProjectCard key={project._id} project={project} />
+					{posts.map((post) => (
+						<PostCard key={post._id} post={post} />
 					))}
 				</div>
 			</div>
