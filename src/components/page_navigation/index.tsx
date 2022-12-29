@@ -102,13 +102,14 @@ const PageNavigation = ({ children }: PageNavigationProps) => {
 						<Pencil2Icon />
 						AMA
 					</Link>
-					<Link
+					{/* I will keep this page onhold */}
+					{/* <Link
 						href="/bookmarks"
 						className="transition-color flex w-full flex-row items-center justify-start gap-4 rounded px-3 py-1 font-medium duration-300 ease-in-out hover:bg-background hover:text-primary"
 						onClick={handleClickOnContent}
 					>
 						<BookmarkIcon /> Bookmarks
-					</Link>
+					</Link> */}
 				</div>
 			</motion.nav>
 			<div
