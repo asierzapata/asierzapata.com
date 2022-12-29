@@ -42,8 +42,8 @@ const PageNavigation = ({ children }: PageNavigationProps) => {
 	);
 
 	const sidebarClassnames = classnames(
-		"px-4 lg:flex w-72 flex-col bg-lightBackground fixed left-0 top-0 z-10 h-screen lg:relative lg:z-0",
-		!isSidebarOpen && "left-[-300px] lg:left-0",
+		"px-4 w-72 flex-col bg-lightBackground lg:flex-grow-0 lg:flex-shrink-0 max-lg:fixed max-lg:top-0 max-lg:z-10 h-screen",
+		!isSidebarOpen && "left-[-300px]",
 		isSidebarOpen && "left-0"
 	);
 
@@ -57,14 +57,22 @@ const PageNavigation = ({ children }: PageNavigationProps) => {
 					>
 						<HamburgerMenuIcon />
 					</button>
-					<h1 className="px-3 text-base font-semibold text-primary">
+					<h1
+						className="animate-text
+							bg-gradient-to-br from-secondary to-primary
+							bg-clip-text
+							px-3 text-lg font-medium
+							text-transparent
+							lg:px-0
+						"
+					>
 						Asier Zapata
 					</h1>
 				</div>
 				<div className="flex w-full flex-col gap-2 px-3 py-2">
 					<Link
 						href="/"
-						className="transition-color flex w-full flex-row items-center justify-start gap-4 rounded px-3 py-1 text-sm duration-300 ease-in-out hover:bg-background hover:text-primary"
+						className="transition-color flex w-full flex-row items-center justify-start gap-4 rounded px-3 py-1 font-medium duration-300 ease-in-out hover:bg-background hover:text-primary"
 						onClick={handleClickOnContent}
 					>
 						<HomeIcon />
@@ -72,7 +80,7 @@ const PageNavigation = ({ children }: PageNavigationProps) => {
 					</Link>
 					<Link
 						href="/posts"
-						className="transition-color flex w-full flex-row items-center justify-start gap-4 rounded px-3 py-1 text-sm duration-300 ease-in-out hover:bg-background hover:text-primary"
+						className="transition-color flex w-full flex-row items-center justify-start gap-4 rounded px-3 py-1 font-medium duration-300 ease-in-out hover:bg-background hover:text-primary"
 						onClick={handleClickOnContent}
 					>
 						<FileTextIcon />
@@ -80,7 +88,7 @@ const PageNavigation = ({ children }: PageNavigationProps) => {
 					</Link>
 					<Link
 						href="/stack"
-						className="transition-color flex w-full flex-row items-center justify-start gap-4 rounded px-3 py-1 text-sm duration-300 ease-in-out hover:bg-background hover:text-primary"
+						className="transition-color flex w-full flex-row items-center justify-start gap-4 rounded px-3 py-1 font-medium duration-300 ease-in-out hover:bg-background hover:text-primary"
 						onClick={handleClickOnContent}
 					>
 						<LayersIcon />
@@ -88,7 +96,7 @@ const PageNavigation = ({ children }: PageNavigationProps) => {
 					</Link>
 					<Link
 						href="/ama"
-						className="transition-color flex w-full flex-row items-center justify-start gap-4 rounded px-3 py-1 text-sm duration-300 ease-in-out hover:bg-background hover:text-primary"
+						className="transition-color flex w-full flex-row items-center justify-start gap-4 rounded px-3 py-1 font-medium duration-300 ease-in-out hover:bg-background hover:text-primary"
 						onClick={handleClickOnContent}
 					>
 						<Pencil2Icon />
@@ -96,7 +104,7 @@ const PageNavigation = ({ children }: PageNavigationProps) => {
 					</Link>
 					<Link
 						href="/bookmarks"
-						className="transition-color flex w-full flex-row items-center justify-start gap-4 rounded px-3 py-1 text-sm duration-300 ease-in-out hover:bg-background hover:text-primary"
+						className="transition-color flex w-full flex-row items-center justify-start gap-4 rounded px-3 py-1 font-medium duration-300 ease-in-out hover:bg-background hover:text-primary"
 						onClick={handleClickOnContent}
 					>
 						<BookmarkIcon /> Bookmarks
