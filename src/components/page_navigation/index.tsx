@@ -37,12 +37,12 @@ const PageNavigation = ({ children }: PageNavigationProps) => {
 	}, [handleToggleSidebar, isSidebarOpen]);
 
 	const childrenContainerClassnames = classnames(
-		"w-full overflow-x-scroll transition-opacity ease-in-out duration-300 pt-[88px]",
+		"w-full overflow-y-auto transition-opacity ease-in-out duration-300 pt-[88px]",
 		isSidebarOpen && "opacity-25 lg:opacity-100"
 	);
 
 	const sidebarClassnames = classnames(
-		"px-4 w-72 flex-col bg-lightBackground lg:flex-grow-0 lg:flex-shrink-0 max-lg:fixed max-lg:top-0 max-lg:z-10 h-screen",
+		"px-4 w-64 flex-col bg-lightBackground lg:flex-grow-0 lg:flex-shrink-0 max-lg:fixed max-lg:top-0 max-lg:z-10 h-screen",
 		!isSidebarOpen && "left-[-300px]",
 		isSidebarOpen && "left-0"
 	);

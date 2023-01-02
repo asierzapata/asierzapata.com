@@ -32,17 +32,19 @@ function PostCard({ post }: { post: PostSummary }) {
 						height={72}
 						width={128}
 					/>
-					<div className="flex flex-1 flex-col items-start justify-between">
-						<span className="text-xl font-medium text-text group-hover:text-primary">
-							{post.title}
-						</span>
-						<span className="text-sm font-thin text-text group-hover:text-primary">
-							{format(new Date(post.publishedAt), "MMMM do, yyyy")} |{" "}
-							{post.estimatedDuration} min
-						</span>
-					</div>
-					<div>
-						<PostTypeBadge postType={post.type} />
+					<div className="flex flex-1 flex-col justify-between">
+						<div className="flex flex-row flex-wrap-reverse items-start justify-between gap-2">
+							<span className="flex-shrink truncate text-xl font-medium text-text group-hover:text-primary">
+								{post.title}
+							</span>
+							<PostTypeBadge postType={post.type} />
+						</div>
+						<div className="mt-4 sm:mt-0">
+							<span className="text-sm font-thin text-text group-hover:text-primary">
+								{format(new Date(post.publishedAt), "MMMM do, yyyy")} |{" "}
+								{post.estimatedDuration} min
+							</span>
+						</div>
 					</div>
 				</div>
 			</div>

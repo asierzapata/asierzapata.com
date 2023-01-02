@@ -18,6 +18,7 @@ import type { InferGetStaticPropsType } from "next";
 /* ====================================================== */
 
 import { getPostsUseCase } from "@/server/modules/posts/get_posts_use_case";
+import { GitHubLogoIcon, TwitterLogoIcon } from "@radix-ui/react-icons";
 
 export const getStaticProps = async () => {
 	const posts = await getPostsUseCase(5, 0);
@@ -35,8 +36,8 @@ export const getStaticProps = async () => {
 
 function Home({ posts }: InferGetStaticPropsType<typeof getStaticProps>) {
 	return (
-		<main>
-			<div className="mb-6 flex w-full flex-col-reverse items-center justify-around gap-8 px-12 py-6 lg:flex-row">
+		<main className="m-auto w-10/12 md:w-5/6 lg:w-4/6 xl:w-3/6">
+			<div className="mb-6 flex w-full flex-col-reverse items-center justify-around gap-8 py-6 lg:flex-row">
 				<div className="flex flex-col items-center justify-center">
 					<h1
 						className="
@@ -60,16 +61,28 @@ function Home({ posts }: InferGetStaticPropsType<typeof getStaticProps>) {
 							Edpuzzle
 						</a>
 					</h2>
-					<Link
-						href="/posts"
-						className="rounded bg-darkPrimary px-4 py-2 font-semibold text-background transition-colors ease-in hover:bg-primary"
-					>
-						Discover my blog here
-					</Link>
+					<h4 className="mb-4 text-center text-lg">Contact with me through</h4>
+					<div className="flex flex-row items-center justify-between gap-4">
+						<Link
+							href="https://twitter.com/intent/tweet?text=%40asierzapata"
+							target="_blank"
+							rel="noopener noreferrer"
+							className="flex items-center justify-between gap-3 rounded bg-darkPrimary px-4 py-2 font-semibold text-background transition-colors ease-in hover:bg-primary"
+						>
+							<TwitterLogoIcon /> Twitter
+						</Link>
+						<Link
+							href="https://github.com/asierzapata"
+							target="_blank"
+							rel="noopener noreferrer"
+							className="flex items-center justify-between gap-3 rounded bg-darkPrimary px-4 py-2 font-semibold text-background transition-colors ease-in hover:bg-primary"
+						>
+							<GitHubLogoIcon /> GitHub
+						</Link>
+					</div>
 				</div>
 				<div className="rounded-lg bg-text shadow-2xl">
 					<Image
-						// className="h-60 md:h-80"
 						src={FaceDrawing}
 						alt="Asier Zapata Drawn Portrait"
 						width={240}
@@ -77,7 +90,7 @@ function Home({ posts }: InferGetStaticPropsType<typeof getStaticProps>) {
 					/>
 				</div>
 			</div>
-			<div className="w-full px-12 py-6">
+			<div className="w-full py-6">
 				<h1 className="mb-8 text-left text-3xl font-bold text-darkPrimary">
 					Latest Posts
 				</h1>
