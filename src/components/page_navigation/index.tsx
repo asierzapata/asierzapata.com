@@ -37,18 +37,18 @@ const PageNavigation = ({ children }: PageNavigationProps) => {
 	}, [handleToggleSidebar, isSidebarOpen]);
 
 	const childrenContainerClassnames = classnames(
-		"w-full overflow-y-auto transition-opacity ease-in-out duration-300 pt-[88px]",
+		"w-full h-full max-h-full transition-opacity ease-in-out duration-300",
 		isSidebarOpen && "opacity-25 lg:opacity-100"
 	);
 
 	const sidebarClassnames = classnames(
-		"px-4 w-64 flex-col bg-lightBackground lg:flex-grow-0 lg:flex-shrink-0 max-lg:fixed max-lg:top-0 max-lg:z-10 h-screen",
+		"px-4 w-64 flex-col bg-lightBackground lg:flex-grow-0 lg:flex-shrink-0 max-lg:absolute max-lg:top-0 max-lg:z-20 h-screen",
 		!isSidebarOpen && "left-[-300px]",
 		isSidebarOpen && "left-0"
 	);
 
 	return (
-		<div className="flex max-h-screen min-h-full w-full flex-col lg:flex-row">
+		<div className="flex max-h-screen min-h-full w-full flex-row">
 			<motion.nav layout className={sidebarClassnames}>
 				<div className="flex flex-row items-center justify-start py-5 lg:px-6 ">
 					<button
@@ -112,19 +112,24 @@ const PageNavigation = ({ children }: PageNavigationProps) => {
 					</Link> */}
 				</div>
 			</motion.nav>
-			<div
-				className="fixed w-full py-5 px-6 text-xl lg:hidden"
-				onClick={handleClickOnContent}
-			>
-				<button onClick={handleToggleSidebar}>
-					<HamburgerMenuIcon />
-				</button>
-			</div>
-			<div
-				className={childrenContainerClassnames}
-				onClick={handleClickOnContent}
-			>
-				{children}
+			<div className="flex h-full max-h-screen w-full flex-col">
+				<div
+					className="flex flex-row items-center justify-between border-b-2 border-b-lightBackground bg-background py-5 px-5 text-xl"
+					onClick={handleClickOnContent}
+				>
+					<button
+						onClick={handleToggleSidebar}
+						className="rounded px-3 py-1 text-sm hover:bg-lightBackground hover:text-primary lg:hidden"
+					>
+						<HamburgerMenuIcon />
+					</button>
+				</div>
+				<div
+					className={childrenContainerClassnames}
+					onClick={handleClickOnContent}
+				>
+					{children}
+				</div>
 			</div>
 		</div>
 	);
