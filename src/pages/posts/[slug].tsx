@@ -67,14 +67,6 @@ export default function PostWithId({
 	content,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
 	return (
-		// <main className="mx-auto w-full py-6 md:w-10/12 lg:w-9/12 xl:w-7/12 2xl:w-5/12">
-		<main>
-			<PostFeed
-				posts={posts}
-				selectedPost={post}
-				selectedPostContent={content}
-			/>
-		</main>
-		// </main>
+		<PostFeed posts={posts} selectedPost={post} selectedPostContent={content} />
 	);
 }

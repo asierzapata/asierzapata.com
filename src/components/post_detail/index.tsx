@@ -135,8 +135,8 @@ const PostDetail = ({
 	);
 
 	return (
-		<main className="mx-auto w-full py-6 md:w-11/12 lg:w-10/12 xl:w-8/12 2xl:w-7/12">
-			<h1 className="mb-2 px-12 text-4xl font-bold">{post.title}</h1>
+		<div className="mx-auto h-full w-full md:w-11/12 lg:w-10/12 xl:w-9/12 2xl:w-8/12">
+			<h1 className="mt-12 mb-2 px-12 text-4xl font-bold">{post.title}</h1>
 			<h3 className="mb-8 px-12 font-thin">
 				{formatedPublishedDate} | {post.estimatedDuration} min
 			</h3>
@@ -149,7 +149,7 @@ const PostDetail = ({
 				sizes="100vw"
 			/>
 
-			<article className="mb-8 px-12 selection:bg-darkPrimary selection:text-background">
+			<article className="mb-12 px-12 selection:bg-darkPrimary selection:text-background">
 				<Component
 					components={{
 						// https://mdxjs.com/docs/using-mdx/#components
@@ -214,7 +214,7 @@ const PostDetail = ({
 					}}
 				/>
 			</article>
-		</main>
+		</div>
 	);
 };
 

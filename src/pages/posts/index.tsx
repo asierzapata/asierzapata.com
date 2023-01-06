@@ -33,9 +33,5 @@ export const getStaticProps = async () => {
 export default function Posts({
 	posts,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
-	return (
-		<main>
-			<PostFeed posts={posts} />
-		</main>
-	);
+	return <PostFeed posts={posts} />;
 }
