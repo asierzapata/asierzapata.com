@@ -16,6 +16,8 @@ import { getMDXComponent } from "mdx-bundler/client";
 
 import SyntaxHighlighter from "react-syntax-highlighter";
 import Image from "next/image";
+import Link from "next/link";
+import { ArrowLeftIcon } from "@radix-ui/react-icons";
 
 /* ====================================================== */
 /*                         Styles                         */
@@ -135,85 +137,89 @@ const PostDetail = ({
 	);
 
 	return (
-		<div className="mx-auto h-full w-full md:w-11/12 lg:w-10/12 xl:w-9/12 2xl:w-8/12">
-			<h1 className="mt-12 mb-2 px-12 text-4xl font-bold">{post.title}</h1>
-			<h3 className="mb-8 px-12 font-thin">
-				{formatedPublishedDate} | {post.estimatedDuration} min
-			</h3>
-			<Image
-				className="mb-8 aspect-auto h-auto w-full rounded-md"
-				src={post.mainImage}
-				alt={post.title}
-				width={700}
-				height={475}
-				sizes="100vw"
-			/>
-
-			<article className="mb-12 px-12 selection:bg-darkPrimary selection:text-background">
-				<Component
-					components={{
-						// https://mdxjs.com/docs/using-mdx/#components
-						// https://mdxjs.com/table-of-components/
-						h1: (props) => <h1 className="my-6 text-3xl" {...props} />,
-						h2: (props) => <h2 className="my-6 text-2xl" {...props} />,
-						h3: (props) => <h3 className="my-6 text-xl" {...props} />,
-						h4: (props) => <h4 className="my-6 text-lg" {...props} />,
-						p: (props) => (
-							<p className="my-6 text-justify indent-8" {...props} />
-						),
-						// rome-ignore lint/a11y/useAnchorContent: on the props it is included
-						a: (props) => (
-							<a
-								className="text-primary underline"
-								target="_blank"
-								rel="noopener noreferrer"
-								{...props}
-							/>
-						),
-						strong: (props) => (
-							<strong className="font-bold text-primary" {...props} />
-						),
-						em: (props) => <em className="text-primary" {...props} />,
-						ul: (props) => (
-							<ul
-								className="my-4 list-inside list-disc marker:text-primary"
-								{...props}
-							/>
-						),
-						ol: (props) => (
-							<ol
-								className="my-4 list-decimal marker:text-primary"
-								{...props}
-							/>
-						),
-						blockquote: (props) => (
-							<blockquote
-								className="text-light my-4 rounded border-l-4 border-l-primary bg-lightBackground bg-opacity-50 py-4 px-6"
-								{...props}
-							/>
-						),
-						code: ({ className, children, ...props }) => {
-							const match = /language-(\w+)/.exec(className || "");
-							return match ? (
-								<div className="my-4">
-									<SyntaxHighlighter
-										language={match[1]}
-										PreTag="div"
-										customStyle={codeStyle}
-									>
-										{children as string}
-									</SyntaxHighlighter>
-								</div>
-							) : (
-								<code
-									className={`${className} bg-dark rounded px-0.5 py-0.5 text-primary`}
+		<div className="max-h-screen w-full overflow-y-auto">
+			<div className="mx-auto w-full md:w-10/12 lg:w-8/12 xl:w-7/12 2xl:w-6/12 pt-12">
+				<Link href="/posts" className="font-light text-sm flex gap-2 items-center justify-start hover:text-primary active:text-primary">
+					<ArrowLeftIcon /> See other posts
+				</Link>
+				<h1 className="mt-8 mb-2 px-12 text-4xl font-bold">{post.title}</h1>
+				<h3 className="mb-8 px-12 font-thin">
+					{formatedPublishedDate} | {post.estimatedDuration} min
+				</h3>
+				<Image
+					className="mb-8 aspect-auto h-auto mx-auto rounded-md"
+					src={post.mainImage}
+					alt={post.title}
+					width={700}
+					height={475}
+					sizes="100vw"
+				/>
+				<article className="mb-12 px-12 selection:bg-darkPrimary selection:text-background">
+					<Component
+						components={{
+							// https://mdxjs.com/docs/using-mdx/#components
+							// https://mdxjs.com/table-of-components/
+							h1: (props) => <h1 className="my-6 text-3xl" {...props} />,
+							h2: (props) => <h2 className="my-6 text-2xl" {...props} />,
+							h3: (props) => <h3 className="my-6 text-xl" {...props} />,
+							h4: (props) => <h4 className="my-6 text-lg" {...props} />,
+							p: (props) => (
+								<p className="my-6 text-justify indent-8" {...props} />
+							),
+							// rome-ignore lint/a11y/useAnchorContent: on the props it is included
+							a: (props) => (
+								<a
+									className="text-primary underline"
+									target="_blank"
+									rel="noopener noreferrer"
 									{...props}
 								/>
-							);
-						},
-					}}
-				/>
-			</article>
+							),
+							strong: (props) => (
+								<strong className="font-bold text-primary" {...props} />
+							),
+							em: (props) => <em className="text-primary" {...props} />,
+							ul: (props) => (
+								<ul
+									className="my-4 list-inside list-disc marker:text-primary"
+									{...props}
+								/>
+							),
+							ol: (props) => (
+								<ol
+									className="my-4 list-decimal marker:text-primary"
+									{...props}
+								/>
+							),
+							blockquote: (props) => (
+								<blockquote
+									className="text-light my-4 rounded border-l-4 border-l-primary bg-lightBackground bg-opacity-50 py-4 px-6"
+									{...props}
+								/>
+							),
+							code: ({ className, children, ...props }) => {
+								const match = /language-(\w+)/.exec(className || "");
+								return match ? (
+									<div className="my-4">
+										<SyntaxHighlighter
+											language={match[1]}
+											PreTag="div"
+											customStyle={codeStyle}
+										>
+											{children as string}
+										</SyntaxHighlighter>
+									</div>
+								) : (
+									<code
+										className={`${className} bg-dark rounded px-0.5 py-0.5 text-primary`}
+										{...props}
+									/>
+								);
+							},
+						}}
+					/>
+				</article>
+			</div>
 		</div>
 	);
 };

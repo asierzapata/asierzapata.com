@@ -19,7 +19,8 @@ export async function getPostsUseCase({
 		"type": type->slug.current,
 		estimatedDuration,
 		"mainImage": mainImage.asset->url,
-		publishedAt
+		publishedAt,
+		body
 	}`;
 	if (postType) {
 		query = `*[_type == "post" && type->slug.current == $postType && _id > $lastId] | order(_id) [0...$limit] {
@@ -30,7 +31,8 @@ export async function getPostsUseCase({
 			"type": type->slug.current,
 			estimatedDuration,
 			"mainImage": mainImage.asset->url,
-			publishedAt
+			publishedAt,
+			body
 		}`;
 	}
 	const posts = await getClient().fetch(query, {

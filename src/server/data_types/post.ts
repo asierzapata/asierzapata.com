@@ -32,7 +32,10 @@ const PostSchema = z.object({
 	body: z.string(),
 });
 
-const PostSummarySchema = z.object(commonPost);
+const PostSummarySchema = z.object({
+	...commonPost,
+	body: z.string(),
+});
 
 export function parsePosts(posts: unknown[]): Post[] {
 	return posts.map((post) => parsePost(post));

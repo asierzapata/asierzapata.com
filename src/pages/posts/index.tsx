@@ -31,9 +31,7 @@ export async function getServerSideProps(
 	context: GetServerSidePropsContext<{ slug: string }>
 ) {
 	const posts = await getPostsUseCase({
-		postType: !_.isEmpty(context.query.filterPostType)
-			? parsePostType(context.query.filterPostType)
-			: undefined,
+		postType: !_.isEmpty(context.query.filterPostType) ? parsePostType(context.query.filterPostType) : undefined,
 	});
 
 	return {
