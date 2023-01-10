@@ -21,7 +21,7 @@ import { getPostsUseCase } from "@/server/modules/posts/get_posts_use_case";
 import { GitHubLogoIcon, TwitterLogoIcon } from "@radix-ui/react-icons";
 
 export const getStaticProps = async () => {
-	const posts = await getPostsUseCase(5, 0);
+	const posts = await getPostsUseCase({ limit: 5, cursor: 0 });
 
 	return {
 		props: {

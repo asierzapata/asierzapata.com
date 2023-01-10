@@ -1,6 +1,5 @@
 import React from "react";
 
-import { z } from "zod";
 import { useRouter } from "next/router";
 
 export const useQueryParam = <T extends string>(
