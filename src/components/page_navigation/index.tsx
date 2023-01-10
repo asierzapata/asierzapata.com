@@ -11,7 +11,6 @@ import {
 	HomeIcon,
 	FileTextIcon,
 	LayersIcon,
-	Pencil2Icon,
 	// BookmarkIcon,
 	HamburgerMenuIcon,
 } from "@radix-ui/react-icons";
@@ -78,14 +77,6 @@ const NavBar = ({
 				>
 					<LayersIcon />
 					Stack
-				</Link>
-				<Link
-					href="/ama"
-					className="transition-color flex w-full flex-row items-center justify-start gap-4 rounded px-3 py-1 font-medium duration-300 ease-in-out hover:bg-background hover:text-primary"
-					onClick={onContentClicked}
-				>
-					<Pencil2Icon />
-					AMA
 				</Link>
 				{/* I will keep this page onhold */}
 				{/* <Link
