@@ -3,9 +3,9 @@
 @tailwind utilities;
 
 @layer base {
-  body {
-    @apply bg-background text-text;
-  }
+	body {
+		@apply bg-background text-text;
+	}
 }
 
 #__next {

@@ -1,29 +1,51 @@
+import React from "react";
+
+import _ from "lodash";
+
+import { useQueryParam } from "@/lib/query_params";
+
 /* ====================================================== */
 /*                      Components                       */
 /* ====================================================== */
 
-import { PostCard } from "@/components/post_card";
+import { PostFeed } from "@/components/post_feed";
 
 /* ====================================================== */
-/*                        Types                          */
+/*                        Types                           */
 /* ====================================================== */
 
-import type { InferGetStaticPropsType } from "next";
+import type {
+	GetServerSidePropsContext,
+	InferGetServerSidePropsType,
+} from "next";
+import type { PostFeedFilters } from "@/components/post_feed";
 
 /* ====================================================== */
 /*                     Data Loading                      */
 /* ====================================================== */
 
 import { getPostsUseCase } from "@/server/modules/posts/get_posts_use_case";
+import { parsePostType } from "@/server/data_types/post";
 
-export const getStaticProps = async () => {
-	const posts = await getPostsUseCase();
+export async function getServerSideProps(
+	context: GetServerSidePropsContext<{ slug: string }>
+) {
+	const posts = await getPostsUseCase({
+		postType: !_.isEmpty(context.query.filterPostType)
+			? parsePostType(context.query.filterPostType)
+			: undefined,
+	});
 
 	return {
 		props: {
 			posts,
 		},
 	};
+}
+
+const parseFilterPostType = (value: unknown) => {
+	if (!value || value === "") return "";
+	return parsePostType(value);
 };
 
 /* ====================================================== */
@@ -32,14 +54,25 @@ export const getStaticProps = async () => {
 
 export default function Posts({
 	posts,
-}: InferGetStaticPropsType<typeof getStaticProps>) {
+}: InferGetServerSidePropsType<typeof getServerSideProps>) {
+	const [filterPostType, setFilterPostType] = useQueryParam<PostFeedFilters>(
+		"filterPostType",
+		parseFilterPostType,
+		""
+	);
+
+	const handlePostFilterSelected = React.useCallback(
+		(filterPostType: PostFeedFilters) => {
+			setFilterPostType(filterPostType);
+		},
+		[setFilterPostType]
+	);
+
 	return (
-		<main className="p-6">
-			<ul className="grid auto-rows-max grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
-				{posts.map((post) => (
-					<PostCard key={post.slug} post={post} />
-				))}
-			</ul>
-		</main>
+		<PostFeed
+			posts={posts}
+			filterPostType={filterPostType}
+			onPostFilterSelected={handlePostFilterSelected}
+		/>
 	);
 }
