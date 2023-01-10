@@ -6,6 +6,7 @@ export const PostTypesArray = [
 	"tutorial",
 	"book-review",
 ] as const;
+
 export const PostTypesDisplayMapping = {
 	article: "Article",
 	snippet: "Snippet",
@@ -47,6 +48,10 @@ export function parsePostSummaries(postSummaries: unknown[]): PostSummary[] {
 
 export function parsePostSummary(postSummary: unknown): PostSummary {
 	return PostSummarySchema.parse(postSummary);
+}
+
+export function parsePostType(postType: unknown): PostType {
+	return PostTypesEnum.parse(postType);
 }
 
 export type Post = typeof PostSchema._type;
