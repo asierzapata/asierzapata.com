@@ -10,7 +10,7 @@
 
 @layer components {
 	.gradient-text {
-		@apply animate-text bg-gradient-to-br from-secondary to-primary text-transparent bg-clip-text
+		@apply animate-text bg-gradient-to-br from-secondary to-primary bg-clip-text text-transparent;
 	}
 }
 
@@ -30,7 +30,7 @@
 	@apply border-lightBackground;
 	box-shadow: 0 16px 70px rgb(0 0 0 / 20%);
 	transition: transform 100ms ease;
-	@apply backdrop-blur-lg bg-transparent;
+	@apply bg-transparent backdrop-blur-lg;
 }
 
 [cmdk-input] {
@@ -72,7 +72,6 @@
 	@apply text-primary;
 }
 
-
 [cmdk-item][aria-disabled='true'] {
 	/*color: hsl(0, 0%, 31.2%);*/
 	cursor: not-allowed;
@@ -92,7 +91,6 @@ svg {
 	width: 18px;
 	height: 18px;
 }
-
 
 [cmdk-list] {
 	height: min(330px);

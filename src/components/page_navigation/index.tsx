@@ -1,36 +1,36 @@
-import React from "react";
+import React from 'react'
 
-import { classnames } from "@/lib/classnames";
+import { classnames } from '@/lib/classnames'
 
 /* ====================================================== */
 /*                       Components                      */
 /* ====================================================== */
 
-import Link from "next/link";
+import Link from 'next/link'
 import {
 	HomeIcon,
 	FileTextIcon,
 	LayersIcon,
 	// BookmarkIcon,
-	HamburgerMenuIcon,
-} from "@radix-ui/react-icons";
-import { motion } from "framer-motion";
-import { SidebarContext } from "./sidebar_context";
+	HamburgerMenuIcon
+} from '@radix-ui/react-icons'
+import { motion } from 'framer-motion'
+import { SidebarContext } from './sidebar_context'
 
 /* ====================================================== */
 /*                    Implementation                     */
 /* ====================================================== */
 
 type PageNavigationProps = {
-	children: React.ReactNode;
-};
+	children: React.ReactNode
+}
 
 const NavBar = ({
 	onToggleSidebar,
-	onContentClicked,
+	onContentClicked
 }: {
-	onToggleSidebar: () => void;
-	onContentClicked: () => void;
+	onToggleSidebar: () => void
+	onContentClicked: () => void
 }) => {
 	return (
 		<>
@@ -88,36 +88,36 @@ const NavBar = ({
 					</Link> */}
 			</div>
 		</>
-	);
-};
+	)
+}
 
 const PageNavigation = ({ children }: PageNavigationProps) => {
-	const [isSidebarOpen, setIsSidebarOpen] = React.useState(false);
+	const [isSidebarOpen, setIsSidebarOpen] = React.useState(false)
 
 	const handleToggleSidebar = React.useCallback(() => {
-		setIsSidebarOpen((_isSidebarOpen) => !_isSidebarOpen);
-	}, []);
+		setIsSidebarOpen(_isSidebarOpen => !_isSidebarOpen)
+	}, [])
 
 	const handleContentClicked = React.useCallback(() => {
-		if (isSidebarOpen) handleToggleSidebar();
-	}, [handleToggleSidebar, isSidebarOpen]);
+		if (isSidebarOpen) handleToggleSidebar()
+	}, [handleToggleSidebar, isSidebarOpen])
 
 	const childrenContainerClassnames = classnames(
-		"w-full h-full transition-opacity ease-in-out duration-300",
-		isSidebarOpen && "opacity-25 lg:opacity-100"
-	);
+		'w-full h-full transition-opacity ease-in-out duration-300',
+		isSidebarOpen && 'opacity-25 lg:opacity-100'
+	)
 
 	const sidebarClassnames = classnames(
-		"px-4 w-64 flex-col bg-lightBackground absolute top-0 z-20 min-h-screen",
-		!isSidebarOpen && "left-[-300px]",
-		isSidebarOpen && "left-0"
-	);
+		'px-4 w-64 flex-col bg-lightBackground absolute top-0 z-20 min-h-screen',
+		!isSidebarOpen && 'left-[-300px]',
+		isSidebarOpen && 'left-0'
+	)
 
 	const sidebarContextValue = React.useMemo(() => {
 		return {
-			toggleSidebar: handleToggleSidebar,
-		};
-	}, [handleToggleSidebar]);
+			toggleSidebar: handleToggleSidebar
+		}
+	}, [handleToggleSidebar])
 
 	return (
 		<SidebarContext.Provider value={sidebarContextValue}>
@@ -142,11 +142,11 @@ const PageNavigation = ({ children }: PageNavigationProps) => {
 				</div>
 			</div>
 		</SidebarContext.Provider>
-	);
-};
+	)
+}
 
 /* ====================================================== */
 /*                      Public API                        */
 /* ====================================================== */
 
-export { PageNavigation };
+export { PageNavigation }

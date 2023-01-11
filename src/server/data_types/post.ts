@@ -1,20 +1,20 @@
-import { z } from "zod";
+import { z } from 'zod'
 
 export const PostTypesArray = [
-	"article",
-	"snippet",
-	"tutorial",
-	"book-review",
-] as const;
+	'article',
+	'snippet',
+	'tutorial',
+	'book-review'
+] as const
 
 export const PostTypesDisplayMapping = {
-	article: "Article",
-	snippet: "Snippet",
-	tutorial: "Tutorial",
-	"book-review": "Book review",
-};
+	article: 'Article',
+	snippet: 'Snippet',
+	tutorial: 'Tutorial',
+	'book-review': 'Book review'
+}
 
-const PostTypesEnum = z.enum(PostTypesArray);
+const PostTypesEnum = z.enum(PostTypesArray)
 
 const commonPost = {
 	_id: z.string(),
@@ -24,38 +24,38 @@ const commonPost = {
 	authorName: z.string(),
 	mainImage: z.string(),
 	publishedAt: z.string(),
-	type: PostTypesEnum,
-};
+	type: PostTypesEnum
+}
 
 const PostSchema = z.object({
 	...commonPost,
-	body: z.string(),
-});
+	body: z.string()
+})
 
 const PostSummarySchema = z.object({
 	...commonPost
-});
+})
 
 export function parsePosts(posts: unknown[]): Post[] {
-	return posts.map((post) => parsePost(post));
+	return posts.map(post => parsePost(post))
 }
 
 export function parsePost(post: unknown): Post {
-	return PostSchema.parse(post);
+	return PostSchema.parse(post)
 }
 
 export function parsePostSummaries(postSummaries: unknown[]): PostSummary[] {
-	return postSummaries.map((postSummary) => parsePostSummary(postSummary));
+	return postSummaries.map(postSummary => parsePostSummary(postSummary))
 }
 
 export function parsePostSummary(postSummary: unknown): PostSummary {
-	return PostSummarySchema.parse(postSummary);
+	return PostSummarySchema.parse(postSummary)
 }
 
 export function parsePostType(postType: unknown): PostType {
-	return PostTypesEnum.parse(postType);
+	return PostTypesEnum.parse(postType)
 }
 
-export type Post = typeof PostSchema._type;
-export type PostSummary = typeof PostSummarySchema._type;
-export type PostType = z.infer<typeof PostTypesEnum>;
+export type Post = typeof PostSchema._type
+export type PostSummary = typeof PostSummarySchema._type
+export type PostType = z.infer<typeof PostTypesEnum>

@@ -1,5 +1,5 @@
-import { getClient } from "@/server/services/sanity/client";
-import { parsePost } from "@/server/data_types/post";
+import { getClient } from '@/server/services/sanity/client'
+import { parsePost } from '@/server/data_types/post'
 
 export async function getPostBySlugUseCase(slug: string) {
 	const post = await getClient().fetch(
@@ -15,7 +15,7 @@ export async function getPostBySlugUseCase(slug: string) {
 			body
 		}`,
 		{ slug }
-	);
+	)
 
-	return parsePost(post[0]);
+	return parsePost(post[0])
 }

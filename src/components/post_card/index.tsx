@@ -1,9 +1,9 @@
-import type { PostSummary, PostType } from "@/server/data_types/post";
+import type { PostSummary, PostType } from '@/server/data_types/post'
 
-import Image from "next/image";
-import Link from "next/link";
-import { format } from "date-fns";
-import { classnames } from "@/lib/classnames";
+import Image from 'next/image'
+import Link from 'next/link'
+import { format } from 'date-fns'
+import { classnames } from '@/lib/classnames'
 
 // TODO: implement correct scaling of images https://hdoro.dev/performant-sanity-io-images and separate it into a component
 
@@ -41,7 +41,7 @@ function PostCard({ post }: { post: PostSummary }) {
 						</div>
 						<div className="mt-4 sm:mt-0">
 							<span className="text-sm font-thin text-text group-hover:text-primary">
-								{format(new Date(post.publishedAt), "MMMM do, yyyy")} |{" "}
+								{format(new Date(post.publishedAt), 'MMMM do, yyyy')} |{' '}
 								{post.estimatedDuration} min
 							</span>
 						</div>
@@ -49,26 +49,26 @@ function PostCard({ post }: { post: PostSummary }) {
 				</div>
 			</div>
 		</Link>
-	);
+	)
 }
 
 function PostTypeBadge({ postType }: { postType: PostType }) {
 	const badgeClassname = classnames(
-		"rounded px-2 py-1 text-xs font-extralight group-hover:bg-primary",
-		postType === "article" && "bg-primary",
-		postType === "snippet" && "bg-darkPrimary",
-		postType === "tutorial" && "bg-secondary",
-		postType === "book-review" && "bg-darkText text-background"
-	);
+		'rounded px-2 py-1 text-xs font-extralight group-hover:bg-primary',
+		postType === 'article' && 'bg-primary',
+		postType === 'snippet' && 'bg-darkPrimary',
+		postType === 'tutorial' && 'bg-secondary',
+		postType === 'book-review' && 'bg-darkText text-background'
+	)
 
 	return (
 		<span className={badgeClassname}>
-			{postType === "article" && "Article"}
-			{postType === "snippet" && "Snippet"}
-			{postType === "tutorial" && "Tutorial"}
-			{postType === "book-review" && "Book Review"}
+			{postType === 'article' && 'Article'}
+			{postType === 'snippet' && 'Snippet'}
+			{postType === 'tutorial' && 'Tutorial'}
+			{postType === 'book-review' && 'Book Review'}
 		</span>
-	);
+	)
 }
 
-export { PostCard };
+export { PostCard }

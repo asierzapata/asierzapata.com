@@ -1,50 +1,50 @@
-import React from "react";
+import React from 'react'
 
-import { useRouter } from "next/router";
+import { useRouter } from 'next/router'
 
-import { useCopyToClipboard } from "@/lib/clipboard/use_copy_to_clipboard";
-import { api } from "@/utils/trpc";
+import { useCopyToClipboard } from '@/lib/clipboard/use_copy_to_clipboard'
+import { api } from '@/utils/trpc'
 
 /* ====================================================== */
 /*                       Components                      */
 /* ====================================================== */
 
-import { Command } from "cmdk";
+import { Command } from 'cmdk'
 import {
 	ArrowRightIcon,
 	CopyIcon,
 	FileTextIcon,
 	GitHubLogoIcon,
 	MagnifyingGlassIcon,
-	TwitterLogoIcon,
-} from "@radix-ui/react-icons";
-import { Toast } from "@/components/toast";
+	TwitterLogoIcon
+} from '@radix-ui/react-icons'
+import { Toast } from '@/components/toast'
 
 /* ====================================================== */
 /*                    Implementation                      */
 /* ====================================================== */
 
 type GeneralSearchProps = {
-	onSearchPosts: () => void;
-	onCloseCommandPalette: () => void;
-};
+	onSearchPosts: () => void
+	onCloseCommandPalette: () => void
+}
 
 const GeneralSearch = ({
 	onSearchPosts,
-	onCloseCommandPalette,
+	onCloseCommandPalette
 }: GeneralSearchProps) => {
-	const router = useRouter();
+	const router = useRouter()
 
-	const [showCopiedToast, setShowCopiedToast] = React.useState(false);
+	const [showCopiedToast, setShowCopiedToast] = React.useState(false)
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars
-	const [_, copyUrlToClipboard] = useCopyToClipboard();
+	const [_, copyUrlToClipboard] = useCopyToClipboard()
 
-	const latestPosts = api.post.getLatestPosts.useQuery({ numberOfPosts: 5 });
+	const latestPosts = api.post.getLatestPosts.useQuery({ numberOfPosts: 5 })
 
-	const isHomePage = router.pathname === "/";
-	const isPostsPage = router.pathname === "/posts";
-	const isPostPage = router.pathname === "/posts/[slug]";
-	const isStackPage = router.pathname === "/stack";
+	const isHomePage = router.pathname === '/'
+	const isPostsPage = router.pathname === '/posts'
+	const isPostPage = router.pathname === '/posts/[slug]'
+	const isStackPage = router.pathname === '/stack'
 
 	return (
 		<>
@@ -58,12 +58,12 @@ const GeneralSearch = ({
 					{latestPosts.isLoading && (
 						<Command.Loading>Fetching latest Posts…</Command.Loading>
 					)}
-					{latestPosts.data?.map((post) => (
+					{latestPosts.data?.map(post => (
 						<Command.Item
 							key={post._id}
 							onSelect={() => {
-								router.push(`/posts/${post.slug}`);
-								onCloseCommandPalette();
+								router.push(`/posts/${post.slug}`)
+								onCloseCommandPalette()
 							}}
 						>
 							<FileTextIcon /> {post.title}
@@ -74,8 +74,8 @@ const GeneralSearch = ({
 				<Command.Group heading="Navigation">
 					<Command.Item
 						onSelect={() => {
-							router.back();
-							onCloseCommandPalette();
+							router.back()
+							onCloseCommandPalette()
 						}}
 					>
 						<ArrowRightIcon /> Go Back
@@ -83,8 +83,8 @@ const GeneralSearch = ({
 					{!isHomePage && (
 						<Command.Item
 							onSelect={() => {
-								router.push("/");
-								onCloseCommandPalette();
+								router.push('/')
+								onCloseCommandPalette()
 							}}
 						>
 							<ArrowRightIcon /> Go to Home
@@ -93,8 +93,8 @@ const GeneralSearch = ({
 					{!isPostsPage && (
 						<Command.Item
 							onSelect={() => {
-								router.push("/posts");
-								onCloseCommandPalette();
+								router.push('/posts')
+								onCloseCommandPalette()
 							}}
 						>
 							<ArrowRightIcon /> Go to Posts
@@ -103,8 +103,8 @@ const GeneralSearch = ({
 					{!isStackPage && (
 						<Command.Item
 							onSelect={() => {
-								router.push("/stack");
-								onCloseCommandPalette();
+								router.push('/stack')
+								onCloseCommandPalette()
 							}}
 						>
 							<ArrowRightIcon /> Go to Stack
@@ -115,8 +115,8 @@ const GeneralSearch = ({
 				<Command.Group heading="Actions">
 					<Command.Item
 						onSelect={async () => {
-							await copyUrlToClipboard(window.location.toString());
-							setShowCopiedToast(true);
+							await copyUrlToClipboard(window.location.toString())
+							setShowCopiedToast(true)
 						}}
 					>
 						<CopyIcon /> Copy Current URL
@@ -129,7 +129,7 @@ const GeneralSearch = ({
 									`https://twitter.com/intent/tweet?text=${encodeURIComponent(
 										`@asierzapata ${window.location.toString()}`
 									)}`,
-									"_blank"
+									'_blank'
 								)
 							}
 						>
@@ -142,8 +142,8 @@ const GeneralSearch = ({
 					<Command.Item
 						onSelect={() =>
 							window.open(
-								"https://twitter.com/intent/tweet?text=%40asierzapata",
-								"_blank"
+								'https://twitter.com/intent/tweet?text=%40asierzapata',
+								'_blank'
 							)
 						}
 					>
@@ -151,7 +151,7 @@ const GeneralSearch = ({
 					</Command.Item>
 					<Command.Item
 						onSelect={() =>
-							window.open("https://github.com/asierzapata", "_blank")
+							window.open('https://github.com/asierzapata', '_blank')
 						}
 					>
 						<GitHubLogoIcon /> GitHub
@@ -174,11 +174,11 @@ const GeneralSearch = ({
 				</Toast>
 			)}
 		</>
-	);
-};
+	)
+}
 
 /* ====================================================== */
 /*                      Public API                        */
 /* ====================================================== */
 
-export { GeneralSearch };
+export { GeneralSearch }

@@ -1,34 +1,34 @@
-import React from "react";
-import { createPortal } from "react-dom";
+import React from 'react'
+import { createPortal } from 'react-dom'
 
 /* ====================================================== */
 /*                     Implementation                     */
 /* ====================================================== */
 
-import * as ToastPrimitive from "@radix-ui/react-toast";
+import * as ToastPrimitive from '@radix-ui/react-toast'
 
-import { ToastActions, ToastAction } from "./toast_actions";
-import { ToastClose } from "./toast_close";
-import { ToastContent } from "./toast_content";
-import { ToastDescription } from "./toast_description";
-import { GradientBorder } from "@/components/gradient_border";
+import { ToastActions, ToastAction } from './toast_actions'
+import { ToastClose } from './toast_close'
+import { ToastContent } from './toast_content'
+import { ToastDescription } from './toast_description'
+import { GradientBorder } from '@/components/gradient_border'
 
 /* ====================================================== */
 /*                     Implementation                     */
 /* ====================================================== */
 
 const TOAST_ACCESSIBILITY_TYPE = {
-	FOREGROUND: "foreground",
-	BACKGROUND: "background",
-} as const;
+	FOREGROUND: 'foreground',
+	BACKGROUND: 'background'
+} as const
 
 type ToastProps = {
-	children: React.ReactNode;
-	duration?: number;
-	accessibilityType?: typeof TOAST_ACCESSIBILITY_TYPE[keyof typeof TOAST_ACCESSIBILITY_TYPE];
-	portal?: boolean;
-	onOpenChange?: (open: boolean) => void;
-};
+	children: React.ReactNode
+	duration?: number
+	accessibilityType?: typeof TOAST_ACCESSIBILITY_TYPE[keyof typeof TOAST_ACCESSIBILITY_TYPE]
+	portal?: boolean
+	onOpenChange?: (open: boolean) => void
+}
 
 const Toast = ({
 	children,
@@ -36,8 +36,8 @@ const Toast = ({
 	accessibilityType,
 	portal = false,
 	onOpenChange = () => {
-		return;
-	},
+		return
+	}
 }: ToastProps) => {
 	return (
 		<ToastPrimitive.Provider duration={duration}>
@@ -61,17 +61,17 @@ const Toast = ({
 				)}
 			{!portal && <ToastPrimitive.Viewport />}
 		</ToastPrimitive.Provider>
-	);
-};
+	)
+}
 
 /* ====================================================== */
 /*                       Public API                       */
 /* ====================================================== */
 
-Toast.Actions = ToastActions;
-Toast.Action = ToastAction;
-Toast.Close = ToastClose;
-Toast.Content = ToastContent;
-Toast.Description = ToastDescription;
+Toast.Actions = ToastActions
+Toast.Action = ToastAction
+Toast.Close = ToastClose
+Toast.Content = ToastContent
+Toast.Description = ToastDescription
 
-export { Toast };
+export { Toast }

@@ -2,33 +2,33 @@
 /*                      Components                       */
 /* ====================================================== */
 
-import Image from "next/image";
-import Link from "next/link";
-import FaceDrawing from "@/../public/face_drawing.svg";
-import { PostCard } from "@/components/post_card";
+import Image from 'next/image'
+import Link from 'next/link'
+import FaceDrawing from '@/../public/face_drawing.svg'
+import { PostCard } from '@/components/post_card'
+import { GitHubLogoIcon, TwitterLogoIcon } from '@radix-ui/react-icons'
 
 /* ====================================================== */
 /*                        Types                          */
 /* ====================================================== */
 
-import type { InferGetStaticPropsType } from "next";
+import type { InferGetStaticPropsType } from 'next'
 
 /* ====================================================== */
 /*                     Data Loading                      */
 /* ====================================================== */
 
-import { getPostsUseCase } from "@/server/modules/posts/get_posts_use_case";
-import { GitHubLogoIcon, TwitterLogoIcon } from "@radix-ui/react-icons";
+import { getPostsUseCase } from '@/server/modules/posts/get_posts_use_case'
 
 export const getStaticProps = async () => {
-	const posts = await getPostsUseCase({ limit: 5, cursor: 0 });
+	const posts = await getPostsUseCase({ limit: 5, cursor: 0 })
 
 	return {
 		props: {
-			posts,
-		},
-	};
-};
+			posts
+		}
+	}
+}
 
 /* ====================================================== */
 /*                      Component                        */
@@ -51,7 +51,7 @@ function Home({ posts }: InferGetStaticPropsType<typeof getStaticProps>) {
 						Hi! I&apos;m Asier
 					</h1>
 					<h2 className="mb-8 text-center text-xl">
-						I&apos;m a Tech Lead and Fullstack Web Developer working at{" "}
+						I&apos;m a Tech Lead and Fullstack Web Developer working at{' '}
 						<a
 							className="font-semibold hover:text-primary"
 							href="https://edpuzzle.com"
@@ -95,13 +95,13 @@ function Home({ posts }: InferGetStaticPropsType<typeof getStaticProps>) {
 					Latest Posts
 				</h1>
 				<div className="flex flex-row flex-wrap items-start justify-evenly gap-6">
-					{posts.map((post) => (
+					{posts.map(post => (
 						<PostCard key={post._id} post={post} />
 					))}
 				</div>
 			</div>
 		</main>
-	);
+	)
 }
 
-export default Home;
+export default Home

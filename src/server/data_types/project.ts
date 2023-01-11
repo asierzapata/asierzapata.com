@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from 'zod'
 
 const ProjectSchema = z.object({
 	_id: z.string(),
@@ -7,12 +7,12 @@ const ProjectSchema = z.object({
 	image: z.string(),
 	links: z.array(
 		z.object({
-			source: z.enum(["github", "web"]),
-			url: z.string().url(),
+			source: z.enum(['github', 'web']),
+			url: z.string().url()
 		})
 	),
-	createdAt: z.string(),
-});
+	createdAt: z.string()
+})
 
 export function parseProjects(projects: unknown[]): Project[] {
 	return projects.map(project => parseProject(project))

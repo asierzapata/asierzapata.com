@@ -1,7 +1,7 @@
-import type { Project } from "@/server/data_types/project";
+import type { Project } from '@/server/data_types/project'
 
-import Image from "next/image";
-import { GlobeIcon, GitHubLogoIcon } from "@radix-ui/react-icons";
+import Image from 'next/image'
+import { GlobeIcon, GitHubLogoIcon } from '@radix-ui/react-icons'
 
 function ProjectCard({ project }: { project: Project }) {
 	return (
@@ -22,7 +22,7 @@ function ProjectCard({ project }: { project: Project }) {
 			/>
 			<h4 className="mb-4 font-light italic">{project.description}</h4>
 			<div className="flex flex-row items-center justify-center gap-6">
-				{project.links.map((link) => (
+				{project.links.map(link => (
 					<a
 						key={link.url}
 						className="hover:text-primary"
@@ -30,15 +30,15 @@ function ProjectCard({ project }: { project: Project }) {
 						target="_blank"
 						rel="noopener noreferrer"
 					>
-						{link.source === "web" ? <GlobeIcon className="h-5 w-5" /> : null}
-						{link.source === "github" ? (
+						{link.source === 'web' ? <GlobeIcon className="h-5 w-5" /> : null}
+						{link.source === 'github' ? (
 							<GitHubLogoIcon className="h-5 w-5" />
 						) : null}
 					</a>
 				))}
 			</div>
 		</div>
-	);
+	)
 }
 
-export { ProjectCard };
+export { ProjectCard }

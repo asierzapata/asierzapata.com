@@ -1,5 +1,5 @@
-import { getClient } from "@/server/services/sanity/client";
-import { parseProjects } from "@/server/data_types/project";
+import { getClient } from '@/server/services/sanity/client'
+import { parseProjects } from '@/server/data_types/project'
 
 export async function getProjectsUserCase() {
 	const projects = await getClient().fetch(
@@ -11,6 +11,6 @@ export async function getProjectsUserCase() {
 			"image": image.asset->url,
 			createdAt
 		}`
-	);
+	)
 	return parseProjects(projects)
 }

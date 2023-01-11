@@ -1,10 +1,10 @@
-import React from "react";
+import React from 'react'
 
 type SidebarContext = {
-	toggleSidebar: () => void;
-};
+	toggleSidebar: () => void
+}
 
 export const SidebarContext = React.createContext<SidebarContext>({
 	// eslint-disable-next-line @typescript-eslint/no-empty-function
-	toggleSidebar: () => {},
-});
+	toggleSidebar: () => {}
+})

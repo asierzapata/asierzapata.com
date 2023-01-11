@@ -6,7 +6,7 @@
 /*                        Types                          */
 /* ====================================================== */
 
-import type { InferGetStaticPropsType } from "next";
+import type { InferGetStaticPropsType } from 'next'
 
 /* ====================================================== */
 /*                     Data Loading                      */
@@ -14,9 +14,9 @@ import type { InferGetStaticPropsType } from "next";
 
 export const getStaticProps = async () => {
 	return {
-		props: {},
-	};
-};
+		props: {}
+	}
+}
 
 /* ====================================================== */
 /*                      Component                        */
@@ -43,7 +43,7 @@ function Stack({}: InferGetStaticPropsType<typeof getStaticProps>) {
 				</div>
 			</div>
 		</main>
-	);
+	)
 }
 
-export default Stack;
+export default Stack

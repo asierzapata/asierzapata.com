@@ -1,12 +1,12 @@
-import React from "react";
-import PropTypes from "prop-types";
+import React from 'react'
+import PropTypes from 'prop-types'
 
-import * as ToastPrimitive from "@radix-ui/react-toast";
-import { Cross2Icon } from "@radix-ui/react-icons";
+import * as ToastPrimitive from '@radix-ui/react-toast'
+import { Cross2Icon } from '@radix-ui/react-icons'
 
 type ToastCloseProps = {
-	onClose: () => void;
-};
+	onClose: () => void
+}
 
 export const ToastClose = ({ onClose }: ToastCloseProps) => {
 	return (
@@ -19,9 +19,9 @@ export const ToastClose = ({ onClose }: ToastCloseProps) => {
 				<Cross2Icon />
 			</button>
 		</ToastPrimitive.Close>
-	);
-};
+	)
+}
 
 ToastClose.propTypes = {
-	onClose: PropTypes.func.isRequired,
-};
+	onClose: PropTypes.func.isRequired
+}
