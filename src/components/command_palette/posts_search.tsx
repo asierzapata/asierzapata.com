@@ -32,10 +32,6 @@ const PostsSearch = ({ onCloseCommandPalette }: PostSearchProps) => {
 		textQuery
 	})
 
-	console.log(searchResults.data)
-	console.log(searchResults.isLoading)
-	console.log(searchResults.error)
-
 	return (
 		<>
 			<Command.Input

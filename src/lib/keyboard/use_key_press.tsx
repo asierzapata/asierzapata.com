@@ -54,7 +54,5 @@ export function useKeyPress({
 		}
 	}, [downHandler, upHandler])
 
-	console.log('>>> keypressed', keyPressed)
-
 	return keyPressed
 }
