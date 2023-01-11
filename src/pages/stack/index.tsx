@@ -29,9 +29,11 @@ function Stack({}: InferGetStaticPropsType<typeof getStaticProps>) {
 				<div className="flex flex-col items-center justify-center">
 					<h1
 						className="
-							mb-4 animate-text
+							mb-4
+							animate-text
 							bg-gradient-to-br from-secondary to-primary
-							bg-clip-text text-5xl
+							bg-clip-text
+							text-5xl
 							font-extrabold
 							text-transparent
 						"

@@ -3,12 +3,13 @@ import { type Session } from "next-auth";
 import { SessionProvider } from "next-auth/react";
 import PlausibleProvider from "next-plausible";
 
-import { trpc } from "@/utils/trpc";
+import { api } from "@/utils/trpc";
 
 import "@/styles/globals.css";
 import Head from "next/head";
 import { PageLoading } from "@/components/page_loading";
 import { PageNavigation } from "@/components/page_navigation";
+import { CommandPalette } from "@/components/command_palette";
 
 const MyApp: AppType<{ session: Session | null }> = ({
 	Component,
@@ -24,6 +25,7 @@ const MyApp: AppType<{ session: Session | null }> = ({
 			<PlausibleProvider domain="asierzapata.com">
 				<SessionProvider session={session}>
 					<PageLoading />
+					<CommandPalette />
 					<PageNavigation>
 						<Component {...pageProps} />
 					</PageNavigation>
@@ -33,4 +35,4 @@ const MyApp: AppType<{ session: Session | null }> = ({
 	);
 };
 
-export default trpc.withTRPC(MyApp);
+export default api.withTRPC(MyApp);
