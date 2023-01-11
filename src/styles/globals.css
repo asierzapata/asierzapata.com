@@ -21,7 +21,6 @@
 
 [cmdk-root] {
 	/*max-width: 640px;*/
-	/*@apply bg-;*/
 	width: 100%;
 	padding: 8px;
 	border-radius: 12px;
@@ -162,6 +161,7 @@ kbd {
 
 [cmdk-dialog] {
 	position: fixed;
+	z-index: 50;
 	top: 50%;
 	left: 50%;
 	transform: translate(-50%, -50%);
