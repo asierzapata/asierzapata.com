@@ -49,6 +49,21 @@
 	@apply text-darkText;
 }
 
+[cmdk-loading] {
+	height: 48px;
+	border-radius: 8px;
+	@apply text-text animate-pulse;
+	background: hsla(0, 0%, 100%, 0.056);
+	transition-property: background;
+	user-select: none;
+	transition: all 150ms ease;
+	padding: 0 16px;
+	display: flex;
+	font-size: 14px;
+	align-items: center;
+	justify-content: center;
+}
+
 [cmdk-item] {
 	content-visibility: auto;
 	cursor: pointer;
@@ -80,6 +95,10 @@
 [cmdk-item]:active {
 	transition-property: background;
 	@apply bg-lightBackground;
+}
+
+[cmdk-loading] + [cmdk-item] {
+	margin-top: 4px;
 }
 
 [cmdk-item] + [cmdk-item] {
