@@ -24,11 +24,12 @@ const MyApp: AppType<{ session: Session | null }> = ({
 			</Head>
 			<PlausibleProvider domain="asierzapata.com">
 				<SessionProvider session={session}>
-					<PageLoading />
-					<CommandPalette />
-					<PageNavigation>
-						<Component {...pageProps} />
-					</PageNavigation>
+					<CommandPalette>
+						<PageLoading />
+						<PageNavigation>
+							<Component {...pageProps} />
+						</PageNavigation>
+					</CommandPalette>
 				</SessionProvider>
 			</PlausibleProvider>
 		</>

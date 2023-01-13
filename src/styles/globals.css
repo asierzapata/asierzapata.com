@@ -101,6 +101,10 @@
 	margin-top: 4px;
 }
 
+[cmdk-item] + [cmdk-loading] {
+	margin-top: 4px;
+}
+
 [cmdk-item] + [cmdk-item] {
 	margin-top: 4px;
 }

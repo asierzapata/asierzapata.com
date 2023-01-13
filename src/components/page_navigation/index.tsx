@@ -12,10 +12,12 @@ import {
 	FileTextIcon,
 	LayersIcon,
 	// BookmarkIcon,
-	HamburgerMenuIcon
+	HamburgerMenuIcon,
+	MagnifyingGlassIcon
 } from '@radix-ui/react-icons'
 import { motion } from 'framer-motion'
 import { SidebarContext } from './sidebar_context'
+import { useCommandPaletteContext } from '@/components/command_palette/command_palette_context'
 
 /* ====================================================== */
 /*                    Implementation                     */
@@ -32,6 +34,8 @@ const NavBar = ({
 	onToggleSidebar: () => void
 	onContentClicked: () => void
 }) => {
+	const { toggleCommandPalette } = useCommandPaletteContext()
+
 	return (
 		<>
 			<div className="flex flex-row items-center justify-start py-5 lg:px-6">
@@ -53,7 +57,19 @@ const NavBar = ({
 					Asier Zapata
 				</h1>
 			</div>
-			<div className="flex w-full flex-col gap-2 px-3 py-2">
+			<button
+				className="flex w-full flex-row items-center justify-around gap-2 rounded bg-background py-2 pl-6 pr-4 text-sm font-light text-darkText"
+				onClick={toggleCommandPalette}
+			>
+				<MagnifyingGlassIcon /> <span className="pl-2">Search</span>
+				<div className="flex flex-1 items-center justify-end">
+					<span className="rounded bg-lightBackground py-0.5 px-1 text-xs font-extralight text-primary">
+						Ctrl + K
+					</span>
+				</div>
+			</button>
+
+			<div className="flex w-full flex-col gap-2 px-3 py-4">
 				<Link
 					href="/"
 					className="transition-color flex w-full flex-row items-center justify-start gap-4 rounded px-3 py-1 font-medium duration-300 ease-in-out hover:bg-background hover:text-primary"
