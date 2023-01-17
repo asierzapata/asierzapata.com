@@ -3,7 +3,7 @@ import React from 'react'
 import { useRouter } from 'next/router'
 
 import { useCopyToClipboard } from '@/lib/clipboard/use_copy_to_clipboard'
-import { api } from '@/utils/trpc'
+import { api } from '@/utils/api'
 
 /* ====================================================== */
 /*                       Components                      */
@@ -62,7 +62,7 @@ const GeneralSearch = ({
 						<Command.Item
 							key={post._id}
 							onSelect={() => {
-								router.push(`/posts/${post.slug}`)
+								void router.push(`/posts/${post.slug}`)
 								onCloseCommandPalette()
 							}}
 						>
@@ -83,7 +83,7 @@ const GeneralSearch = ({
 					{!isHomePage && (
 						<Command.Item
 							onSelect={() => {
-								router.push('/')
+								void router.push('/')
 								onCloseCommandPalette()
 							}}
 						>
@@ -93,7 +93,7 @@ const GeneralSearch = ({
 					{!isPostsPage && (
 						<Command.Item
 							onSelect={() => {
-								router.push('/posts')
+								void router.push('/posts')
 								onCloseCommandPalette()
 							}}
 						>
@@ -103,7 +103,7 @@ const GeneralSearch = ({
 					{!isStackPage && (
 						<Command.Item
 							onSelect={() => {
-								router.push('/stack')
+								void router.push('/stack')
 								onCloseCommandPalette()
 							}}
 						>

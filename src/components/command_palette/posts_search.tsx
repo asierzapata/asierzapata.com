@@ -7,7 +7,7 @@ import _ from 'lodash'
 
 import { Command } from 'cmdk'
 import { useRouter } from 'next/router'
-import { api } from '@/utils/trpc'
+import { api } from '@/utils/api'
 import { FileTextIcon } from '@radix-ui/react-icons'
 
 /* ====================================================== */
@@ -51,7 +51,7 @@ const PostsSearch = ({ onCloseCommandPalette }: PostSearchProps) => {
 					<Command.Item
 						key={post._id}
 						onSelect={() => {
-							router.push(`/posts/${post.slug}`)
+							void router.push(`/posts/${post.slug}`)
 							onCloseCommandPalette()
 						}}
 					>
