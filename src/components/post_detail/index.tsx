@@ -137,13 +137,13 @@ const PostDetail = ({
 	)
 
 	return (
-		<div className="max-h-screen w-full overflow-y-auto">
+		<div className="max-h-screen w-full overflow-y-auto mt-4">
 			<div className="mx-auto w-full pt-12 md:w-10/12 lg:w-8/12 xl:w-7/12 2xl:w-6/12">
 				<Link
 					href="/posts"
-					className="flex items-center justify-start gap-2 text-sm font-light hover:text-primary active:text-primary"
+					className="px-5 flex items-center justify-start gap-2 text-sm font-light hover:text-primary active:text-primary"
 				>
-					<ArrowLeftIcon /> See other posts
+					<ArrowLeftIcon /> <span>See other posts</span>
 				</Link>
 				<h1 className="mt-8 mb-2 px-12 text-4xl font-bold">{post.title}</h1>
 				<h3 className="mb-8 px-12 font-thin">

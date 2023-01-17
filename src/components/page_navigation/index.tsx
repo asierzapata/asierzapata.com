@@ -138,6 +138,12 @@ const PageNavigation = ({ children }: PageNavigationProps) => {
 	return (
 		<SidebarContext.Provider value={sidebarContextValue}>
 			<div className="flex max-h-screen min-h-full w-full flex-row">
+				<button
+					className="rounded absolute z-20 top-0 left-0 my-5 mx-4 px-3 py-1 text-sm self-start hover:bg-lightBackground hover:text-primary lg:hidden"
+					onClick={handleToggleSidebar}
+				>
+					<HamburgerMenuIcon />
+				</button>
 				<motion.nav layout className={sidebarClassnames}>
 					<NavBar
 						onToggleSidebar={handleToggleSidebar}
