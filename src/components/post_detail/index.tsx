@@ -17,7 +17,7 @@ import { getMDXComponent } from 'mdx-bundler/client'
 import SyntaxHighlighter from 'react-syntax-highlighter'
 import Image from 'next/image'
 import Link from 'next/link'
-import { ArrowLeftIcon } from '@radix-ui/react-icons'
+import { ArrowLeftIcon } from "@radix-ui/react-icons";
 
 /* ====================================================== */
 /*                         Styles                         */
@@ -127,6 +127,8 @@ const PostDetail = ({
 	post: Post
 	content: Awaited<ReturnType<typeof renderPost>>
 }) => {
+	const [twitterText, setTwitterText] = React.useState('')
+
 	const formatedPublishedDate = post.publishedAt
 		? format(new Date(post.publishedAt), 'MMMM do, yyyy')
 		: ''
@@ -136,8 +138,13 @@ const PostDetail = ({
 		[content.code]
 	)
 
+	React.useEffect(() => {
+		// We put this inside the useEffect because window is only defined on the FE
+		setTwitterText(encodeURIComponent(`@asierzapata ${window.location.toString()}`))
+	}, [])
+
 	return (
-		<div className="max-h-screen w-full overflow-y-auto mt-4">
+		<div className="max-h-screen w-full overflow-y-auto">
 			<div className="mx-auto w-full pt-12 md:w-10/12 lg:w-8/12 xl:w-7/12 2xl:w-6/12">
 				<Link
 					href="/posts"
@@ -157,7 +164,7 @@ const PostDetail = ({
 					height={475}
 					sizes="100vw"
 				/>
-				<article className="mb-12 px-12 selection:bg-darkPrimary selection:text-background">
+				<article className=" px-12 selection:bg-darkPrimary selection:text-background">
 					<Component
 						components={{
 							// https://mdxjs.com/docs/using-mdx/#components
@@ -222,6 +229,17 @@ const PostDetail = ({
 						}}
 					/>
 				</article>
+				<div className="rounded bg-lightBackground px-12 py-8 my-12">Liked the post or want to talk about it? Hit me up at{" "}
+					<Link
+						href={`https://twitter.com/intent/tweet?text=${twitterText}`}
+						target="_blank"
+						rel="noopener noreferrer"
+						className="underline text-primary"
+					>
+						@asierzapata
+					</Link>
+					!
+					</div>
 			</div>
 		</div>
 	)
