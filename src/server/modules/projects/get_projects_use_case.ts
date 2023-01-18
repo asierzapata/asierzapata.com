@@ -2,7 +2,7 @@ import { getClient } from '@/server/services/sanity/client'
 import { parseProjects } from '@/server/data_types/project'
 
 export async function getProjectsUserCase() {
-	const projects = await getClient().fetch(
+	const projects = await getClient().fetch<unknown[]>(
 		`*[_type == "project"] {
 			_id,
 			title,

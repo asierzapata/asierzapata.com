@@ -35,7 +35,7 @@ export async function getPostsUseCase({
 			body
 		}`
 	}
-	const posts = await getClient().fetch(query, {
+	const posts = await getClient().fetch<unknown[]>(query, {
 		postType: postType || '',
 		lastId: cursor || '',
 		limit: limit || 5

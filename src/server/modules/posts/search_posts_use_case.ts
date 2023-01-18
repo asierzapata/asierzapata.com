@@ -20,7 +20,7 @@ export async function searchPostsUseCase({
 		publishedAt,
 		_score
 	} [ _score > 0 ]`
-	const posts = await getClient().fetch(query, {
+	const posts = await getClient().fetch<unknown[]>(query, {
 		textQuery: _.toLower(textQuery) || '',
 		limit: limit || 5
 	})

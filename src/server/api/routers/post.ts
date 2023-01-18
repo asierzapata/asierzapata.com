@@ -1,9 +1,10 @@
-import { router, publicProcedure } from '../trpc'
 import { z } from 'zod'
 import { getPostsUseCase } from '@/server/modules/posts/get_posts_use_case'
 import { searchPostsUseCase } from '@/server/modules/posts/search_posts_use_case'
 
-export const postRouter = router({
+import { createTRPCRouter, publicProcedure } from '../trpc'
+
+export const postRouter = createTRPCRouter({
 	getLatestPosts: publicProcedure
 		.input(
 			z.object({

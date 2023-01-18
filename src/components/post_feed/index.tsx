@@ -52,7 +52,7 @@ const PostFeed = ({
 	)
 
 	const stickyHeaderClassname = classnames(
-		'sticky top-0 z-10 flex w-full flex-col p-4 backdrop-blur-lg'
+		'sticky top-0 z-10 flex w-full flex-col p-5 pl-14 lg:p-4 backdrop-blur-lg'
 	)
 
 	return (

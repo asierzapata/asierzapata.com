@@ -1,9 +1,11 @@
 import React from 'react'
 
+import * as Fathom from 'fathom-client'
+
 import { useRouter } from 'next/router'
 
 import { useCopyToClipboard } from '@/lib/clipboard/use_copy_to_clipboard'
-import { api } from '@/utils/trpc'
+import { api } from '@/utils/api'
 
 /* ====================================================== */
 /*                       Components                      */
@@ -46,6 +48,12 @@ const GeneralSearch = ({
 	const isPostPage = router.pathname === '/posts/[slug]'
 	const isStackPage = router.pathname === '/stack'
 
+	const handleCopyCurrentUrl = React.useCallback(async () => {
+		Fathom.trackGoal('UAMOGDZI', 0)
+		await copyUrlToClipboard(window.location.toString())
+		setShowCopiedToast(true)
+	}, [copyUrlToClipboard])
+
 	return (
 		<>
 			<Command.Input autoFocus placeholder="What do you want to search for?" />
@@ -62,7 +70,7 @@ const GeneralSearch = ({
 						<Command.Item
 							key={post._id}
 							onSelect={() => {
-								router.push(`/posts/${post.slug}`)
+								void router.push(`/posts/${post.slug}`)
 								onCloseCommandPalette()
 							}}
 						>
@@ -83,7 +91,7 @@ const GeneralSearch = ({
 					{!isHomePage && (
 						<Command.Item
 							onSelect={() => {
-								router.push('/')
+								void router.push('/')
 								onCloseCommandPalette()
 							}}
 						>
@@ -93,7 +101,7 @@ const GeneralSearch = ({
 					{!isPostsPage && (
 						<Command.Item
 							onSelect={() => {
-								router.push('/posts')
+								void router.push('/posts')
 								onCloseCommandPalette()
 							}}
 						>
@@ -103,7 +111,7 @@ const GeneralSearch = ({
 					{!isStackPage && (
 						<Command.Item
 							onSelect={() => {
-								router.push('/stack')
+								void router.push('/stack')
 								onCloseCommandPalette()
 							}}
 						>
@@ -113,17 +121,13 @@ const GeneralSearch = ({
 				</Command.Group>
 
 				<Command.Group heading="Actions">
-					<Command.Item
-						onSelect={async () => {
-							await copyUrlToClipboard(window.location.toString())
-							setShowCopiedToast(true)
-						}}
-					>
+					<Command.Item onSelect={void handleCopyCurrentUrl}>
 						<CopyIcon /> Copy Current URL
 					</Command.Item>
 					{isPostPage && (
 						<Command.Item
-							onSelect={() =>
+							onSelect={() => {
+								Fathom.trackGoal('JPEAN03Y', 0)
 								// TODO: this should be a link or something like that to avoid browser behaviours like blocking the opening of the URL
 								window.open(
 									`https://twitter.com/intent/tweet?text=${encodeURIComponent(
@@ -131,7 +135,7 @@ const GeneralSearch = ({
 									)}`,
 									'_blank'
 								)
-							}
+							}}
 						>
 							<TwitterLogoIcon /> Share post on Twitter
 						</Command.Item>
@@ -140,19 +144,21 @@ const GeneralSearch = ({
 
 				<Command.Group heading="Contact">
 					<Command.Item
-						onSelect={() =>
+						onSelect={() => {
+							Fathom.trackGoal('FMQFDG7M', 0)
 							window.open(
 								'https://twitter.com/intent/tweet?text=%40asierzapata',
 								'_blank'
 							)
-						}
+						}}
 					>
 						<TwitterLogoIcon /> Twitter
 					</Command.Item>
 					<Command.Item
-						onSelect={() =>
+						onSelect={() => {
+							Fathom.trackGoal('ADQ3I876', 0)
 							window.open('https://github.com/asierzapata', '_blank')
-						}
+						}}
 					>
 						<GitHubLogoIcon /> GitHub
 					</Command.Item>

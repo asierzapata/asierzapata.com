@@ -4,14 +4,16 @@ export const PostTypesArray = [
 	'article',
 	'snippet',
 	'tutorial',
-	'book-review'
+	'book-review',
+	'weekly-reading'
 ] as const
 
 export const PostTypesDisplayMapping = {
 	article: 'Article',
 	snippet: 'Snippet',
 	tutorial: 'Tutorial',
-	'book-review': 'Book review'
+	'book-review': 'Book review',
+	'weekly-reading': 'Weekly Reading'
 }
 
 const PostTypesEnum = z.enum(PostTypesArray)

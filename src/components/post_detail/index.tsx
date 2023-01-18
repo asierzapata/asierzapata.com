@@ -142,9 +142,9 @@ const PostDetail = ({
 			<div className="mx-auto w-11/12 pt-12 md:w-10/12 lg:w-8/12 xl:w-7/12 2xl:w-6/12">
 				<Link
 					href="/posts"
-					className="flex items-center justify-start gap-2 text-sm font-light hover:text-primary active:text-primary"
+					className="flex items-center justify-start gap-2 px-5 text-sm font-light hover:text-primary active:text-primary"
 				>
-					<ArrowLeftIcon /> See other posts
+					<ArrowLeftIcon /> <span>See other posts</span>
 				</Link>
 				<h1 className="mt-8 mb-2 px-12 text-4xl font-bold">{post.title}</h1>
 				<h3 className="mb-8 px-12 font-thin">
@@ -215,7 +215,9 @@ const PostDetail = ({
 									</div>
 								) : (
 									<code
-										className={`${className} bg-dark rounded px-0.5 py-0.5 text-primary`}
+										className={`${
+											className || ''
+										} bg-dark rounded px-0.5 py-0.5 text-primary`}
 										{...props}
 									/>
 								)

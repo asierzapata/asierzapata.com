@@ -11,7 +11,7 @@ const LOADING_STATES = {
 function PageLoading() {
 	const router = useRouter()
 	const [loadingState, setLoadingState] = React.useState<
-		typeof LOADING_STATES[keyof typeof LOADING_STATES]
+		(typeof LOADING_STATES)[keyof typeof LOADING_STATES]
 	>(LOADING_STATES.IDLE)
 	const [animationComplete, setAnimationComplete] = React.useState(true)
 	const ref = React.useRef<HTMLDivElement>(null)
@@ -23,7 +23,9 @@ function PageLoading() {
 
 		Promise.allSettled(
 			ref.current.getAnimations().map(({ finished }) => finished)
-		).then(() => !active && setAnimationComplete(true))
+		)
+			.then(() => !active && setAnimationComplete(true))
+			.catch(() => !active && setAnimationComplete(true))
 	}, [active])
 
 	const handleRouteHistoryChange = React.useCallback(() => {
