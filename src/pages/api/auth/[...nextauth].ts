@@ -1,8 +1,10 @@
 import NextAuth, { type NextAuthOptions } from 'next-auth'
 // Prisma adapter for NextAuth, optional and can be removed
+import TwitterProvider from 'next-auth/providers/twitter'
 import { PrismaAdapter } from '@next-auth/prisma-adapter'
 
 import { prisma } from '@/server/db'
+import { env } from '@/env/server.mjs'
 
 export const authOptions: NextAuthOptions = {
 	// Include user.id on session
@@ -19,13 +21,12 @@ export const authOptions: NextAuthOptions = {
 	providers: [
 		/**
 		 * ...add more providers here
-		 *
-		 * Most other providers require a bit more work than the Discord provider.
-		 * For example, the GitHub provider requires you to add the
-		 * `refresh_token_expires_in` field to the Account model. Refer to the
-		 * NextAuth.js docs for the provider you want to use. Example:
-		 * @see https://next-auth.js.org/providers/github
 		 */
+		TwitterProvider({
+			clientId: env.TWITTER_CLIENT_SECRET,
+			clientSecret: env.TWITTER_CLIENT_SECRET,
+			version: '2.0' // opt-in to Twitter OAuth 2.0
+		})
 	]
 }
 

@@ -20,6 +20,7 @@ import SyntaxHighlighter from 'react-syntax-highlighter'
 import Image from 'next/image'
 import Link from 'next/link'
 import { ArrowLeftIcon } from '@radix-ui/react-icons'
+import { PostReactions } from '@/components/post_reactions'
 
 /* ====================================================== */
 /*                         Styles                         */
@@ -235,6 +236,9 @@ const PostDetail = ({
 						}}
 					/>
 				</article>
+				<div className="pt-6">
+					<PostReactions />
+				</div>
 				<div className="my-12 rounded bg-lightBackground px-12 py-8">
 					Liked the post or want to talk about it? Hit me up at{' '}
 					<Link
