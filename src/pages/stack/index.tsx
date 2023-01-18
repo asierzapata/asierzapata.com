@@ -12,7 +12,7 @@ import type { InferGetStaticPropsType } from 'next'
 /*                     Data Loading                      */
 /* ====================================================== */
 
-export const getStaticProps = async () => {
+export const getStaticProps = () => {
 	return {
 		props: {}
 	}

@@ -46,6 +46,11 @@ const GeneralSearch = ({
 	const isPostPage = router.pathname === '/posts/[slug]'
 	const isStackPage = router.pathname === '/stack'
 
+	const handleCopyCurrentUrl = React.useCallback(async () => {
+		await copyUrlToClipboard(window.location.toString())
+		setShowCopiedToast(true)
+	}, [copyUrlToClipboard])
+
 	return (
 		<>
 			<Command.Input autoFocus placeholder="What do you want to search for?" />
@@ -113,12 +118,7 @@ const GeneralSearch = ({
 				</Command.Group>
 
 				<Command.Group heading="Actions">
-					<Command.Item
-						onSelect={async () => {
-							await copyUrlToClipboard(window.location.toString())
-							setShowCopiedToast(true)
-						}}
-					>
+					<Command.Item onSelect={void handleCopyCurrentUrl}>
 						<CopyIcon /> Copy Current URL
 					</Command.Item>
 					{isPostPage && (

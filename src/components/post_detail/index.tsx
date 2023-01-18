@@ -17,7 +17,7 @@ import { getMDXComponent } from 'mdx-bundler/client'
 import SyntaxHighlighter from 'react-syntax-highlighter'
 import Image from 'next/image'
 import Link from 'next/link'
-import { ArrowLeftIcon } from "@radix-ui/react-icons";
+import { ArrowLeftIcon } from '@radix-ui/react-icons'
 
 /* ====================================================== */
 /*                         Styles                         */
@@ -140,7 +140,9 @@ const PostDetail = ({
 
 	React.useEffect(() => {
 		// We put this inside the useEffect because window is only defined on the FE
-		setTwitterText(encodeURIComponent(`@asierzapata ${window.location.toString()}`))
+		setTwitterText(
+			encodeURIComponent(`@asierzapata ${window.location.toString()}`)
+		)
 	}, [])
 
 	return (
@@ -148,7 +150,7 @@ const PostDetail = ({
 			<div className="mx-auto w-full pt-12 md:w-10/12 lg:w-8/12 xl:w-7/12 2xl:w-6/12">
 				<Link
 					href="/posts"
-					className="px-5 flex items-center justify-start gap-2 text-sm font-light hover:text-primary active:text-primary"
+					className="flex items-center justify-start gap-2 px-5 text-sm font-light hover:text-primary active:text-primary"
 				>
 					<ArrowLeftIcon /> <span>See other posts</span>
 				</Link>
@@ -221,7 +223,9 @@ const PostDetail = ({
 									</div>
 								) : (
 									<code
-										className={`${className} bg-dark rounded px-0.5 py-0.5 text-primary`}
+										className={`${
+											className || ''
+										} bg-dark rounded px-0.5 py-0.5 text-primary`}
 										{...props}
 									/>
 								)
@@ -229,17 +233,18 @@ const PostDetail = ({
 						}}
 					/>
 				</article>
-				<div className="rounded bg-lightBackground px-12 py-8 my-12">Liked the post or want to talk about it? Hit me up at{" "}
+				<div className="my-12 rounded bg-lightBackground px-12 py-8">
+					Liked the post or want to talk about it? Hit me up at{' '}
 					<Link
 						href={`https://twitter.com/intent/tweet?text=${twitterText}`}
 						target="_blank"
 						rel="noopener noreferrer"
-						className="underline text-primary"
+						className="text-primary underline"
 					>
 						@asierzapata
 					</Link>
 					!
-					</div>
+				</div>
 			</div>
 		</div>
 	)

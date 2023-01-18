@@ -2,7 +2,7 @@ import { getClient } from '@/server/services/sanity/client'
 import { parsePost } from '@/server/data_types/post'
 
 export async function getPostBySlugUseCase(slug: string) {
-	const post = await getClient().fetch(
+	const post = await getClient().fetch<unknown[]>(
 		`*[_type == "post" && slug.current == $slug] {
 			_id,
 			title,

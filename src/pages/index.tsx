@@ -2,6 +2,7 @@
 /*                      Components                       */
 /* ====================================================== */
 
+import type { StaticImageData } from 'next/image'
 import Image from 'next/image'
 import Link from 'next/link'
 import FaceDrawing from '@/../public/face_drawing.svg'
@@ -36,7 +37,7 @@ export const getStaticProps = async () => {
 
 function Home({ posts }: InferGetStaticPropsType<typeof getStaticProps>) {
 	return (
-		<main className="m-auto w-10/12 py-6 md:w-9/12 lg:w-8/12 xl:w-7/12 mt-4">
+		<main className="m-auto mt-4 w-10/12 py-6 md:w-9/12 lg:w-8/12 xl:w-7/12">
 			<div className="mb-6 flex w-full flex-col-reverse items-center justify-around gap-8 py-6 lg:flex-row">
 				<div className="flex flex-col items-center justify-center">
 					<h1
@@ -83,7 +84,7 @@ function Home({ posts }: InferGetStaticPropsType<typeof getStaticProps>) {
 				</div>
 				<div className="rounded-lg bg-text shadow-2xl">
 					<Image
-						src={FaceDrawing}
+						src={FaceDrawing as StaticImageData}
 						alt="Asier Zapata Drawn Portrait"
 						width={240}
 						height={240}

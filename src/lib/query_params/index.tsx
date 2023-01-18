@@ -15,7 +15,7 @@ export const useQueryParam = <T extends string>(
 
 	const setQueryParam = React.useCallback(
 		(value: T) => {
-			router.push({
+			void router.push({
 				query: { ...router.query, [queryParam]: value }
 			})
 		},
@@ -24,7 +24,7 @@ export const useQueryParam = <T extends string>(
 
 	React.useEffect(() => {
 		if (!!defaultValue && router.query[queryParam] !== defaultValue) {
-			router.push({
+			void router.push({
 				query: { ...router.query, [queryParam]: defaultValue }
 			})
 		}
@@ -51,7 +51,7 @@ export const useBooleanQueryParam = (
 
 	const setQueryParam = React.useCallback(
 		(value: boolean) => {
-			router.replace({
+			void router.replace({
 				query: { ...router.query, [queryParam]: value ? 'true' : 'false' }
 			})
 		},
@@ -60,7 +60,7 @@ export const useBooleanQueryParam = (
 
 	React.useEffect(() => {
 		if (defaultValue && currentParsedValue !== defaultValue) {
-			router.replace({
+			void router.replace({
 				query: { ...router.query, [queryParam]: defaultValue }
 			})
 		}
