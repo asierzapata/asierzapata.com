@@ -23,6 +23,7 @@
 		"@trpc/server": "^10.0.0",
 		"cmdk": "^0.1.21",
 		"date-fns": "^2.29.3",
+		"fathom-client": "^3.5.0",
 		"framer-motion": "^8.0.2",
 		"lodash": "^4.17.21",
 		"mdx-bundler": "^9.0.1",
