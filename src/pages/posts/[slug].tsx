@@ -21,6 +21,7 @@ import { PostDetail } from '@/components/post_detail'
 import { renderPost } from '@/server/services/post_render'
 import { getPostBySlugUseCase } from '@/server/modules/posts/get_post_by_slug_use_case'
 import { getPostsUseCase } from '@/server/modules/posts/get_posts_use_case'
+import Head from 'next/head'
 
 export async function getStaticProps(
 	context: GetStaticPropsContext<{ slug: string }>
@@ -59,5 +60,16 @@ export default function PostWithId({
 	post,
 	content
 }: InferGetStaticPropsType<typeof getStaticProps>) {
-	return <PostDetail post={post} content={content} />
+	return (
+		<>
+			<Head>
+				<meta property="og:title" content={post.title} />
+				<meta property="og:type" content="article" />
+				{post.mainImage ? (
+					<meta property="og:image" content={post.mainImage.toString()} />
+				) : null}
+			</Head>
+			<PostDetail post={post} content={content} />
+		</>
+	)
 }

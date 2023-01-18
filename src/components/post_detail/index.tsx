@@ -18,6 +18,7 @@ import SyntaxHighlighter from 'react-syntax-highlighter'
 import Image from 'next/image'
 import Link from 'next/link'
 import { ArrowLeftIcon } from '@radix-ui/react-icons'
+import Giscus from '@giscus/react'
 
 /* ====================================================== */
 /*                         Styles                         */
@@ -138,7 +139,7 @@ const PostDetail = ({
 
 	return (
 		<div className="max-h-screen w-full overflow-y-auto">
-			<div className="mx-auto w-full pt-12 md:w-10/12 lg:w-8/12 xl:w-7/12 2xl:w-6/12">
+			<div className="mx-auto w-11/12 pt-12 md:w-10/12 lg:w-8/12 xl:w-7/12 2xl:w-6/12">
 				<Link
 					href="/posts"
 					className="flex items-center justify-start gap-2 text-sm font-light hover:text-primary active:text-primary"
@@ -222,6 +223,23 @@ const PostDetail = ({
 						}}
 					/>
 				</article>
+				<div className="mb-12">
+					<Giscus
+						id="comments"
+						repo="asierzapata/asierzapata.com"
+						repoId="R_kgDOIbCpww"
+						category="Posts"
+						categoryId="DIC_kwDOIbCpw84CTqfb"
+						mapping="og:title"
+						strict="0"
+						reactionsEnabled="1"
+						emitMetadata="0"
+						inputPosition="top"
+						theme="dark"
+						lang="en"
+						loading="lazy"
+					/>
+				</div>
 			</div>
 		</div>
 	)

@@ -10,6 +10,7 @@
 		"start": "next start"
 	},
 	"dependencies": {
+		"@giscus/react": "^2.2.6",
 		"@next-auth/prisma-adapter": "^1.0.5",
 		"@prisma/client": "^4.5.0",
 		"@radix-ui/react-icons": "^1.1.1",
