@@ -44,3 +44,6 @@ yarn-error.log*
 
 # Sanity Studio
 studio/.sanity/*
+
+# Webstorm
+.idea
