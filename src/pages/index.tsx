@@ -1,8 +1,9 @@
+import * as Fathom from 'fathom-client'
+
 /* ====================================================== */
 /*                      Components                       */
 /* ====================================================== */
 
-import type { StaticImageData } from 'next/image'
 import Image from 'next/image'
 import Link from 'next/link'
 import FaceDrawing from '@/../public/face_drawing.svg'
@@ -14,6 +15,7 @@ import { GitHubLogoIcon, TwitterLogoIcon } from '@radix-ui/react-icons'
 /* ====================================================== */
 
 import type { InferGetStaticPropsType } from 'next'
+import type { StaticImageData } from 'next/image'
 
 /* ====================================================== */
 /*                     Data Loading                      */
@@ -69,6 +71,7 @@ function Home({ posts }: InferGetStaticPropsType<typeof getStaticProps>) {
 							target="_blank"
 							rel="noopener noreferrer"
 							className="flex items-center justify-between gap-3 rounded bg-darkPrimary px-4 py-2 font-semibold text-background transition-colors ease-in hover:bg-primary"
+							onClick={() => Fathom.trackGoal('FMQFDG7M', 0)}
 						>
 							<TwitterLogoIcon /> Twitter
 						</Link>
@@ -77,6 +80,7 @@ function Home({ posts }: InferGetStaticPropsType<typeof getStaticProps>) {
 							target="_blank"
 							rel="noopener noreferrer"
 							className="flex items-center justify-between gap-3 rounded bg-darkPrimary px-4 py-2 font-semibold text-background transition-colors ease-in hover:bg-primary"
+							onClick={() => Fathom.trackGoal('ADQ3I876', 0)}
 						>
 							<GitHubLogoIcon /> GitHub
 						</Link>

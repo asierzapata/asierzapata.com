@@ -9,6 +9,7 @@ import { Command } from 'cmdk'
 import { useRouter } from 'next/router'
 import { api } from '@/utils/api'
 import { FileTextIcon } from '@radix-ui/react-icons'
+import * as Fathom from 'fathom-client'
 
 /* ====================================================== */
 /*                    Implementation                      */
@@ -31,6 +32,10 @@ const PostsSearch = ({ onCloseCommandPalette }: PostSearchProps) => {
 		numberOfPosts: 5,
 		textQuery
 	})
+
+	React.useEffect(() => {
+		Fathom.trackGoal('PSX1WMSZ', 0)
+	}, [])
 
 	return (
 		<>

@@ -1,5 +1,7 @@
 import React from 'react'
 
+import * as Fathom from 'fathom-client'
+
 /* ====================================================== */
 /*                         Types                          */
 /* ====================================================== */
@@ -240,6 +242,7 @@ const PostDetail = ({
 						target="_blank"
 						rel="noopener noreferrer"
 						className="text-primary underline"
+						onClick={() => Fathom.trackGoal('JPEAN03Y', 0)}
 					>
 						@asierzapata
 					</Link>

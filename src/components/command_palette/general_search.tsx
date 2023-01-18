@@ -1,5 +1,7 @@
 import React from 'react'
 
+import * as Fathom from 'fathom-client'
+
 import { useRouter } from 'next/router'
 
 import { useCopyToClipboard } from '@/lib/clipboard/use_copy_to_clipboard'
@@ -47,6 +49,7 @@ const GeneralSearch = ({
 	const isStackPage = router.pathname === '/stack'
 
 	const handleCopyCurrentUrl = React.useCallback(async () => {
+		Fathom.trackGoal('UAMOGDZI', 0)
 		await copyUrlToClipboard(window.location.toString())
 		setShowCopiedToast(true)
 	}, [copyUrlToClipboard])
@@ -123,7 +126,8 @@ const GeneralSearch = ({
 					</Command.Item>
 					{isPostPage && (
 						<Command.Item
-							onSelect={() =>
+							onSelect={() => {
+								Fathom.trackGoal('JPEAN03Y', 0)
 								// TODO: this should be a link or something like that to avoid browser behaviours like blocking the opening of the URL
 								window.open(
 									`https://twitter.com/intent/tweet?text=${encodeURIComponent(
@@ -131,7 +135,7 @@ const GeneralSearch = ({
 									)}`,
 									'_blank'
 								)
-							}
+							}}
 						>
 							<TwitterLogoIcon /> Share post on Twitter
 						</Command.Item>
@@ -140,19 +144,21 @@ const GeneralSearch = ({
 
 				<Command.Group heading="Contact">
 					<Command.Item
-						onSelect={() =>
+						onSelect={() => {
+							Fathom.trackGoal('FMQFDG7M', 0)
 							window.open(
 								'https://twitter.com/intent/tweet?text=%40asierzapata',
 								'_blank'
 							)
-						}
+						}}
 					>
 						<TwitterLogoIcon /> Twitter
 					</Command.Item>
 					<Command.Item
-						onSelect={() =>
+						onSelect={() => {
+							Fathom.trackGoal('ADQ3I876', 0)
 							window.open('https://github.com/asierzapata', '_blank')
-						}
+						}}
 					>
 						<GitHubLogoIcon /> GitHub
 					</Command.Item>
