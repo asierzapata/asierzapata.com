@@ -1,8 +1,9 @@
 import { getClient } from '@/server/services/sanity/client'
-import { parsePost } from '@/server/data_types/post'
+import { parsePosts } from '@/server/data_types/post'
 
 export async function getPostBySlugUseCase(slug: string) {
-	const post = await getClient().fetch<unknown[]>(
+	// We use the preview flag here since we would want to obtain individual posts in draft
+	const posts = await getClient({ usePreview: true }).fetch<unknown[]>(
 		`*[_type == "post" && slug.current == $slug] {
 			_id,
 			title,
@@ -17,5 +18,5 @@ export async function getPostBySlugUseCase(slug: string) {
 		{ slug }
 	)
 
-	return parsePost(post[0])
+	return parsePosts(posts)
 }

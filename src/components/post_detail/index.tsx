@@ -17,7 +17,7 @@ import { getMDXComponent } from 'mdx-bundler/client'
 import SyntaxHighlighter from 'react-syntax-highlighter'
 import Image from 'next/image'
 import Link from 'next/link'
-import { ArrowLeftIcon } from '@radix-ui/react-icons'
+import { ArrowLeftIcon, ExclamationTriangleIcon } from '@radix-ui/react-icons'
 import Giscus from '@giscus/react'
 
 /* ====================================================== */
@@ -42,7 +42,7 @@ const codeStyle = {
 		fontWeight: 'bold'
 	},
 	'hljs-literal': {
-		color: '#fffffe',
+		color: '#f25f4c',
 		fontWeight: 'bold'
 	},
 	'hljs-section': {
@@ -50,7 +50,7 @@ const codeStyle = {
 		fontWeight: 'bold'
 	},
 	'hljs-link': {
-		color: '#fffffe'
+		color: '#e53170'
 	},
 	'hljs-subst': {
 		color: '#fffffe'
@@ -69,6 +69,22 @@ const codeStyle = {
 	'hljs-type': {
 		color: '#ff8906',
 		fontWeight: 'bold'
+	},
+	'hljs-params': {
+		color: '#ff8906',
+		fontWeight: 'bold'
+	},
+	'hljs-number': {
+		color: '#ff8906'
+	},
+	'hljs-selector-class': {
+		color: '#ff8906'
+	},
+	'hljs-tag': {
+		color: '#ff8906'
+	},
+	'hljs-selector-id': {
+		color: '#ff8906'
 	},
 	'hljs-attribute': {
 		color: '#e53170'
@@ -95,16 +111,16 @@ const codeStyle = {
 		color: '#e53170'
 	},
 	'hljs-comment': {
-		color: '#0f0e17'
+		color: '#a7a9be'
 	},
 	'hljs-quote': {
-		color: '#0f0e17'
+		color: '#a7a9be'
 	},
 	'hljs-deletion': {
-		color: '#0f0e17'
+		color: '#a7a9be'
 	},
 	'hljs-meta': {
-		color: '#0f0e17'
+		color: '#a7a9be'
 	},
 	'hljs-doctag': {
 		fontWeight: 'bold'
@@ -114,17 +130,23 @@ const codeStyle = {
 	},
 	'hljs-emphasis': {
 		fontStyle: 'italic'
+	},
+	'hljs-attr': {
+		color: '#ff8906',
+		fontStyle: 'italic'
 	}
-} as React.CSSProperties
+}
 
 /* ====================================================== */
 /*                    Implementation                      */
 /* ====================================================== */
 
 const PostDetail = ({
+	isPreview,
 	post,
 	content
 }: {
+	isPreview: boolean
 	post: Post
 	content: Awaited<ReturnType<typeof renderPost>>
 }) => {
@@ -146,6 +168,12 @@ const PostDetail = ({
 				>
 					<ArrowLeftIcon /> <span>See other posts</span>
 				</Link>
+				{isPreview ? (
+					<div className="mt-8 flex w-full items-center gap-2 rounded bg-darkPrimary p-4">
+						<ExclamationTriangleIcon />
+						This is a draft!
+					</div>
+				) : null}
 				<h1 className="mt-8 mb-2 px-12 text-4xl font-bold">{post.title}</h1>
 				<h3 className="mb-8 px-12 font-thin">
 					{formatedPublishedDate} | {post.estimatedDuration} min
@@ -158,19 +186,36 @@ const PostDetail = ({
 					height={475}
 					sizes="100vw"
 				/>
-				<article className="mb-12 px-12 selection:bg-darkPrimary selection:text-background">
+				<article className="mb-12 px-8 selection:bg-darkPrimary selection:text-background">
 					<Component
 						components={{
 							// https://mdxjs.com/docs/using-mdx/#components
 							// https://mdxjs.com/table-of-components/
-							h1: props => <h1 className="my-6 text-3xl" {...props} />,
-							h2: props => <h2 className="my-6 text-2xl" {...props} />,
-							h3: props => <h3 className="my-6 text-xl" {...props} />,
-							h4: props => <h4 className="my-6 text-lg" {...props} />,
-							p: props => (
-								<p className="my-6 text-justify indent-8" {...props} />
+							h1: props => (
+								<h1
+									className="my-6 text-3xl font-semibold text-darkPrimary"
+									{...props}
+								/>
 							),
-							// rome-ignore lint/a11y/useAnchorContent: on the props it is included
+							h2: props => (
+								<h2
+									className="my-6 text-2xl font-semibold text-darkPrimary"
+									{...props}
+								/>
+							),
+							h3: props => (
+								<h3
+									className="my-6 text-xl font-semibold text-darkPrimary"
+									{...props}
+								/>
+							),
+							h4: props => (
+								<h4
+									className="my-6 text-lg font-semibold text-darkPrimary"
+									{...props}
+								/>
+							),
+							p: props => <p className="my-6 text-justify" {...props} />,
 							a: props => (
 								<a
 									className="text-primary underline"
@@ -197,7 +242,17 @@ const PostDetail = ({
 							),
 							blockquote: props => (
 								<blockquote
-									className="text-light my-4 rounded border-l-4 border-l-primary bg-lightBackground bg-opacity-50 py-4 px-6"
+									className="text-light my-2 rounded border-l-4 border-l-primary bg-lightBackground bg-opacity-50 py-0.5 px-6"
+									{...props}
+								/>
+							),
+							img: props => (
+								// eslint-disable-next-line jsx-a11y/alt-text
+								<Image
+									className="mx-auto mb-8 aspect-auto h-auto rounded-md"
+									width={700}
+									height={475}
+									sizes="100vw"
 									{...props}
 								/>
 							),
@@ -207,8 +262,8 @@ const PostDetail = ({
 									<div className="my-4">
 										<SyntaxHighlighter
 											language={match[1]}
-											PreTag="div"
-											customStyle={codeStyle}
+											style={codeStyle}
+											showLineNumbers
 										>
 											{children as string}
 										</SyntaxHighlighter>
@@ -217,9 +272,11 @@ const PostDetail = ({
 									<code
 										className={`${
 											className || ''
-										} bg-dark rounded px-0.5 py-0.5 text-primary`}
+										} rounded bg-lightBackground px-1 py-0.5 text-sm text-primary`}
 										{...props}
-									/>
+									>
+										{children}
+									</code>
 								)
 							}
 						}}

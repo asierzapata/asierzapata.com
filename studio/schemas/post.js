@@ -47,7 +47,6 @@ export default {
 			name: 'publishedAt',
 			title: 'Published at',
 			type: 'datetime',
-			readOnly: ({ document }) => !document?.publishedOnce,
 			validation: Rule => Rule.required()
 		},
 		{

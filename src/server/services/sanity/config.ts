@@ -3,5 +3,5 @@ export const config = {
 	// Find these in your ./studio/sanity.json file
 	dataset: 'production',
 	projectId: 'lz94831n',
-	useCdn: true
+	useCdn: typeof document !== 'undefined' // server-side is statically generated, the CDN is only necessary beneficial if queries are called on-demand
 }
