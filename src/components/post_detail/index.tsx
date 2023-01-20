@@ -246,16 +246,17 @@ const PostDetail = ({
 									{...props}
 								/>
 							),
-							img: props => (
-								<Image
-									className="mx-auto mb-8 aspect-auto h-auto rounded-md"
-									width={700}
-									height={475}
-									sizes="100vw"
-									alt={post.title}
-									{...props}
-								/>
-							),
+							img: ({ src, alt }) =>
+								src ? (
+									<Image
+										className="mx-auto mb-8 aspect-auto h-auto rounded-md"
+										src={src}
+										width={700}
+										height={475}
+										sizes="100vw"
+										alt={alt || post.title}
+									/>
+								) : null,
 							code: ({ className, children, ...props }) => {
 								const match = /language-(\w+)/.exec(className || '')
 								return match ? (
