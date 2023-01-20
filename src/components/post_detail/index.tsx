@@ -161,7 +161,7 @@ const PostDetail = ({
 
 	return (
 		<div className="max-h-screen w-full overflow-y-auto">
-			<div className="mx-auto w-11/12 pt-12 md:w-10/12 lg:w-8/12 xl:w-7/12 2xl:w-6/12">
+			<div className="mx-auto w-11/12 pt-12 md:w-10/12 lg:w-9/12 xl:w-8/12 2xl:w-6/12">
 				<Link
 					href="/posts"
 					className="flex items-center justify-start gap-2 px-5 text-sm font-light hover:text-primary active:text-primary"
