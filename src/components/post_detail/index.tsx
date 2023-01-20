@@ -161,15 +161,15 @@ const PostDetail = ({
 
 	return (
 		<div className="max-h-screen w-full overflow-y-auto">
-			<div className="mx-auto w-11/12 pt-12 md:w-10/12 lg:w-9/12 xl:w-8/12 2xl:w-6/12">
+			<div className="mx-auto w-11/12 pt-16 md:w-10/12 lg:w-9/12 xl:w-8/12 2xl:w-6/12">
 				<Link
 					href="/posts"
-					className="flex items-center justify-start gap-2 px-5 text-sm font-light hover:text-primary active:text-primary"
+					className="flex items-center justify-start gap-2 px-12 text-sm font-light hover:text-primary active:text-primary"
 				>
 					<ArrowLeftIcon /> <span>See other posts</span>
 				</Link>
 				{isPreview ? (
-					<div className="mt-8 flex w-full items-center gap-2 rounded bg-darkPrimary p-4">
+					<div className="mx-12 mt-8 flex items-center gap-2 rounded bg-darkPrimary p-4">
 						<ExclamationTriangleIcon />
 						This is a draft!
 					</div>
