@@ -186,7 +186,7 @@ const PostDetail = ({
 					height={475}
 					sizes="100vw"
 				/>
-				<article className="mb-12 px-8 selection:bg-darkPrimary selection:text-background">
+				<article className="mb-12 px-12 selection:bg-darkPrimary selection:text-background">
 					<Component
 						components={{
 							// https://mdxjs.com/docs/using-mdx/#components
@@ -247,12 +247,12 @@ const PostDetail = ({
 								/>
 							),
 							img: props => (
-								// eslint-disable-next-line jsx-a11y/alt-text
 								<Image
 									className="mx-auto mb-8 aspect-auto h-auto rounded-md"
 									width={700}
 									height={475}
 									sizes="100vw"
+									alt={post.title}
 									{...props}
 								/>
 							),
