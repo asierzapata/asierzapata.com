@@ -1,5 +1,4 @@
 import React from 'react'
-import PropTypes from 'prop-types'
 
 import * as ToastPrimitive from '@radix-ui/react-toast'
 import { Cross2Icon } from '@radix-ui/react-icons'
@@ -20,8 +19,4 @@ export const ToastClose = ({ onClose }: ToastCloseProps) => {
 			</button>
 		</ToastPrimitive.Close>
 	)
-}
-
-ToastClose.propTypes = {
-	onClose: PropTypes.func.isRequired
 }
