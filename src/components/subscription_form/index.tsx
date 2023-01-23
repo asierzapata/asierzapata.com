@@ -83,16 +83,23 @@ const SubscriptionForm = () => {
 					{createSubscription.error.message}
 				</span>
 			)}
-			<button
-				className="flex items-center justify-center gap-3 rounded bg-darkPrimary px-4 py-2 font-semibold text-background transition-colors ease-in hover:bg-primary"
-				type="submit"
-			>
-				{createSubscription.isLoading ? (
-					<Spinner type="primary" />
-				) : (
-					'Subscribe'
-				)}
-			</button>
+
+			{createSubscription.isSuccess ? (
+				<div className="flex items-center justify-center gap-3 px-4 py-2 font-semibold text-text">
+					Subscribed!
+				</div>
+			) : (
+				<button
+					className="flex items-center justify-center gap-3 rounded bg-darkPrimary px-4 py-2 font-semibold text-background transition-colors ease-in hover:bg-primary"
+					type="submit"
+					disabled={createSubscription.isSuccess}
+				>
+					{createSubscription.isLoading ? <Spinner type="primary" /> : null}
+					{createSubscription.isIdle || createSubscription.isError
+						? 'Subscribe'
+						: null}
+				</button>
+			)}
 		</form>
 	)
 }
