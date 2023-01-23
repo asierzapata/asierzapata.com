@@ -9,6 +9,7 @@ import Link from 'next/link'
 import FaceDrawing from '@/../public/face_drawing.svg'
 import { PostCard } from '@/components/post_card'
 import { GitHubLogoIcon, TwitterLogoIcon } from '@radix-ui/react-icons'
+import { SubscriptionForm } from '@/components/subscription_form'
 
 /* ====================================================== */
 /*                        Types                          */
@@ -22,7 +23,6 @@ import type { StaticImageData } from 'next/image'
 /* ====================================================== */
 
 import { getPostsUseCase } from '@/server/modules/posts/get_posts_use_case'
-import { SubscriptionForm } from '@/components/subscription_form'
 
 export const getStaticProps = async () => {
 	const posts = await getPostsUseCase({ limit: 5, cursor: 0 })
