@@ -12,6 +12,7 @@ export async function searchPostsUseCase({
 	const query = `*[_type == "post"] | score(boost(title match $textQuery, 2), title match "*" + $textQuery + "*") | order(_score desc) [0...$limit] {
 		_id,
 		title,
+		description,
 		"slug": slug.current,
 		"authorName": author->name,
 		"type": type->slug.current,

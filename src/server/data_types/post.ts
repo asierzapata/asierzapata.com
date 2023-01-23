@@ -26,6 +26,7 @@ const commonPost = {
 	authorName: z.string(),
 	mainImage: z.string(),
 	publishedAt: z.string(),
+	description: z.string(),
 	type: PostTypesEnum
 }
 

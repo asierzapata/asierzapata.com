@@ -14,6 +14,7 @@ export async function getPostsUseCase({
 	let query = `*[_type == "post" && _id > $lastId] | order(_id) [0...$limit] {
 		_id,
 		title,
+		description,
 		"slug": slug.current,
 		"authorName": author->name,
 		"type": type->slug.current,
@@ -26,6 +27,7 @@ export async function getPostsUseCase({
 		query = `*[_type == "post" && type->slug.current == $postType && _id > $lastId] | order(_id) [0...$limit] {
 			_id,
 			title,
+			description,
 			"slug": slug.current,
 			"authorName": author->name,
 			"type": type->slug.current,

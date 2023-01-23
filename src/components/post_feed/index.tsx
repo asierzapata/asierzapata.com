@@ -1,7 +1,5 @@
 import React from 'react'
 
-import { useRouter } from 'next/router'
-
 /* ====================================================== */
 /*                         Types                          */
 /* ====================================================== */
@@ -17,13 +15,11 @@ import {
 /*                       Components                       */
 /* ====================================================== */
 
-import Link from 'next/link'
-
 import { classnames } from '@/lib/classnames'
-import { format } from 'date-fns'
 import { DoubleArrowDownIcon, DoubleArrowUpIcon } from '@radix-ui/react-icons'
 
 import { motion } from 'framer-motion'
+import { PostCard } from '@/components/post_card'
 
 /* ====================================================== */
 /*                    Implementation                      */
@@ -52,14 +48,14 @@ const PostFeed = ({
 	)
 
 	const stickyHeaderClassname = classnames(
-		'sticky top-0 z-10 flex w-full flex-col p-5 pl-14 lg:p-4 backdrop-blur-lg'
+		'sticky top-0 z-10 flex w-full flex-col p-5 lg:p-4 backdrop-blur-lg'
 	)
 
 	return (
 		<div className="max-h-screen w-full overflow-y-auto">
 			<div className="flex h-full w-full flex-col">
 				<div className={stickyHeaderClassname}>
-					<div className="flex flex-row items-center justify-around">
+					<div className="flex flex-row items-center justify-around pl-10">
 						<span className="flex flex-1 flex-row items-center justify-around">
 							Posts
 						</span>
@@ -84,10 +80,9 @@ const PostFeed = ({
 					>
 						<button
 							className={classnames(
-								'rounded border-2 border-primary py-1 px-2 text-sm duration-300 ease-in-out',
+								'rounded border-[1px] border-primary py-1 px-2 text-sm duration-300 ease-in-out',
 								filterPostType === '' && 'bg-primary text-background',
-								filterPostType !== '' &&
-									'border-2 hover:text-primary focus:text-primary'
+								filterPostType !== '' && 'hover:text-primary focus:text-primary'
 							)}
 							onClick={() => onPostFilterSelected('')}
 						>
@@ -97,10 +92,10 @@ const PostFeed = ({
 							<button
 								key={postType}
 								className={classnames(
-									'rounded border-2 border-primary py-1 px-2 text-sm duration-300 ease-in-out',
+									'rounded border-[1px] border-primary py-1 px-2 text-sm duration-300 ease-in-out',
 									filterPostType === postType && 'bg-primary text-background',
 									filterPostType !== postType &&
-										'border-2 hover:text-primary focus:text-primary'
+										'hover:text-primary focus:text-primary'
 								)}
 								onClick={() => onPostFilterSelected(postType)}
 							>
@@ -109,14 +104,9 @@ const PostFeed = ({
 						))}
 					</motion.div>
 				</div>
-				<div className="mx-auto flex h-full w-full flex-col gap-6 p-4 md:w-10/12 lg:w-8/12 xl:w-7/12 2xl:w-6/12">
-					{posts.map((post, index, array) => (
-						<>
-							<PostFeedListItem key={post._id} post={post} />
-							{index !== array.length - 1 && (
-								<div className="h-0.5 w-full rounded bg-primary" />
-							)}
-						</>
+				<div className="mx-auto flex h-full w-full flex-col gap-6 p-4 py-8 md:w-10/12 lg:w-8/12 xl:w-7/12 2xl:w-6/12">
+					{posts.map(post => (
+						<PostCard key={post._id} post={post} />
 					))}
 					<div className="flex h-28 items-center justify-center bg-background px-4 pb-6 italic">
 						The End 🎉
@@ -124,56 +114,6 @@ const PostFeed = ({
 				</div>
 			</div>
 		</div>
-	)
-}
-
-// TODO: separate
-function PostTypeBadge({ postType }: { postType: PostType }) {
-	const badgeClassname = classnames(
-		'rounded px-1 py-0.5 text-xs font-extralight group-hover:bg-primary',
-		postType === 'article' && 'bg-primary',
-		postType === 'snippet' && 'bg-darkPrimary',
-		postType === 'tutorial' && 'bg-secondary',
-		postType === 'book-review' && 'bg-darkText text-background'
-	)
-
-	return (
-		<span className={badgeClassname}>
-			{postType === 'article' && 'Article'}
-			{postType === 'snippet' && 'Snippet'}
-			{postType === 'tutorial' && 'Tutorial'}
-			{postType === 'book-review' && 'Book Review'}
-		</span>
-	)
-}
-
-const PostFeedListItem = ({ post }: { post: PostSummary }) => {
-	const router = useRouter()
-	const linkClassnames = classnames(
-		'group flex h-34 flex-row justify-start gap-6 rounded p-4 transition duration-300 hover:bg-lightBackground active:bg-lightBackground'
-	)
-	return (
-		<Link
-			href={{
-				pathname: `/posts/[slug]`,
-				query: { ...router.query, slug: post.slug }
-			}}
-			key={post._id}
-			className={linkClassnames}
-		>
-			<div className="flex w-full flex-col justify-between gap-4">
-				<div className="flex flex-row items-start justify-between gap-2">
-					<div className="font-medium text-text line-clamp-2 group-hover:text-primary">
-						{post.title}
-					</div>
-					<PostTypeBadge postType={post.type} />
-				</div>
-				<span className="text-sm font-thin text-text group-hover:text-primary">
-					{format(new Date(post.publishedAt), 'MMMM do, yyyy')} |{' '}
-					{post.estimatedDuration} min
-				</span>
-			</div>
-		</Link>
 	)
 }
 

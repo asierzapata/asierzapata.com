@@ -10,6 +10,12 @@ export default {
 			validation: Rule => Rule.required().min(5).max(96)
 		},
 		{
+			name: 'description',
+			title: 'Description',
+			type: 'string',
+			validation: Rule => Rule.required().min(5).max(256)
+		},
+		{
 			name: 'slug',
 			title: 'Slug',
 			type: 'slug',

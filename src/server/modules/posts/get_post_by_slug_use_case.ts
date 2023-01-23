@@ -7,6 +7,7 @@ export async function getPostBySlugUseCase(slug: string) {
 		`*[_type == "post" && slug.current == $slug] {
 			_id,
 			title,
+			description,
 			"slug": slug.current,
 			"authorName": author->name,
 			"type": type->slug.current,
