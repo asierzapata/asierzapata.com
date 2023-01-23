@@ -29,17 +29,25 @@ const codeStyle = {
 		display: 'block',
 		'overflow-x': 'auto',
 		borderRadius: '0.25rem',
-		padding: '1em 1.5rem',
+		padding: '1rem 0.5rem',
 		background: '#2e2f3e',
 		color: '#fffffe'
+	},
+	'hljs-comment': {
+		color: '#a7a9be',
+		fontStyle: 'italic'
 	},
 	'hljs-keyword': {
 		color: '#e53170',
 		fontWeight: 'bold'
 	},
 	'hljs-selector-tag': {
-		color: '#fffffe',
+		color: '#e53170',
 		fontWeight: 'bold'
+	},
+	'hljs-subst': {
+		color: '#e53170',
+		fontWeight: 'normal'
 	},
 	'hljs-literal': {
 		color: '#f25f4c',
@@ -51,9 +59,6 @@ const codeStyle = {
 	},
 	'hljs-link': {
 		color: '#e53170'
-	},
-	'hljs-subst': {
-		color: '#fffffe'
 	},
 	'hljs-string': {
 		color: '#f25f4c'
@@ -110,11 +115,9 @@ const codeStyle = {
 	'hljs-template-variable': {
 		color: '#e53170'
 	},
-	'hljs-comment': {
-		color: '#a7a9be'
-	},
 	'hljs-quote': {
-		color: '#a7a9be'
+		color: '#a7a9be',
+		fontStyle: 'italic'
 	},
 	'hljs-deletion': {
 		color: '#a7a9be'
@@ -265,6 +268,13 @@ const PostDetail = ({
 											language={match[1]}
 											style={codeStyle}
 											showLineNumbers
+											lineNumberStyle={{
+												fontStyle: 'italic',
+												color: '#a7a9be'
+											}}
+											lineNumberContainerStyle={{
+												background: '#0f0e17'
+											}}
 										>
 											{children as string}
 										</SyntaxHighlighter>
