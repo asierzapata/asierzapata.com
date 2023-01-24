@@ -9,56 +9,56 @@ import { Preview } from '@react-email/preview'
 import { Section } from '@react-email/section'
 import { Text } from '@react-email/text'
 import * as React from 'react'
+import type { PostSummary } from '@/server/data_types/post'
 
-export default function ReminderConfirmation() {
+export default function NewPostTemplate({ post }: { post: PostSummary }) {
 	return (
 		<Html>
 			<Head />
-			<Preview>Reminder to confirm your subscription to my newsletter</Preview>
+			<Preview>{post.title}</Preview>
 			<Section style={main}>
 				<Container style={container}>
-					<Section style={{ marginTop: '32px' }}>
-						<Img
-							src="https://asierzapata.com/email_logo.png"
-							width="100"
-							height="100"
-							alt="Asier Zapata Logo"
-							style={logo}
-						/>
-					</Section>
 					<Text style={h1}>
-						Confirm your subscription to my <strong>newsletter</strong>
+						I have published a new <strong>post</strong>
 					</Text>
-					<Text style={text}>Hi {`{{ email }}`},</Text>
-					<Text style={text}>
-						This is a small reminder about your subscription to my newsletter.
-						We are all very busy people! But I promise this won&apos;t take you
-						long.
-					</Text>
+					<Img
+						src={post.mainImage}
+						width="256"
+						height="171"
+						alt={post.title}
+						style={{ ...postImage, marginTop: '32px' }}
+					/>
+					<Text style={title}>{post.title}</Text>
+					<Text style={description}>{post.description}</Text>
+
 					<Section style={{ textAlign: 'center', paddingTop: '16px' }}>
-						<Button pX={20} pY={12} style={btn} href="{{ confirmation_url }}">
-							Confirm clicking here
+						<Button
+							pX={20}
+							pY={12}
+							style={btn}
+							href={`https://asierzapata.com/posts/${post.slug}?utm_campaign=post-engagement&utm_source=newsletter&utm_medium=email`}
+						>
+							Read it here
 						</Button>
 					</Section>
-					<Text style={text}>
+					<Text style={alternateLink}>
 						<br />
-						or copy and paste this URL into your browser:{' '}
+						If you can&apos;t open the post, copy and paste this URL into your
+						browser:{' '}
 						<Link
-							href="{{ confirmation_url }}"
+							href={`https://asierzapata.com/posts/${post.slug}?utm_campaign=post-engagement&utm_source=newsletter&utm_medium=email`}
 							target="_blank"
 							style={link}
 							rel="noreferrer"
 						>
-							{`{{ confirmation_url }}`}
+							{`https://asierzapata.com/posts/${post.slug}?utm_campaign=post-engagement&utm_source=newsletter&utm_medium=email`}
 						</Link>
 					</Text>
 					<Hr style={hr} />
 					<Text style={footer}>
-						This email was intended for{' '}
-						<span style={black}>{`{{ email }}`}</span>. If you were not
-						expecting this, you can ignore this email. If you are concerned
-						about your email&apos;s safety, please reply to this to get in
-						touch.
+						If you were not expecting this, you can ignore this email. If you
+						are concerned about your email&apos;s safety, please reply to this
+						to get in touch.
 					</Text>
 				</Container>
 			</Section>
@@ -78,9 +78,8 @@ const container = {
 	maxWidth: '465px'
 }
 
-const logo = {
+const postImage = {
 	margin: '0 auto',
-	backgroundColor: '#fffffe',
 	borderRadius: '0.5rem'
 }
 
@@ -95,21 +94,39 @@ const h1 = {
 	padding: '0'
 }
 
+const title = {
+	color: '#fffffe',
+	fontFamily:
+		"-apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif",
+	fontSize: '20px',
+	fontWeight: 'normal',
+	textAlign: 'center' as const,
+	margin: '30px 0',
+	padding: '0'
+}
+
+const description = {
+	color: '#fffffe',
+	fontFamily:
+		"-apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif",
+	fontSize: '16px',
+	fontWeight: 'thin',
+	textAlign: 'center' as const,
+	margin: '30px 0',
+	padding: '0'
+}
+
 const link = {
 	color: '#067df7',
 	textDecoration: 'none'
 }
 
-const text = {
+const alternateLink = {
 	color: '#fffffe',
 	fontFamily:
 		"-apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif",
-	fontSize: '14px',
+	fontSize: '12px',
 	lineHeight: '24px'
-}
-
-const black = {
-	color: 'black'
 }
 
 const btn = {

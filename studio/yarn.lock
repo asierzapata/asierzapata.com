@@ -3041,16 +3041,6 @@
     "is-date-object" "^1.0.1"
     "is-symbol" "^1.0.2"
 
-"esbuild-darwin-64@0.14.54":
-  "integrity" "sha512-jtdKWV3nBviOd5v4hOpkVmpxsBy90CGzebpbO9beiqUYVMBtSc0AL9zGftFuBon7PNDcdvNCEuQqw2x0wP9yug=="
-  "resolved" "https://registry.npmjs.org/esbuild-darwin-64/-/esbuild-darwin-64-0.14.54.tgz"
-  "version" "0.14.54"
-
-"esbuild-darwin-64@0.15.18":
-  "integrity" "sha512-2WAvs95uPnVJPuYKP0Eqx+Dl/jaYseZEUUT1sjg97TJa4oBtbAKnPnl3b5M9l51/nbx7+QAEtuummJZW0sBEmg=="
-  "resolved" "https://registry.npmjs.org/esbuild-darwin-64/-/esbuild-darwin-64-0.15.18.tgz"
-  "version" "0.15.18"
-
 "esbuild-darwin-arm64@0.14.54":
   "integrity" "sha512-OPafJHD2oUPyvJMrsCvDGkRrVCar5aVyHfWGQzY1dWnzErjrDuSETxwA2HSsyg2jORLY8yBfzc1MIpUkXlctmw=="
   "resolved" "https://registry.npmjs.org/esbuild-darwin-arm64/-/esbuild-darwin-arm64-0.14.54.tgz"

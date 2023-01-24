@@ -113,7 +113,7 @@ const black = {
 const btn = {
 	backgroundColor: '#ff8906',
 	borderRadius: '5px',
-	color: '#fff',
+	color: '#fffffe',
 	fontFamily:
 		"-apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif",
 	fontSize: '12px',
