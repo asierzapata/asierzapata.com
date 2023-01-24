@@ -34,9 +34,9 @@ function PostCard({ post }: { post: PostSummary }) {
 							width={256}
 						/>
 					</div>
-					<div className="flex flex-col justify-between gap-4">
+					<div className="flex flex-1 flex-col justify-between gap-4">
 						<div className="flex flex-row items-start justify-between gap-2">
-							<span className="text-xl font-medium text-text line-clamp-1 group-hover:text-primary">
+							<span className="text-xl font-medium text-text line-clamp-2 group-hover:text-primary md:line-clamp-1">
 								{post.title}
 							</span>
 							<PostTypeBadge postType={post.type} />
