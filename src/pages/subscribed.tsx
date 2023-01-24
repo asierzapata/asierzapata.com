@@ -55,8 +55,8 @@ function Subscribed({ posts }: InferGetStaticPropsType<typeof getStaticProps>) {
 							font-bold
 						"
 					>
-						Now that you are subscribed, you will receive a notification when I
-						publish a new post. Here are the last two.
+						Now that you are subscribed, you will receive a notification each
+						time I publish a new post. Here are the last two.
 					</h2>
 				</div>
 				<div className="mx-auto flex w-full max-w-2xl flex-col gap-6 py-6">

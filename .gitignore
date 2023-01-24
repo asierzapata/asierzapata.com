@@ -47,3 +47,6 @@ studio/.sanity/*
 
 # Webstorm
 .idea
+
+# React email
+.react-email
