@@ -32,7 +32,7 @@ export const getStaticProps = async () => {
 function Subscribed({ posts }: InferGetStaticPropsType<typeof getStaticProps>) {
 	return (
 		<div className="max-h-screen w-full overflow-y-auto">
-			<main className="m-auto mt-4 flex w-10/12 flex-col gap-8 py-6 md:w-9/12 lg:w-8/12 xl:w-7/12">
+			<main className="m-auto mt-4 flex w-10/12 flex-col gap-8 py-6 px-4 md:w-9/12 lg:w-8/12 xl:w-7/12">
 				<div className="mx-auto mt-12 flex flex-col text-center">
 					<h1
 						className="
