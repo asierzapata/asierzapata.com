@@ -59,7 +59,7 @@ function PostCard({ post }: { post: PostSummary }) {
 
 function PostTypeBadge({ postType }: { postType: PostType }) {
 	const badgeClassname = classnames(
-		'rounded px-2 py-1 text-xs font-extralight group-hover:bg-primary bg-secondary'
+		'rounded px-2 py-1 text-xs font-light group-hover:bg-primary bg-secondary text-background'
 	)
 
 	return (

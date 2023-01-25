@@ -117,7 +117,7 @@ const description = {
 }
 
 const link = {
-	color: '#067df7',
+	color: '#ff8906',
 	textDecoration: 'none'
 }
 
@@ -132,7 +132,7 @@ const alternateLink = {
 const btn = {
 	backgroundColor: '#ff8906',
 	borderRadius: '5px',
-	color: '#fffffe',
+	color: '#0f0e17',
 	fontFamily:
 		"-apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif",
 	fontSize: '12px',
