@@ -9,9 +9,12 @@ import { Preview } from '@react-email/preview'
 import { Section } from '@react-email/section'
 import { Text } from '@react-email/text'
 import * as React from 'react'
-import type { PostSummary } from '@/server/data_types/post'
 
-export default function NewPostTemplate({ post }: { post: PostSummary }) {
+export default function NewPostTemplate({
+	post
+}: {
+	post: { title: string; description: string; mainImage: string; slug: string }
+}) {
 	return (
 		<Html>
 			<Head />

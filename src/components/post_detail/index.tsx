@@ -1,3 +1,4 @@
+import type { CSSProperties } from 'react'
 import React from 'react'
 
 /* ====================================================== */
@@ -138,7 +139,7 @@ const codeStyle = {
 		color: '#ff8906',
 		fontStyle: 'italic'
 	}
-}
+} as { [key: string]: CSSProperties }
 
 /* ====================================================== */
 /*                    Implementation                      */
