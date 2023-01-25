@@ -27,7 +27,7 @@ import Giscus from '@giscus/react'
 const codeStyle = {
 	hljs: {
 		display: 'block',
-		'overflow-x': 'auto',
+		overflowX: 'auto',
 		borderRadius: '0.25rem',
 		padding: '1rem 0.5rem',
 		background: '#2e2f3e',

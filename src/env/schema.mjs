@@ -20,6 +20,7 @@ export const serverSchema = z.object({
     process.env.VERCEL ? z.string() : z.string().url(),
   ),
 	SANITY_API_TOKEN: z.string().min(1),
+	SANITY_WEBHOOK_SECRET: z.string().min(1),
 	BUTTONDOWN_API_KEY: z.string().min(1)
 });
 
@@ -34,7 +35,8 @@ export const serverEnv = {
   NEXTAUTH_SECRET: process.env.NEXTAUTH_SECRET,
   NEXTAUTH_URL: process.env.NEXTAUTH_URL,
 	SANITY_API_TOKEN: process.env.SANITY_API_TOKEN,
-	BUTTONDOWN_API_KEY: process.env.BUTTONDOWN_API_KEY
+	SANITY_WEBHOOK_SECRET:  process.env.SANITY_WEBHOOK_SECRET,
+	BUTTONDOWN_API_KEY: process.env.BUTTONDOWN_API_KEY,
 };
 
 /**

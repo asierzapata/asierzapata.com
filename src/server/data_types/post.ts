@@ -16,7 +16,7 @@ export const PostTypesDisplayMapping = {
 	'weekly-reading': 'Weekly Reading'
 }
 
-const PostTypesEnum = z.enum(PostTypesArray)
+export const PostTypesEnum = z.enum(PostTypesArray)
 
 const commonPost = {
 	_id: z.string(),

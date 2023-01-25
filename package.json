@@ -17,6 +17,7 @@
 		"@prisma/client": "^4.9.0",
 		"@radix-ui/react-icons": "^1.1.1",
 		"@radix-ui/react-toast": "^1.1.2",
+		"@sanity/webhook": "^2.0.0",
 		"@react-email/button": "^0.0.5",
 		"@react-email/container": "^0.0.5",
 		"@react-email/head": "^0.0.3",
