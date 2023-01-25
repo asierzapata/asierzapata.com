@@ -1,5 +1,4 @@
 import { env } from '@/env/server.mjs'
-import { formatISO } from 'date-fns'
 
 const BUTTONDOWN_API_URL = 'https://api.buttondown.email/v1'
 
@@ -48,7 +47,6 @@ export const sendNotificationEmail = async ({
 			body: JSON.stringify({
 				included_tags: [],
 				excluded_tags: [],
-				publish_date: formatISO(new Date()),
 				subject,
 				body,
 				email_type: 'private',
