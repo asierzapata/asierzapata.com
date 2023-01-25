@@ -67,10 +67,9 @@ export const sendNotificationEmail = async ({
 
 	if (response.status >= 400) {
 		const jsonResponse = (await response.json()) as Record<string, unknown>
-		if (jsonResponse.code && jsonResponse.code === 'email_already_exists') {
-			throw new Error('The email address is already subscribed.')
-		}
-		throw new Error('There was an error subscribing to the list.')
+		throw new Error(
+			`There was an error sending the email: ${JSON.stringify(jsonResponse)}`
+		)
 	}
 
 	return
