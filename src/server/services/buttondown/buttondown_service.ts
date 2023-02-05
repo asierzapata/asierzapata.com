@@ -50,7 +50,6 @@ export const sendNotificationEmail = async ({
 				subject,
 				body,
 				email_type: 'private',
-				status: 'sent',
 				metadata: {}
 			}),
 			headers: {
