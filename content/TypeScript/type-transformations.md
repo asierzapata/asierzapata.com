@@ -2,7 +2,7 @@
 title: Type Transformations Notes
 tags:
   - TypeScript
-  - WebDevelopment
+  - Web Development
 draft: false
 ---
 
