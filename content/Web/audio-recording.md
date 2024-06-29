@@ -89,9 +89,9 @@ After my preliminary research about it, I found that I could create an Audio Dri
 
 I've looked at how big apps do this, and I saw that Loom literally does this. You have to opt-in to the feature by going into preferences and then switching the toggle `Use System Audio`. The first time, it will prompt you to install a driver. Then, once you record, you can see the magic in the input section of the audio preferences. The first screenshot is what it looks like without recording, and the other is recording.
 
-![[Screenshot 2023-01-19 at 08.38.53.png]]
+![[without-audio-recording.png]]
 
-![[Pasted image 20230119083926.png]]
+![[with-audio-recording.png]]
 
 You can see that there are two new inputs: `Loom Background Music` and `Loom Recording Device`. I suspect the one they connect to is the virtual input, but I don't know exactly how they are doing it.
 
