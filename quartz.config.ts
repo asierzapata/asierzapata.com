@@ -12,7 +12,8 @@ const config: QuartzConfig = {
 		enableSPA: true,
 		enablePopovers: true,
 		analytics: {
-			provider: 'plausible',
+			provider: 'google',
+			tagId: 'G-H3XEQ1CXLR',
 		},
 		locale: 'en-US',
 		baseUrl: 'asierzapata.com',
