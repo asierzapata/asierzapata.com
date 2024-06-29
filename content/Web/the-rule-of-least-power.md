@@ -5,7 +5,7 @@ tags:
   - WebDevelopment
 ---
 
-When designing computer systems, we often face a crucial decision: choosing the right language for the task at hand. While it may seem counterintuitive, the "Rule of Least Power" suggests that opting for a less powerful language can be the key to unlocking greater flexibility and reusability of information.
+When designing systems, we often face a crucial decision: choosing the right language for the task at hand. While it may seem counterintuitive, the "Rule of Least Power" suggests that opting for a less powerful language can be the key to unlocking greater flexibility and reusability of information.
 
 In the past, computer science focused on creating languages that were as powerful as possible. However, this pursuit of power comes at a cost. Turing-complete languages, which are capable of computing any result a computer is capable of, are often difficult to analyze and secure. This is because their very power makes it hard to predict what a program will do without running it.
 
