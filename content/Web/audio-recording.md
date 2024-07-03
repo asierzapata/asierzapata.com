@@ -3,7 +3,7 @@ title: Recording Audio on the Web
 draft: false
 tags:
   - Audio
-  - WebDevelopment
+  - Web Development
 ---
 
 A few days ago, I started a new side project about having a meeting buddy. My initial concept was to have a page/app/extension that listened for my microphone and a call's audio and transcribed it. Around this, I had different ideas like adding the ability to bookmark a particular moment for later review, defining blocks to divide discussed topics, or summarizing the meeting. Pretty cool, I thought!
