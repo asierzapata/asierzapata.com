@@ -4,6 +4,7 @@ draft: false
 tags:
   - Audio
   - Web Development
+date: 2024-05-18
 ---
 
 A few days ago, I started a new side project about having a meeting buddy. My initial concept was to have a page/app/extension that listened for my microphone and a call's audio and transcribed it. Around this, I had different ideas like adding the ability to bookmark a particular moment for later review, defining blocks to divide discussed topics, or summarizing the meeting. Pretty cool, I thought!
@@ -20,12 +21,12 @@ If we wanted to record the microphone, we would pick the user source since they 
 
 ```javascript
 try {
- const mediaStream = await navigator.mediaDevices.getUserMedia({
-  video: true, // This activates the webcam
-  audio: true, // This activates the microphone
- })
+	const mediaStream = await navigator.mediaDevices.getUserMedia({
+		video: true, // This activates the webcam
+		audio: true, // This activates the microphone
+	})
 } catch (error) {
- /* handle the error */
+	/* handle the error */
 }
 ```
 
@@ -41,12 +42,12 @@ My rationale for recording the system audio was to use the other source I mentio
 
 ```javascript
 try {
- const mediaStream = await navigator.mediaDevices.getDisplayMedia({
-  video: false, // I didn't want the video, so I disabled it
-  audio: true, // This would return me the audio of the recorded display part
- })
+	const mediaStream = await navigator.mediaDevices.getDisplayMedia({
+		video: false, // I didn't want the video, so I disabled it
+		audio: true, // This would return me the audio of the recorded display part
+	})
 } catch (error) {
- /* handle the error */
+	/* handle the error */
 }
 ```
 
@@ -60,12 +61,12 @@ Then I tried this:
 
 ```javascript
 try {
- const mediaStream = await navigator.mediaDevices.getDisplayMedia({
-  video: false, // I didn't want the video, so I disabled it
-  audio: true, // This would return me the audio of the recorded display part
- })
+	const mediaStream = await navigator.mediaDevices.getDisplayMedia({
+		video: false, // I didn't want the video, so I disabled it
+		audio: true, // This would return me the audio of the recorded display part
+	})
 } catch (error) {
- /* handle the error */
+	/* handle the error */
 }
 ```
 

@@ -3,6 +3,7 @@ title: Atwood's Law
 draft: false
 tags:
   - JavaScript
+date: 2024-07-13
 ---
 
 > “Any application that _can_ be written in JavaScript, _will_ eventually be written in JavaScript.”

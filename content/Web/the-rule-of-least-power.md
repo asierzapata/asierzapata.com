@@ -3,6 +3,7 @@ title: The Rule of Least Power
 draft: true
 tags:
   - Web Development
+date: 2024-07-13
 ---
 
 When designing systems, we often face a crucial decision: choosing the right language for the task at hand. While it may seem counterintuitive, the "Rule of Least Power" suggests that opting for a less powerful language can be the key to unlocking greater flexibility and reusability of information.

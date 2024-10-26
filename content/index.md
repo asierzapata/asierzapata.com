@@ -1,6 +1,7 @@
 ---
 title: Welcome to my digital garden!
 draft: false
+date: 2024-05-18
 ---
 
 Hi there! I'm Asier! I’m a software engineer currently working at [Edpuzzle](https://edpuzzle.com), a fantastic EdTech company, where I’m an Engineering Manager (or whatever the team needs, I like to wear many hats). My day is split between helping my team grow and leading different projects, from the technical side to the product side.

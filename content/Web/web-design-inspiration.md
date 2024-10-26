@@ -4,17 +4,21 @@ draft: false
 tags:
   - Web Development
   - Web Design
+date: 2024-07-13
 ---
 
 This is my collection of web design inspiration sources. I use them to get ideas for my personal projects and to keep up with the latest trends in web design. They are a mix of libraries, websites, and website aggregators. I hope you find them useful!
 
 - **[Call To inspiration](https://calltoinspiration.com/)**
+
   - A curated collection of screenshots of real websites organized by their type of UI element, like for example carousels, or common sections of a page, such as a pricing section.
 
 - **[SVG Hub](https://svghub.vercel.app/)**
+
   - A library of 70 SVG scribbles, shapes, and other elements that you can use in your projects.
 
 - **[Landing Folio](https://www.landingfolio.com/)**
+
   - A website that showcases landing pages from different products. It has a great search feature to find landing pages by industry, type, or style.
 
 - **[shadcn UI](https://ui.shadcn.com/)**

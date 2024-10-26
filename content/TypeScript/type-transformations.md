@@ -4,6 +4,7 @@ tags:
   - TypeScript
   - Web Development
 draft: false
+date: 2024-08-13
 ---
 
 These are my notes from the [Type Transformations](https://www.totaltypescript.com/workshops/type-transformations) course by [Matt Pocock](https://twitter.com/mattpocockuk) on [Total TypeScript](https://www.totaltypescript.com/).
@@ -18,15 +19,15 @@ These are my notes from the [Type Transformations](https://www.totaltypescript.c
 
 ```typescript
 const testingFrameworks = {
- vitest: {
-  label: 'Vitest',
- },
- jest: {
-  label: 'Jest',
- },
- mocha: {
-  label: 'Mocha',
- },
+	vitest: {
+		label: 'Vitest',
+	},
+	jest: {
+		label: 'Jest',
+	},
+	mocha: {
+		label: 'Mocha',
+	},
 } as const
 
 type TestingFramework = keyof typeof testingFrameworks
@@ -43,24 +44,24 @@ type TestingFramework = keyof typeof testingFrameworks
 
 ```typescript
 type A =
- | {
-   type: 'a'
-   a: string
-   }
- | {
-   type: 'b'
-   b: string
-   }
- | {
-   type: 'c'
-   c: string
-   }
+	| {
+			type: 'a'
+			a: string
+	  }
+	| {
+			type: 'b'
+			b: string
+	  }
+	| {
+			type: 'c'
+			c: string
+	  }
 
 const getUnion = (result: A) => {
- // Here we can not access result.a
- if (result.type === 'a') {
-  // Here we can access result.a
- }
+	// Here we can not access result.a
+	if (result.type === 'a') {
+		// Here we can access result.a
+	}
 }
 ```
 
@@ -68,18 +69,18 @@ const getUnion = (result: A) => {
 
 ```typescript
 export type Event =
- | {
-   type: 'click'
-   event: MouseEvent
-   }
- | {
-   type: 'focus'
-   event: FocusEvent
-   }
- | {
-   type: 'keydown'
-   event: KeyboardEvent
-   }
+	| {
+			type: 'click'
+			event: MouseEvent
+	  }
+	| {
+			type: 'focus'
+			event: FocusEvent
+	  }
+	| {
+			type: 'keydown'
+			event: KeyboardEvent
+	  }
 
 type ClickEvent = Extract<Event, { type: 'click' }>
 //   ^ {
@@ -102,7 +103,7 @@ type NonKeyDownEvents = Exclude<Event, { type: 'keydown' }>
 ```typescript
 // Simple Type
 const fakeDataDefaults = {
- String: 'Default string',
+	String: 'Default string',
 }
 
 type StringType = (typeof fakeDataDefaults)['String']
@@ -110,18 +111,18 @@ type StringType = (typeof fakeDataDefaults)['String']
 
 // Discriminated Union
 type Event =
- | {
-   type: 'click'
-   event: MouseEvent
-   }
- | {
-   type: 'focus'
-   event: FocusEvent
-   }
- | {
-   type: 'keydown'
-   event: KeyboardEvent
-   }
+	| {
+			type: 'click'
+			event: MouseEvent
+	  }
+	| {
+			type: 'focus'
+			event: FocusEvent
+	  }
+	| {
+			type: 'keydown'
+			event: KeyboardEvent
+	  }
 type EventType = Event['type']
 //   ^ 'click' | 'focus' | 'keydown'
 ```
@@ -131,19 +132,19 @@ type EventType = Event['type']
 
 ```typescript
 const programModeEnumMap = {
- GROUP: 'group',
- ANNOUNCEMENT: 'announcement',
- ONE_ON_ONE: '1on1',
- SELF_DIRECTED: 'selfDirected',
- PLANNED_ONE_ON_ONE: 'planned1on1',
- PLANNED_SELF_DIRECTED: 'plannedSelfDirected',
+	GROUP: 'group',
+	ANNOUNCEMENT: 'announcement',
+	ONE_ON_ONE: '1on1',
+	SELF_DIRECTED: 'selfDirected',
+	PLANNED_ONE_ON_ONE: 'planned1on1',
+	PLANNED_SELF_DIRECTED: 'plannedSelfDirected',
 } as const
 
 type IndividualProgram = (typeof programModeEnumMap)[
- | 'ONE_ON_ONE'
- | 'SELF_DIRECTED'
- | 'PLANNED_ONE_ON_ONE'
- | 'PLANNED_SELF_DIRECTED']
+	| 'ONE_ON_ONE'
+	| 'SELF_DIRECTED'
+	| 'PLANNED_ONE_ON_ONE'
+	| 'PLANNED_SELF_DIRECTED']
 
 type AllPrograms = (typeof programModeEnumMap)[string]
 ```
@@ -182,8 +183,8 @@ type Sandwich = `${BreadType} sandwich with ${Filling}`
 
 ```typescript
 type CreateDataShape<TData, TError = undefined> = {
- data: TData
- error: TError
+	data: TData
+	error: TError
 }
 ```
 
@@ -214,15 +215,15 @@ type GetSurname<T> = T extends `${infer First} ${infer Last}` ? Last : never
 
 ```typescript
 type GetParserResult<T> = T extends
- | {
-   parse: () => infer TResult
-   }
- | {
-   extract: () => infer TResult
-   }
- | (() => infer TResult)
- ? TResult
- : never
+	| {
+			parse: () => infer TResult
+	  }
+	| {
+			extract: () => infer TResult
+	  }
+	| (() => infer TResult)
+	? TResult
+	: never
 ```
 
 ## Mapped Types
@@ -231,7 +232,7 @@ type GetParserResult<T> = T extends
 
 ```typescript
 type RoutesObject = {
- [R in Route]: R
+	[R in Route]: R
 }
 ```
 
@@ -239,13 +240,13 @@ type RoutesObject = {
 
 ```typescript
 interface Attributes {
- firstName: string
- lastName: string
- age: number
+	firstName: string
+	lastName: string
+	age: number
 }
 
 type AttributeGetters = {
- [K in keyof Attributes as `get${Capitalize<K>}`]: () => Attributes[K]
+	[K in keyof Attributes as `get${Capitalize<K>}`]: () => Attributes[K]
 }
 // ^ {
 //       getFirstName: () => string;
@@ -260,7 +261,7 @@ type AttributeGetters = {
 type SearchForId = `${string}${'id' | 'Id'}${string}`
 
 type OnlyIdKeys<T> = {
- [K in keyof T as K extends SearchForId ? K : never]: T[K]
+	[K in keyof T as K extends SearchForId ? K : never]: T[K]
 }
 
 // This will only return the values of a type that contain Id or id
@@ -270,6 +271,6 @@ type OnlyIdKeys<T> = {
 
 ```typescript
 type ValuesAsUnionOfTuples = {
- [K in keyof Values]: [K, Values[K]]
+	[K in keyof Values]: [K, Values[K]]
 }[keyof Values]
 ```

@@ -3,8 +3,10 @@ title: If I had to start over
 tags:
   - Life
   - Advice
-draft: true
+draft: false
+date: 2024-10-26
 ---
+
 In a few weeks, my brother-in-law will finish college, and as with many people his age and life period, he is unsure about what to do next. That has kickstarted a recurrent thought in my mind that has popped up repeatedly over the last few months: `What advice would I give to my younger self?`
 
 I don't want to come off as an "all-figured" type of guy, because I'm not, but I think I can at least tell what's worked for me and what's not.
