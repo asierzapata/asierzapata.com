@@ -1,0 +1,31 @@
+---
+import Header from '../components/header.astro'
+import PostLink from '../components/post-link.astro'
+import Layout from '../layouts/layout.astro'
+
+const posts = Object.values(import.meta.glob('../posts/*.md', { eager: true }))
+console.log(posts)
+---
+
+<Layout>
+	<Header />
+
+	<section class="mt-8 flex flex-col gap-4 px-4 sm:px-6">
+		{
+			posts.map((post, index) => (
+				<>
+					<PostLink
+						url={(post as any).url}
+						title={(post as any).frontmatter.title}
+						date={(post as any).frontmatter.date}
+						tags={(post as any).frontmatter.tags}
+					/>
+					{/* Divider line between items on small screens only */}
+					{index < posts.length - 1 && (
+						<hr class="lg:hidden border-t border-gray-200 dark:border-gray-700 opacity-40" />
+					)}
+				</>
+			))
+		}
+	</section>
+</Layout>

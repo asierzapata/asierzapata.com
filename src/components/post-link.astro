@@ -1,0 +1,79 @@
+---
+interface Props {
+	url: string
+	title: string
+	date: string
+	tags?: string[]
+}
+
+const { url, title, date, tags = [] } = Astro.props
+
+// Format date to full format (e.g., "June 15, 2024")
+const formatDate = (dateString: string) => {
+	const dateObj = new Date(dateString)
+	return dateObj.toLocaleDateString('en-US', {
+		year: 'numeric',
+		month: 'long',
+		day: 'numeric',
+	})
+}
+
+const formattedDate = formatDate(date)
+const displayTags = tags.slice(0, 2)
+
+const postSlug = title.replace(/\s+/g, '-').toLowerCase()
+---
+
+<a
+	href={url}
+	class="group relative isolate rounded p-4 flex flex-col gap-3 border border-transparent hover:border-blue-300 dark:hover:border-blue-300/20 transition-all duration-200 hover:shadow-sm"
+>
+	<!-- SVG Dot Pattern Background (visible on hover) - matches header -->
+	<svg
+		class="pointer-events-none absolute inset-0 size-full select-none text-blue-300 -z-10 invisible opacity-30 group-hover:visible dark:opacity-60 rounded"
+		aria-hidden="true"
+	>
+		<defs>
+			<pattern id={`pattern-${postSlug}`} width="4" height="4" patternUnits="userSpaceOnUse">
+				<circle cx="0" cy="0" r="1.5" fill="currentColor"></circle>
+			</pattern>
+		</defs>
+		<rect width="100%" height="100%" fill={`url(#pattern-${postSlug})`}></rect>
+	</svg>
+
+	<!-- Small screens: Title on one line, tags + date on another -->
+	<!-- Large screens: Everything inline with divider line -->
+	<div class="flex flex-col gap-2 lg:flex-row lg:items-center lg:gap-4">
+		<!-- Title -->
+		<h2
+			class="underline decoration-blue-300/20 hover:decoration-blue-400/80 dark:decoration-blue-300/20 dark:hover:decoration-blue-400/80 group-hover:decoration-blue-400/80 dark:group-hover:decoration-blue-400/80 text-gray-900 dark:text-gray-100 text-base font-medium transition-all"
+		>
+			{title}
+		</h2>
+
+		<!-- Horizontal divider line (visible only on large screens) -->
+		<hr
+			class="hidden lg:block grow border-t border-gray-200 dark:border-gray-700 opacity-60 group-hover:opacity-40 transition-opacity"
+		/>
+
+		<!-- Tags and Date Container -->
+		<div class="flex flex-wrap items-center gap-2 lg:ml-0">
+			{
+				displayTags.length > 0 && (
+					<div class="flex gap-2">
+						{displayTags.map(tag => (
+							<span class="text-xs px-2 py-1 rounded bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300">
+								{tag}
+							</span>
+						))}
+					</div>
+				)
+			}
+
+			<!-- Date -->
+			<p class="ml-auto lg:ml-0 text-gray-600 dark:text-gray-400 font-mono text-xs shrink-0">
+				{formattedDate}
+			</p>
+		</div>
+	</div>
+</a>
