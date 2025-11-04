@@ -1,16 +1,8 @@
 <section class="relative px-4 py-12 sm:px-6">
-	<hgroup class="mx-auto flex max-w-xl flex-col items-center gap-1">
-		<h2 class="font-serif text-3xl font-medium text-blue-600 text-center text-balance mb-2">
-			Async
-		</h2>
-		<p class="text-center">
-			<span class="text-blue-400 text-balance"> by Asier Zapata </span>
-		</p>
-	</hgroup>
-
+	<slot />
 	<svg
 		aria-hidden="true"
-		class="absolute inset-0 size-full pointer-events-none select-none text-blue-300 -z-10 opacity-30 dark:opacity-60"
+		class="absolute inset-0 size-full pointer-events-none select-none text-blue-300 -z-10 opacity-30"
 	>
 		<defs>
 			<pattern id="header-pattern" width="4" height="4" patternUnits="userSpaceOnUse">
@@ -23,31 +15,31 @@
 
 <section
 	id="divider-slash"
-	class="relative h-4 w-full before:absolute before:top-0 before:-left-[100vw] before:-z-10 before:h-px before:w-[200vw] before:bg-blue-200/50 dark:before:bg-blue-300/8 after:absolute after:bottom-0 after:-left-[100vw] after:-z-10 after:h-px after:w-[200vw] after:bg-blue-200/50 dark:after:bg-blue-300/8"
+	class="relative h-4 w-full before:absolute before:top-0 before:-left-[100vw] before:-z-10 before:h-px before:w-[200vw] before:bg-blue-200/50 after:absolute after:bottom-0 after:-left-[100vw] after:-z-10 after:h-px after:w-[200vw] after:bg-blue-200/50"
 >
 	<div
-		class="absolute z-10 size-2 rotate-45 rounded-sm border border-blue-200 dark:border-blue-300/20 bg-white dark:bg-black"
+		class="absolute z-10 size-2 rotate-45 rounded-sm border border-blue-200 bg-white"
 		style="top: -3.5px; left: -4.5px;"
 	>
 	</div>
 	<div
-		class="absolute z-10 size-2 rotate-45 rounded-sm border border-blue-200 dark:border-blue-300/20 bg-white dark:bg-black"
+		class="absolute z-10 size-2 rotate-45 rounded-sm border border-blue-200 bg-white"
 		style="top: -3.5px; right: -4.5px;"
 	>
 	</div>
 	<div
-		class="absolute z-10 size-2 rotate-45 rounded-sm border border-blue-200 dark:border-blue-300/20 bg-white dark:bg-black"
+		class="absolute z-10 size-2 rotate-45 rounded-sm border border-blue-200 bg-white"
 		style="left: -4.5px; bottom: -3.5px;"
 	>
 	</div>
 	<div
-		class="absolute z-10 size-2 rotate-45 rounded-sm border border-blue-200 dark:border-blue-300/20 bg-white dark:bg-black"
+		class="absolute z-10 size-2 rotate-45 rounded-sm border border-blue-200 bg-white"
 		style="right: -4.5px; bottom: -3.5px;"
 	>
 	</div>
 
 	<svg
-		class="absolute inset-0 size-full pointer-events-none select-none text-blue-300 -z-10 opacity-30 dark:opacity-60"
+		class="absolute inset-0 size-full pointer-events-none select-none text-blue-300 -z-10 opacity-30"
 	>
 		<defs>
 			<pattern

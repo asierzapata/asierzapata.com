@@ -1,28 +1,41 @@
 ---
+import { getCollection } from 'astro:content'
+
 import Header from '../components/header.astro'
 import PostLink from '../components/post-link.astro'
 import Layout from '../layouts/layout.astro'
 
-const posts = Object.values(import.meta.glob('../posts/*.md', { eager: true }))
-console.log(posts)
+let posts = await getCollection('posts')
+posts = posts.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
 ---
 
 <Layout>
-	<Header />
+	<Header>
+		<hgroup class="mx-auto flex max-w-xl flex-col items-center gap-1">
+			<h2 class="font-serif text-3xl font-medium text-blue-600 text-center text-balance mb-2">
+				Posts
+			</h2>
+			<p class="text-center">
+				<span class="text-blue-400 text-balance">
+					Thoughts, tutorials, and musings on web development and technology.
+				</span>
+			</p>
+		</hgroup>
+	</Header>
 
 	<section class="mt-8 flex flex-col gap-4 px-4 sm:px-6">
 		{
 			posts.map((post, index) => (
 				<>
 					<PostLink
-						url={(post as any).url}
-						title={(post as any).frontmatter.title}
-						date={(post as any).frontmatter.date}
-						tags={(post as any).frontmatter.tags}
+						slug={post.data.slug}
+						title={post.data.title}
+						date={post.data.date}
+						tags={post.data.tags}
 					/>
 					{/* Divider line between items on small screens only */}
 					{index < posts.length - 1 && (
-						<hr class="lg:hidden border-t border-gray-200 dark:border-gray-700 opacity-40" />
+						<hr class="lg:hidden border-t border-gray-200  opacity-40" />
 					)}
 				</>
 			))
