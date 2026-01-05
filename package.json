@@ -9,8 +9,13 @@
     "astro": "astro"
   },
   "dependencies": {
+    "@astrojs/mdx": "^4.3.13",
+    "@fontsource/merriweather": "^5.2.11",
+    "@resvg/resvg-js": "^2.6.2",
     "@tailwindcss/vite": "^4.1.16",
     "astro": "^5.15.3",
+    "satori": "^0.18.3",
+    "satori-html": "^0.3.2",
     "tailwindcss": "^4.1.16"
   },
   "devDependencies": {
