@@ -115,8 +115,10 @@ const socialImageURL = new URL(image, Astro.url);
 		<main class="mx-3 grow md:mx-8 lg:mx-12 border-border border-x">
 			<slot />
 		</main>
-		<footer class="mx-3 md:mx-8 lg:mx-12 border-border border-x border-b py-6 text-center">
-			<p class="text-primary-light text-sm">Written with ❤️ from Barcelona</p>
+		<footer class="border-t border-border px-3 md:px-8 lg:px-12">
+			<div class="border-l border-r border-border py-6 text-center">
+				<p class="text-primary-light text-sm">Written with ❤️ from Barcelona</p>
+			</div>
 		</footer>
 	</body>
 
