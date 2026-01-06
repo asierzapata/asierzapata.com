@@ -1,0 +1,23 @@
+<div
+	id="reading-progress"
+	class="fixed top-0 left-0 h-1.5 bg-primary z-50 transition-all duration-150 ease-out w-0"
+>
+</div>
+
+<script>
+	const progress = document.getElementById('reading-progress')
+
+	const updateProgress = () => {
+		const scrollTop = window.scrollY
+		const docHeight = document.documentElement.scrollHeight - window.innerHeight
+		const scrollPercent = (scrollTop / docHeight) * 100
+
+		if (progress) {
+			progress.style.width = `${scrollPercent}%`
+		}
+	}
+
+	window.addEventListener('scroll', updateProgress)
+	// Initial call in case the user reloads halfway down
+	updateProgress()
+</script>

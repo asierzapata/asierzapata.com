@@ -1,0 +1,77 @@
+---
+title: Can you create a coding agent with Node.js in 30 minutes? (Yes, you can!)
+slug: coding-agent-with-node
+date: 2026-01-06
+draft: false
+tags:
+  - AI
+  - Node.js
+---
+
+import { Image } from 'astro:assets'
+import AgentLoop from '../assets/coding-agent-with-node/agent-loop.png'
+import CodingAgentParts from '../assets/coding-agent-with-node/coding-agent-parts.png'
+
+This last year has been really exciting to be in the AI coding space, especially with the release of tools like Claude Code and the explosion of CLI Coding Agents. Those agents are incredible, but what impresses me the most is that their core concepts are very simple once you wrap you head around them. In this post I will try to demystify them through building your own coding agent with JavaScript. I encourage you to follow along!
+
+# What is an agent?
+
+Before writing a single line of code I think its interesting talk about what is an **_Agent_**. Its one of those buzzwords that I think may not have a clear definition in lots of peoples heads.
+
+In early AI applications using LLMs, we had the _autocomplete_. The pioneer here was Github's Copilot, which focused on just predicting the next piece of code you were writing. Those models where the most powerful we ever had at that moment, but lacked both overall context of the code being written and producing longer code responses, which was a drawback for more complex tasks. Then it came the _chatbot_. With much bigger contexts and longer responses now we could potentially solve bigger problems. This worked well at first, but is cumbersome the dance of giving the _chatbot_ context and then moving the solutions to the actual place. Its also difficult to know which context is the correct for a given task. Agents come from trying to solve this problem of **how can we let the LLM get the context itself and then execute the steps needed to solve the task**.
+
+What changed here is that we gave the _chatbot_ some _tools_ to gather context and do something with that. In other words, an agent is an AI system where the LLM dynamically directs their own actions and tool usage in a loop, having full autonomy over how they accomplish the task at hand and when to stop.
+
+<Image
+	src={AgentLoop}
+	alt="Agent Loop Diagram with LLM, Tools, Observations and Actions"
+	style={{ boxShadow: 'none', marginBottom: '4rem' }}
+/>
+
+# So whats a coding agent then?
+
+The main thing that differentiates agents between them are two things: the system prompt (aka the prompt that tells the agent how to behave) and the tools we give them.
+
+To develop the most simple (but powerful) coding agent we just need to give it three types of tools: _search, read_ and _write._ With those three types of tools the agent will be able to code whatever we need, its that simple!
+
+# What we are going to code
+
+We are going to code a simple CLI in Node.js that will have three distinct parts:
+
+<Image
+	src={CodingAgentParts}
+	alt="Coding Agent Parts Diagram with Chat Loop, Agent and Tools"
+	style={{ boxShadow: 'none' }}
+/>
+
+First we will begin with a simple chat loop to get that out of the way. Then we will focus on how to build our agent to answer us and then give it tools to make it a real coding agent.
+
+## Chat loop
+
+On Node.js we can use the **_readline_** internal package as a quick and easy way to create an input/chat loop. To do so we first need to create an interface and then as for the users input.
+
+```javascript
+import * as readline from 'node:readline/promises'
+
+const terminal = readline.createInterface({
+	input: process.stdin,
+	output: process.stdout,
+})
+
+export async function chat() {
+	while (true) {
+		const userInput = await terminal.question(getUserConsolePrompt())
+		console.log(`Agent: ${userInput}`)
+	}
+}
+
+chat()
+```
+
+# Inspiration
+
+This post was inspired by another one written by Thorsten Ball called _[How to Build an Agent](https://ampcode.com/how-to-build-an-agent)_. Not long ago, I stumbled upon a new CLI coding agent called [AMP](https://ampcode.com/), and while looking into what made it interesting, I came across this post. It was so inspiring that I wanted to try doing the same but in JavaScript.
+
+Also, I recently gave a lightning talk about this same topic, so I wanted to create a transcription of that.
+
+Thank you for reading it!

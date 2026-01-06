@@ -4,22 +4,49 @@ import { getCollection } from 'astro:content'
 import Header from '../components/header.astro'
 import PostLink from '../components/post-link.astro'
 import Layout from '../layouts/layout.astro'
+import Separator from '../components/separator.astro'
+import { Linkedin, Github } from '@lucide/astro'
 
-let posts = await getCollection('posts')
+let posts = await getCollection('posts', ({ data }) => {
+	return import.meta.env.PROD ? !data.draft && data.date <= new Date() : true
+})
 posts = posts.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
 ---
 
 <Layout>
+	<section class="my-8 flex flex-col gap-4 px-4 sm:px-6">
+		<h1 class="font-serif text-4xl font-medium text-primary text-left text-balance mb-2">
+			Hi there!
+		</h1>
+		<p class="text-left">
+			Welcome to <strong>Async</strong>, my personal blog where I share my thoughts and musings on
+			web development and technology. Here, you'll find articles on a variety of topics, from
+			programming to technical leadership. I hope you find something interesting and useful!
+		</p>
+		<!-- Social Links -->
+		<p class="text-left flex flex-row gap-4 mt-2">
+			<a
+				href="https://www.github.com/asierzapata"
+				class="text-primary hover:underline hover:opacity-80 transition duration-150 ease-in-out hover:text-primary-hover hover:scale-105"
+				target="_blank"
+				aria-label="GitHub Profile"
+				rel="noopener noreferrer"><Github /></a
+			>
+			<a
+				href="https://www.linkedin.com/in/asierzapata/"
+				class="text-primary hover:underline hover:opacity-80 transition duration-150 ease-in-out hover:text-primary-hover hover:scale-105"
+				target="_blank"
+				aria-label="LinkedIn Profile"
+				rel="noopener noreferrer"><Linkedin /></a
+			>
+		</p>
+	</section>
+	<Separator />
 	<Header>
 		<hgroup class="mx-auto flex max-w-xl flex-col items-center gap-1">
-			<h2 class="font-serif text-3xl font-medium text-blue-600 text-center text-balance mb-2">
+			<h2 class="font-serif text-3xl font-medium text-primary text-center text-balance mb-2">
 				Posts
 			</h2>
-			<p class="text-center">
-				<span class="text-blue-400 text-balance">
-					Thoughts and musings on web development and technology.
-				</span>
-			</p>
 		</hgroup>
 	</Header>
 
@@ -34,9 +61,7 @@ posts = posts.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
 						tags={post.data.tags}
 					/>
 					{/* Divider line between items on small screens only */}
-					{index < posts.length - 1 && (
-						<hr class="lg:hidden border-t border-gray-200  opacity-40" />
-					)}
+					{index < posts.length - 1 && <hr class="lg:hidden border-t border-gray-200 opacity-40" />}
 				</>
 			))
 		}

@@ -26,6 +26,7 @@ const displayTags = tags.slice(0, 2)
 <Button url={`posts/${slug}`} id={slug} size="lg">
 	<!-- Title -->
 	<h2
+		transition:name={`title-${slug}`}
 		class="underline decoration-blue-300/20 hover:decoration-blue-400/80 group-hover:decoration-blue-400/80 text-gray-900 text-base font-medium transition-all"
 	>
 		{title}

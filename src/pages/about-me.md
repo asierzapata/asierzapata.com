@@ -2,7 +2,9 @@
 layout: ../layouts/about-me-layout.astro
 ---
 
-Hi there! I'm Asier! I’m a software engineer currently working at [Edpuzzle](https://edpuzzle.com), a fantastic EdTech company, where I’m a Senior Staff Engineer. My day is split between helping my team grow and leading different projects, from the technical side to the product side.
+# Hi!
+
+I'm Asier! I’m a software engineer currently working at [Edpuzzle](https://edpuzzle.com), a fantastic EdTech company, where I’m a Senior Staff Engineer. My day is split between helping my team grow and leading different projects, from the technical side to the product side.
 
 I love working on the Education sector, where I can help teachers make their lives easier and focuse on their students as much as possible.
 

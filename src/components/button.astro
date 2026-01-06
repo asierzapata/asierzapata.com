@@ -12,7 +12,7 @@ const classAnchor = `
 	${size === 'sm' ? 'px-2 py-1' : ''}
 	${size === 'md' ? 'px-3 py-2' : ''}
 	${size === 'lg' ? 'px-4 py-3' : ''}
-	flex flex-col gap-3 border border-transparent hover:cursor-pointer hover:border-blue-300 transition-all duration-200 hover:shadow-sm
+	flex flex-col gap-3 border border-transparent hover:cursor-pointer hover:border-primary-lighter transition-all duration-200 hover:shadow-sm
 `
 
 const patternId = id ? `pattern-${id}` : `pattern-${url}`
@@ -21,7 +21,7 @@ const patternId = id ? `pattern-${id}` : `pattern-${url}`
 <a href={url} class={classAnchor}>
 	<!-- SVG Dot Pattern Background (visible on hover) - matches header -->
 	<svg
-		class="pointer-events-none absolute inset-0 size-full select-none text-blue-300 -z-10 invisible opacity-30 group-hover:visible rounded"
+		class="pointer-events-none absolute inset-0 size-full select-none text-primary-lighter -z-10 invisible opacity-30 group-hover:visible rounded"
 		aria-hidden="true"
 	>
 		<defs>
