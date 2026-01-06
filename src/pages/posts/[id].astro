@@ -45,7 +45,7 @@ const ogImage = `/open-graph/${post.id}.png`
 				>
 					&larr; Back to Home
 				</a>
-				<div>
+				<div class="w-full">
 					<h1
 						transition:name={`title-${post.data.slug}`}
 						class="font-serif text-3xl md:text-4xl text-primary mb-4 text-balance"
@@ -68,7 +68,7 @@ const ogImage = `/open-graph/${post.id}.png`
 									post.data.tags
 										.slice(0, 3)
 										.map((tag: string) => (
-											<span class="text-xs px-2 py-1 rounded bg-primary-surface text-primary-hover">
+											<span class="text-xs px-2 py-1 rounded bg-primary-surface text-primary-active">
 												{tag}
 											</span>
 										))

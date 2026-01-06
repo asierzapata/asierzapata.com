@@ -43,7 +43,9 @@ const displayTags = tags.slice(0, 2)
 			displayTags.length > 0 && (
 				<div class="flex gap-2">
 					{displayTags.map(tag => (
-						<span class="text-xs px-2 py-1 rounded bg-blue-100  text-blue-700 ">{tag}</span>
+						<span class="text-xs px-2 py-1 rounded bg-primary-surface text-primary-active">
+							{tag}
+						</span>
 					))}
 				</div>
 			)
