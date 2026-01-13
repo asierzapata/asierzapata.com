@@ -52,7 +52,7 @@ On Node.js, we can use the **_readline_** module as a straightforward way to cre
 
 To configure it, we first need to create an interface to define the input and output (in this case, the terminal), then use it to prompt the user for input with the `question` method. With this code, we have a chat that responds with the same thing we introduce and saves all messages.
 
-```javascript
+```javascript title="index.js"
 import { styleText } from 'node:util'
 import * as readline from 'node:readline/promises'
 
@@ -84,7 +84,7 @@ To run our LLM, we will use Ollama because it's free and very easy to use. If yo
 
 If you don’t have Ollama installed, you can download it from the official website. Once installed and running, we will need to pull a model to run it. This selection will change over time, but at the time of writing, I recommend using either [`devstral-small-2`](ttps://ollama.com/library/devstral-small-2) if you have at least 32 GB of RAM, or [`ministral-3:8b`](https://ollama.com/library/ministral-3) if you have 16 GB or less. If you are in the 8 GB group, first, my condolences, but fret not. You could use [`ministral-3:3b`](https://ollama.com/library/ministral-3) (but seriously, get more RAM). To get the model, we can run:
 
-```other
+```bash
 // For folks with 32Gb or more
 ollama pull devstral-small-2:24b
 
@@ -107,15 +107,24 @@ npm i ollama
 
 Once the package is installed, we can add the call to our existing chat, enabling an LLM to answer our questions!
 
-```javascript
+```javascript title="index.js" collapse={5-10} del={16-17} ins={3,18-33}
+import { styleText } from 'node:util'
+import * as readline from 'node:readline/promises'
 import ollama from 'ollama'
 
-// ...
+const terminal = readline.createInterface({
+	input: process.stdin,
+	output: process.stdout,
+})
+
+const messages = []
 
 export async function chat() {
 	while (true) {
-		// ...
-
+		const userInput = await terminal.question(`${styleText(['blueBright', 'bold'], 'You')}: `)
+		console.log(`${styleText(['yellowBright', 'bold'], 'Agent')}: ${userInput}`)
+		// We will save the role of who sent the mesage, this will be important later
+		messages.push({ role: 'user', content: [{ text: userInput }] })
 		process.stdout.write(`${styleText(['yellowBright', 'bold'], 'Agent')}: `)
 
 		const response = await ollama.chat({
@@ -181,15 +190,14 @@ We will start by writing the code that will run for each of the tools. We will u
 
 First, we will create a small utility to execute shell commands easily from our code:
 
-```javascript
+```javascript title="index.js" collapse={21-53} ins={4-19}
+import { styleText } from 'node:util'
+import * as readline from 'node:readline/promises'
+import ollama from 'ollama'
 import { exec } from 'child_process'
 import { promisify } from 'util'
 
-// ...
-
 const execAsync = promisify(exec)
-
-// ...
 
 export async function executeCommand(command) {
 	try {
@@ -202,16 +210,77 @@ export async function executeCommand(command) {
 		return { errorCode: error.code }
 	}
 }
+
+const terminal = readline.createInterface({
+	input: process.stdin,
+	output: process.stdout,
+})
+
+const messages = []
+
+export async function chat() {
+	while (true) {
+		const userInput = await terminal.question(`${styleText(['blueBright', 'bold'], 'You')}: `)
+		console.log(`${styleText(['yellowBright', 'bold'], 'Agent')}: ${userInput}`)
+		// We will save the role of who sent the mesage, this will be important later
+		messages.push({ role: 'user', content: [{ text: userInput }] })
+		process.stdout.write(`${styleText(['yellowBright', 'bold'], 'Agent')}: `)
+
+		const response = await ollama.chat({
+			model: 'ministral-3:8b',
+			messages: messages,
+			stream: true,
+		})
+
+		let fullResponse = ''
+		for await (const part of response) {
+			process.stdout.write(part.message.content)
+			fullResponse += part.message.content
+		}
+		process.stdout.write('\n')
+
+		messages.push({ role: 'assistant', content: fullResponse })
+	}
+}
+
+chat()
 ```
 
 Then we will create one function for each tool we will have (remember to install the glob dependency with `npm install glob`)
 
-```javascript
+```javascript title="index.js" collapse={10-29,103-129} ins={6-8,31-101}
+import { styleText } from 'node:util'
+import * as readline from 'node:readline/promises'
+import ollama from 'ollama'
+import { exec } from 'child_process'
+import { promisify } from 'util'
 import { promises as fs } from 'fs'
 import path from 'path'
 import { glob } from 'glob'
 
-// ...
+const execAsync = promisify(exec)
+
+export async function executeCommand(command) {
+	try {
+		const { stdout } = await execAsync(command, {
+			maxBuffer: 1024 * 1024 * 10, // 10MB buffer
+		})
+
+		return { data: stdout }
+	} catch (error) {
+		return { errorCode: error.code }
+	}
+}
+
+const terminal = readline.createInterface({
+	input: process.stdin,
+	output: process.stdout,
+})
+
+const messages = []
+
+// Tools
+// -----
 
 export async function find({ pattern }) {
 	try {
@@ -281,13 +350,74 @@ export async function edit({ filePath, oldString, newString, replaceAll }) {
 		return `Error editing file: ${error.message}`
 	}
 }
+
+// Chat
+// ----
+
+export async function chat() {
+	while (true) {
+		const userInput = await terminal.question(`${styleText(['blueBright', 'bold'], 'You')}: `)
+		messages.push({ role: 'user', content: [{ text: userInput }] })
+		process.stdout.write(`${styleText(['yellowBright', 'bold'], 'Agent')}: `)
+
+		const response = await ollama.chat({
+			model: 'ministral-3:8b',
+			messages: messages,
+			stream: true,
+		})
+
+		let fullResponse = ''
+		for await (const part of response) {
+			process.stdout.write(part.message.content)
+			fullResponse += part.message.content
+		}
+		process.stdout.write('\n')
+
+		messages.push({ role: 'assistant', content: fullResponse })
+	}
+}
+
+chat()
 ```
 
 I included some cool details on the tools that improve how the LLM understands the response, such as the read tool, which prepends line numbers to let the LLM know where to make edits later on, since it is not good at counting. I want to reiterate that those details, such as the names of the tools, their inputs, and how the response is returned, are what differentiate a good coding agent from a great one.
 
 We are almost there! We are missing two important things: the “list” to pass to the agent, which outlines which tools are available and how to call them, and the glue to connect the agent telling us he wants to call a tool with actually executing it. Let’s start by defining the “list” of tools.
 
-```javascript
+```javascript title="index.js" collapse={1-32,166-345} ins={34-162}
+import { styleText } from 'node:util'
+import * as readline from 'node:readline/promises'
+import ollama from 'ollama'
+import { exec } from 'child_process'
+import { promisify } from 'util'
+import { promises as fs } from 'fs'
+import path from 'path'
+import { glob } from 'glob'
+
+const execAsync = promisify(exec)
+
+export async function executeCommand(command) {
+	try {
+		const { stdout } = await execAsync(command, {
+			maxBuffer: 1024 * 1024 * 10, // 10MB buffer
+		})
+
+		return { data: stdout }
+	} catch (error) {
+		return { errorCode: error.code }
+	}
+}
+
+const terminal = readline.createInterface({
+	input: process.stdin,
+	output: process.stdout,
+})
+
+const messages = []
+
+// Tools
+// -----
+
 const tools = [
 	{
 		type: 'function',
@@ -419,13 +549,347 @@ const toolFunctions = {
 	createFile,
 	editFile,
 }
+
+export async function find({ pattern }) {
+	try {
+		let files = await glob(pattern, { ignore: 'node_modules/**' })
+		files = files.map(file => path.join(process.cwd(), file))
+		return JSON.stringify(files)
+	} catch (error) {
+		return `Error finding files: ${error.message}`
+	}
+}
+
+export async function grep({ pattern, searchPath = '.', globPattern, caseInsensitive }) {
+	let flags = '-rn'
+	if (caseInsensitive) flags += 'i'
+
+	const includeFlag = globPattern ? `--include="${globPattern}"` : ''
+
+	const command = `grep ${flags} ${includeFlag} "${pattern}" "${searchPath}"`
+	const { data, errorCode } = await executeCommand(command)
+
+	if (errorCode && !data) {
+		return 'No matches found.'
+	}
+	return data.trim()
+}
+
+export async function read({ filePath, offset = 1, limit = 2000 }) {
+	try {
+		const content = await fs.readFile(filePath, 'utf-8')
+		const lines = content.split('\n')
+		const selectedLines = lines
+			.slice(offset - 1, offset - 1 + limit)
+			.map((line, index) => `${offset + index} | ${line}`)
+			.join('\n')
+		return selectedLines
+	} catch (error) {
+		return `Error reading file: ${error.message}`
+	}
+}
+
+export async function create({ filePath, content }) {
+	try {
+		await fs.mkdir(path.dirname(filePath), { recursive: true })
+		await fs.writeFile(filePath, content, 'utf-8')
+		return `File created successfully at ${filePath}`
+	} catch (error) {
+		return `Error creating file: ${error.message}`
+	}
+}
+
+export async function edit({ filePath, oldString, newString, replaceAll }) {
+	try {
+		const content = await fs.readFile(filePath, 'utf-8')
+
+		if (!content.includes(oldString)) {
+			return 'Error: oldString not found in file. Please ensure exact matching including indentation.'
+		}
+
+		const newContent = replaceAll
+			? content.split(oldString).join(newString)
+			: content.replace(oldString, newString)
+
+		await fs.writeFile(filePath, newContent, 'utf-8')
+
+		return `File edited successfully at ${filePath}`
+	} catch (error) {
+		return `Error editing file: ${error.message}`
+	}
+}
+
+// Chat
+// ----
+
+export async function chat() {
+	while (true) {
+		const userInput = await terminal.question(`${styleText(['blueBright', 'bold'], 'You')}: `)
+		messages.push({ role: 'user', content: [{ text: userInput }] })
+		process.stdout.write(`${styleText(['yellowBright', 'bold'], 'Agent')}: `)
+
+		const response = await ollama.chat({
+			model: 'ministral-3:8b',
+			messages: messages,
+			stream: true,
+		})
+
+		let fullResponse = ''
+		for await (const part of response) {
+			process.stdout.write(part.message.content)
+			fullResponse += part.message.content
+		}
+		process.stdout.write('\n')
+
+		messages.push({ role: 'assistant', content: fullResponse })
+	}
+}
+
+chat()
 ```
 
 We include descriptions throughout to help the agent understand when and how to use each one. However, this leaves us with the final piece missing—the "glue." Let’s finish this!
 
 To make the code easier to read, we will separate the agent call from the chat function and create another function to call all the tools we need.
 
-```javascript
+```javascript title="index.js" collapse={1-53,} ins={34-164}
+import { styleText } from 'node:util'
+import * as readline from 'node:readline/promises'
+import ollama from 'ollama'
+import { exec } from 'child_process'
+import { promisify } from 'util'
+import { promises as fs } from 'fs'
+import path from 'path'
+import { glob } from 'glob'
+
+const execAsync = promisify(exec)
+
+export async function executeCommand(command) {
+	try {
+		const { stdout } = await execAsync(command, {
+			maxBuffer: 1024 * 1024 * 10, // 10MB buffer
+		})
+
+		return { data: stdout }
+	} catch (error) {
+		return { errorCode: error.code }
+	}
+}
+
+const terminal = readline.createInterface({
+	input: process.stdin,
+	output: process.stdout,
+})
+
+const messages = []
+
+// Tools
+// -----
+
+const tools = [
+	{
+		type: 'function',
+		function: {
+			name: 'find',
+			description: 'Find files in the project matching a pattern',
+			parameters: {
+				type: 'object',
+				required: ['pattern'],
+				properties: {
+					pattern: {
+						type: 'string',
+						description: 'The file pattern to search for (e.g. "*.js")',
+					},
+				},
+			},
+		},
+	},
+	{
+		type: 'function',
+		function: {
+			name: 'grep',
+			description: 'Search for text patterns within files',
+			parameters: {
+				type: 'object',
+				required: ['pattern'],
+				properties: {
+					pattern: {
+						type: 'string',
+						description: 'The text or regex pattern to search for',
+					},
+					searchPath: {
+						type: 'string',
+						description: 'The directory to search in (default: ".")',
+					},
+					globPattern: {
+						type: 'string',
+						description: 'File pattern to include (e.g. "*.js")',
+					},
+					caseInsensitive: {
+						type: 'boolean',
+						description: 'Whether to ignore case',
+					},
+				},
+			},
+		},
+	},
+	{
+		type: 'function',
+		function: {
+			name: 'read',
+			description: 'Read the contents of a file',
+			parameters: {
+				type: 'object',
+				required: ['filePath'],
+				properties: {
+					filePath: {
+						type: 'string',
+						description: 'The path to the file',
+					},
+					offset: {
+						type: 'integer',
+						description: 'Line number to start reading from (default: 1)',
+					},
+					limit: {
+						type: 'integer',
+						description: 'Number of lines to read (default: 2000)',
+					},
+				},
+			},
+		},
+	},
+	{
+		type: 'function',
+		function: {
+			name: 'create',
+			description: 'Create a new file with content',
+			parameters: {
+				type: 'object',
+				required: ['filePath', 'content'],
+				properties: {
+					filePath: {
+						type: 'string',
+						description: 'The path for the new file',
+					},
+					content: {
+						type: 'string',
+						description: 'The content to write to the file',
+					},
+				},
+			},
+		},
+	},
+	{
+		type: 'function',
+		function: {
+			name: 'edit',
+			description: 'Edit a file by replacing text',
+			parameters: {
+				type: 'object',
+				required: ['filePath', 'oldString', 'newString'],
+				properties: {
+					filePath: {
+						type: 'string',
+						description: 'The path to the file',
+					},
+					oldString: {
+						type: 'string',
+						description: 'The existing text to be replaced',
+					},
+					newString: {
+						type: 'string',
+						description: 'The new text to replace with',
+					},
+					replaceAll: {
+						type: 'boolean',
+						description: 'Whether to replace all occurrences',
+					},
+				},
+			},
+		},
+	},
+]
+
+const toolFunctions = {
+	findFiles,
+	searchFileContents,
+	readFile,
+	createFile,
+	editFile,
+}
+
+export async function find({ pattern }) {
+	try {
+		let files = await glob(pattern, { ignore: 'node_modules/**' })
+		files = files.map(file => path.join(process.cwd(), file))
+		return JSON.stringify(files)
+	} catch (error) {
+		return `Error finding files: ${error.message}`
+	}
+}
+
+export async function grep({ pattern, searchPath = '.', globPattern, caseInsensitive }) {
+	let flags = '-rn'
+	if (caseInsensitive) flags += 'i'
+
+	const includeFlag = globPattern ? `--include="${globPattern}"` : ''
+
+	const command = `grep ${flags} ${includeFlag} "${pattern}" "${searchPath}"`
+	const { data, errorCode } = await executeCommand(command)
+
+	if (errorCode && !data) {
+		return 'No matches found.'
+	}
+	return data.trim()
+}
+
+export async function read({ filePath, offset = 1, limit = 2000 }) {
+	try {
+		const content = await fs.readFile(filePath, 'utf-8')
+		const lines = content.split('\n')
+		const selectedLines = lines
+			.slice(offset - 1, offset - 1 + limit)
+			.map((line, index) => `${offset + index} | ${line}`)
+			.join('\n')
+		return selectedLines
+	} catch (error) {
+		return `Error reading file: ${error.message}`
+	}
+}
+
+export async function create({ filePath, content }) {
+	try {
+		await fs.mkdir(path.dirname(filePath), { recursive: true })
+		await fs.writeFile(filePath, content, 'utf-8')
+		return `File created successfully at ${filePath}`
+	} catch (error) {
+		return `Error creating file: ${error.message}`
+	}
+}
+
+export async function edit({ filePath, oldString, newString, replaceAll }) {
+	try {
+		const content = await fs.readFile(filePath, 'utf-8')
+
+		if (!content.includes(oldString)) {
+			return 'Error: oldString not found in file. Please ensure exact matching including indentation.'
+		}
+
+		const newContent = replaceAll
+			? content.split(oldString).join(newString)
+			: content.replace(oldString, newString)
+
+		await fs.writeFile(filePath, newContent, 'utf-8')
+
+		return `File edited successfully at ${filePath}`
+	} catch (error) {
+		return `Error editing file: ${error.message}`
+	}
+}
+
+// Agent
+// -----
+
 async function callAgent(messages) {
 	process.stdout.write(`${styleText(['yellowBright', 'bold'], 'Agent')}: `)
 
@@ -476,13 +940,30 @@ async function executeTool(toolCall) {
 	}
 }
 
+// Chat
+// ----
+
 export async function chat() {
 	while (true) {
-		// ...
+		const userInput = await terminal.question(`${styleText(['blueBright', 'bold'], 'You')}: `)
+		messages.push({ role: 'user', content: [{ text: userInput }] })
 
 		process.stdout.write(`${styleText(['yellowBright', 'bold'], 'Agent')}: `)
+		const response = await ollama.chat({
+			model: 'ministral-3:8b',
+			messages: messages,
+			stream: true,
+		})
 
-		// New!
+		let fullResponse = ''
+		for await (const part of response) {
+			process.stdout.write(part.message.content)
+			fullResponse += part.message.content
+		}
+		process.stdout.write('\n')
+
+		messages.push({ role: 'assistant', content: fullResponse })
+
 		while (true) {
 			const toolCalls = await callAgent(messages)
 
@@ -501,6 +982,8 @@ export async function chat() {
 		}
 	}
 }
+
+chat()
 ```
 
 And that’s it. We have our own coding agent in 300 lines of code!

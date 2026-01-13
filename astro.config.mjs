@@ -6,8 +6,9 @@ import tailwindcss from '@tailwindcss/vite'
 import mdx from '@astrojs/mdx'
 import react from '@astrojs/react'
 import { remarkReadingTime } from './src/plugins/remark-reading-time.mjs'
-import { remarkCodeCollapse } from './src/plugins/remark-code-collapse.mjs'
 import { remarkAlert } from 'remark-github-blockquote-alert'
+
+import expressiveCode from 'astro-expressive-code'
 
 // https://astro.build/config
 export default defineConfig({
@@ -17,8 +18,9 @@ export default defineConfig({
 	},
 
 	integrations: [
+		expressiveCode(),
 		mdx({
-			remarkPlugins: [remarkReadingTime, remarkAlert, remarkCodeCollapse],
+			remarkPlugins: [remarkReadingTime, remarkAlert],
 		}),
 		react(),
 	],
