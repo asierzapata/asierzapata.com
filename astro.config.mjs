@@ -7,7 +7,6 @@ import mdx from '@astrojs/mdx'
 import react from '@astrojs/react'
 import { remarkReadingTime } from './src/plugins/remark-reading-time.mjs'
 import { remarkCodeCollapse } from './src/plugins/remark-code-collapse.mjs'
-import { customTheme } from './src/styles/shiki-theme.mjs'
 import { remarkAlert } from 'remark-github-blockquote-alert'
 
 // https://astro.build/config
