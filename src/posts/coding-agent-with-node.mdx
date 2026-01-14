@@ -75,8 +75,7 @@ export async function chat() {
 chat()
 ```
 
-> [!NOTE]
-> Now is a good time to run `npm init`, since we’ll need a `package.json` file later. You can use `npm init -y` to skip all the prompts.
+Now is a good time to run `npm init`, since we’ll need a `package.json` file later. You can use `npm init -y` to skip all the prompts.
 
 ## Powering our agent with an LLM
 
@@ -149,7 +148,7 @@ chat()
 
 If we run this, we can see that something responds to us.
 
-```bash
+```markdown showLineNumbers=false frame="terminal"
 You: Hi there! Who are you?
 Agent: Hi! I’m **Ministral-3-8B-Instruct**, a large language model developed by **Mistral AI** (a French AI lab based in Paris). Think of me as your friendly AI assistant—here to help with questions, explanations, brainstorming, or just chatting!
 What can I do for you today? 😊
@@ -162,27 +161,27 @@ That's impressive, but what about the coding part of the agent? Let's give it th
 
 ### What are those?
 
-So, what are tools really? They are concrete pieces of code that execute when the Agent says so and with the input it sees fit.
+So, what are tools in the real world? They are concrete pieces of code that execute when the Agent says so and with the input it sees fit.
 
-Tools bridge the gap between what an LLM can do (generate text) and what we need it to do. Here’s the dance we have to perform to make that happen: the agent writes a request for a tool, we execute it, and we send back the result as plain text.
+Tools fill the gap between what an LLM can do on its own (basically, generate text) and what we actually need it to get done. The flow is rather simple: the agent asks for a tool, we run it, and we send the result back as plain text.
 
-To make this work, we pass the agent a list of available tools, including their names, what they do, and the inputs they expect. Modern LLMs are trained to call those tools eagerly if they apply to the task at hand. When the agent requests a tool, it sends a special message in the chat. We detect that message, run the function, and add the result back to the conversation.
+To make that possible, we give the agent a list of tools: their names, what they do, and what inputs they expect. Modern LLMs are trained to call those tools eagerly if they're relevant to the task they are completing. When the agent wants to use a tool, it sends a special message in the chat. We spot that message, run the function, and drop the result back into the conversation to continue with the conversation.
 
-Think of it this way: the agent can’t read files or write code directly. But it can ask you to do those things in a structured way. You execute the request, report back, and the agent uses that information to decide what to do next.
+Put differently: the agent can’t directly read files or write code, but it can _ask_ you to do those things in a structured way. You run whatever it asked for, send back the result, and the agent uses that to decide what to do next.
 
 ### What do we need for our coding agent?
 
-What makes a coding agent tick is giving it 3 main types of tools: _search, read,_ and _write._
+A coding agent comes to life when you give it three core kinds of tools: _search, read,_ and _write_.
 
-Digging a bit deeper, the tools we would need here are:
+Concretely, the tools we need are:
 
-- _Find_ - To find files or with glob patterns
-- _Grep_ - To find code
-- _Read_ - To read files
-- _Create_ - To create new files
-- _Edit_ - To edit an existing file
+- _Find_ - Locate files, including via glob patterns
+- _Grep_ - Search within files for specific code or text
+- _Read_ - Open and read files
+- _Create_ - Create new files
+- _Edit_ - Modify existing files
 
-One of the cool things about the tools we give the agent is that they are closely tied to language, which is what the LLM really understands. I told you before that you could think of tools as normal functions in code. It’s very close, but you might not get everything out of the model if you’re purely thinking like a programmer. Instead, write things closer to how they would read in plain English. Think of tools as something you would tell someone who needs to know exactly what to do, not necessarily as writing a traditional computer program.
+One of the cool things about the tools is that they are closely tied to language, which is what the LLM really understands. I told you before that you could think of tools as normal functions in code. That's almost right, but you might not get everything out of the model if you’re purely thinking like a programmer. Instead, write things closer to how they would read in plain English. Think of tools as something you would tell someone who needs to know exactly what to do, not necessarily as writing a traditional computer program. The more naturally and precisely you describe the tool’s behavior, the better the model can use it.
 
 ### Lets get hacking!
 
@@ -652,7 +651,7 @@ We include descriptions throughout to help the agent understand when and how to 
 
 To make the code easier to read, we will separate the agent call from the chat function and create another function to call all the tools we need.
 
-```javascript title="index.js" collapse={1-53,} ins={34-164}
+```javascript title="index.js" collapse={1-233} ins={235-286,312-327}
 import { styleText } from 'node:util'
 import * as readline from 'node:readline/promises'
 import ollama from 'ollama'
@@ -986,13 +985,13 @@ export async function chat() {
 chat()
 ```
 
-And that’s it. We have our own coding agent in 300 lines of code!
+And that’s it. We have our own coding agent in 331 lines of code!
 
 # The test drive
 
 Now we can try it ourselves to see what it does. Let’s ask him to describe the project.
 
-```javascript
+```markdown showLineNumbers=false frame="terminal"
 You: could you describe me this project?
 Agent: Could you clarify what you mean by "this project"? Are you referring to:
 
@@ -1001,6 +1000,7 @@ Agent: Could you clarify what you mean by "this project"? Are you referring to:
 3. **Something else** (e.g., a tool, framework, or external project)?
 
 If you’re referring to a local project (e.g., files on your system), I can help analyze its structure, content, or code. Let me know how you’d like to proceed! For example:
+
 - Do you want me to list files/directories?
 - Check the content of specific files?
 - Explain a particular part of the code?
@@ -1008,7 +1008,35 @@ If you’re referring to a local project (e.g., files on your system), I can hel
 
 I’d bet my MacBook that if you run your agent, it will probably give you a response like this—or maybe even attempt to read and reply. However, most of the time, the answer might not be very good. Why is that? The missing piece is the final ingredient that ties everything: _the system prompt_. This special prompt guides the agent on how to behave. To include it, simply modify the messages array by adding a first message of the special type `system`.
 
-```javascript
+```javascript title="index.js" collapse={1-27,51-351} ins={29-49}
+import { styleText } from 'node:util'
+import * as readline from 'node:readline/promises'
+import ollama from 'ollama'
+import { exec } from 'child_process'
+import { promisify } from 'util'
+import { promises as fs } from 'fs'
+import path from 'path'
+import { glob } from 'glob'
+
+const execAsync = promisify(exec)
+
+export async function executeCommand(command) {
+	try {
+		const { stdout } = await execAsync(command, {
+			maxBuffer: 1024 * 1024 * 10, // 10MB buffer
+		})
+
+		return { data: stdout }
+	} catch (error) {
+		return { errorCode: error.code }
+	}
+}
+
+const terminal = readline.createInterface({
+	input: process.stdin,
+	output: process.stdout,
+})
+
 const messages = [
 	{
 		role: 'system',
@@ -1030,14 +1058,316 @@ const messages = [
     `,
 	},
 ]
+
+// Tools
+// -----
+
+const tools = [
+	{
+		type: 'function',
+		function: {
+			name: 'find',
+			description: 'Find files in the project matching a pattern',
+			parameters: {
+				type: 'object',
+				required: ['pattern'],
+				properties: {
+					pattern: {
+						type: 'string',
+						description: 'The file pattern to search for (e.g. "*.js")',
+					},
+				},
+			},
+		},
+	},
+	{
+		type: 'function',
+		function: {
+			name: 'grep',
+			description: 'Search for text patterns within files',
+			parameters: {
+				type: 'object',
+				required: ['pattern'],
+				properties: {
+					pattern: {
+						type: 'string',
+						description: 'The text or regex pattern to search for',
+					},
+					searchPath: {
+						type: 'string',
+						description: 'The directory to search in (default: ".")',
+					},
+					globPattern: {
+						type: 'string',
+						description: 'File pattern to include (e.g. "*.js")',
+					},
+					caseInsensitive: {
+						type: 'boolean',
+						description: 'Whether to ignore case',
+					},
+				},
+			},
+		},
+	},
+	{
+		type: 'function',
+		function: {
+			name: 'read',
+			description: 'Read the contents of a file',
+			parameters: {
+				type: 'object',
+				required: ['filePath'],
+				properties: {
+					filePath: {
+						type: 'string',
+						description: 'The path to the file',
+					},
+					offset: {
+						type: 'integer',
+						description: 'Line number to start reading from (default: 1)',
+					},
+					limit: {
+						type: 'integer',
+						description: 'Number of lines to read (default: 2000)',
+					},
+				},
+			},
+		},
+	},
+	{
+		type: 'function',
+		function: {
+			name: 'create',
+			description: 'Create a new file with content',
+			parameters: {
+				type: 'object',
+				required: ['filePath', 'content'],
+				properties: {
+					filePath: {
+						type: 'string',
+						description: 'The path for the new file',
+					},
+					content: {
+						type: 'string',
+						description: 'The content to write to the file',
+					},
+				},
+			},
+		},
+	},
+	{
+		type: 'function',
+		function: {
+			name: 'edit',
+			description: 'Edit a file by replacing text',
+			parameters: {
+				type: 'object',
+				required: ['filePath', 'oldString', 'newString'],
+				properties: {
+					filePath: {
+						type: 'string',
+						description: 'The path to the file',
+					},
+					oldString: {
+						type: 'string',
+						description: 'The existing text to be replaced',
+					},
+					newString: {
+						type: 'string',
+						description: 'The new text to replace with',
+					},
+					replaceAll: {
+						type: 'boolean',
+						description: 'Whether to replace all occurrences',
+					},
+				},
+			},
+		},
+	},
+]
+
+const toolFunctions = {
+	findFiles,
+	searchFileContents,
+	readFile,
+	createFile,
+	editFile,
+}
+
+export async function find({ pattern }) {
+	try {
+		let files = await glob(pattern, { ignore: 'node_modules/**' })
+		files = files.map(file => path.join(process.cwd(), file))
+		return JSON.stringify(files)
+	} catch (error) {
+		return `Error finding files: ${error.message}`
+	}
+}
+
+export async function grep({ pattern, searchPath = '.', globPattern, caseInsensitive }) {
+	let flags = '-rn'
+	if (caseInsensitive) flags += 'i'
+
+	const includeFlag = globPattern ? `--include="${globPattern}"` : ''
+
+	const command = `grep ${flags} ${includeFlag} "${pattern}" "${searchPath}"`
+	const { data, errorCode } = await executeCommand(command)
+
+	if (errorCode && !data) {
+		return 'No matches found.'
+	}
+	return data.trim()
+}
+
+export async function read({ filePath, offset = 1, limit = 2000 }) {
+	try {
+		const content = await fs.readFile(filePath, 'utf-8')
+		const lines = content.split('\n')
+		const selectedLines = lines
+			.slice(offset - 1, offset - 1 + limit)
+			.map((line, index) => `${offset + index} | ${line}`)
+			.join('\n')
+		return selectedLines
+	} catch (error) {
+		return `Error reading file: ${error.message}`
+	}
+}
+
+export async function create({ filePath, content }) {
+	try {
+		await fs.mkdir(path.dirname(filePath), { recursive: true })
+		await fs.writeFile(filePath, content, 'utf-8')
+		return `File created successfully at ${filePath}`
+	} catch (error) {
+		return `Error creating file: ${error.message}`
+	}
+}
+
+export async function edit({ filePath, oldString, newString, replaceAll }) {
+	try {
+		const content = await fs.readFile(filePath, 'utf-8')
+
+		if (!content.includes(oldString)) {
+			return 'Error: oldString not found in file. Please ensure exact matching including indentation.'
+		}
+
+		const newContent = replaceAll
+			? content.split(oldString).join(newString)
+			: content.replace(oldString, newString)
+
+		await fs.writeFile(filePath, newContent, 'utf-8')
+
+		return `File edited successfully at ${filePath}`
+	} catch (error) {
+		return `Error editing file: ${error.message}`
+	}
+}
+
+// Agent
+// -----
+
+async function callAgent(messages) {
+	process.stdout.write(`${styleText(['yellowBright', 'bold'], 'Agent')}: `)
+
+	const response = await ollama.chat({
+		model: 'ministral-3:8b',
+		messages,
+		stream: true,
+		tools,
+	})
+
+	let fullResponse = ''
+	let toolCalls = []
+
+	for await (const part of response) {
+		process.stdout.write(part.message.content)
+		fullResponse += part.message.content
+
+		if (part.message.tool_calls) {
+			toolCalls = part.message.tool_calls
+		}
+	}
+	process.stdout.write('\n')
+
+	messages.push({
+		role: 'assistant',
+		content: fullResponse,
+		tool_calls: toolCalls.length ? toolCalls : undefined,
+	})
+
+	return toolCalls
+}
+
+async function executeTool(toolCall) {
+	const functionName = toolCall.function.name
+	const functionArgs = toolCall.function.arguments
+
+	console.log(`${styleText(['dim'], `[Tool Call: ${functionName}]`)}`)
+
+	const tool = availableTools[functionName]
+	if (!tool) {
+		return `Error: Tool ${functionName} not found.`
+	}
+
+	try {
+		return await tool(functionArgs)
+	} catch (err) {
+		return `Error executing ${functionName}: ${err.message}`
+	}
+}
+
+// Chat
+// ----
+
+export async function chat() {
+	while (true) {
+		const userInput = await terminal.question(`${styleText(['blueBright', 'bold'], 'You')}: `)
+		messages.push({ role: 'user', content: [{ text: userInput }] })
+
+		process.stdout.write(`${styleText(['yellowBright', 'bold'], 'Agent')}: `)
+		const response = await ollama.chat({
+			model: 'ministral-3:8b',
+			messages: messages,
+			stream: true,
+		})
+
+		let fullResponse = ''
+		for await (const part of response) {
+			process.stdout.write(part.message.content)
+			fullResponse += part.message.content
+		}
+		process.stdout.write('\n')
+
+		messages.push({ role: 'assistant', content: fullResponse })
+
+		while (true) {
+			const toolCalls = await callAgent(messages)
+
+			if (!toolCalls.length) {
+				break
+			}
+
+			for (const toolCall of toolCalls) {
+				const result = await executeAction(toolCall)
+				messages.push({
+					role: 'tool',
+					content: result,
+					name: toolCall.function.name,
+				})
+			}
+		}
+	}
+}
+
+chat()
 ```
 
 This isn’t a perfect system prompt, but watch how it transforms the agent’s behavior. If we ask the same question again, the agent responds more consistently and much better.
 
-```javascript
+```markdown showLineNumbers=false frame="terminal"
 You: could you describe me this project?
 Agent:
-[Tool Call: findFiles] inputs: {"pattern":"README*"}
+[Tool Call: findFiles] inputs: {"pattern":"README\*"}
 Agent:
 [Tool Call: findFiles] inputs: {"pattern":".gitignore"}
 Agent:
@@ -1046,11 +1376,13 @@ Agent:
 [Tool Call: findFiles] inputs: {"pattern":"package.json"}
 Agent:
 [Tool Call: readFile] inputs: {"filePath":"package.json"}
+
 > This project appears to be a **blog post code example** related to a **coding agent** (likely a tool or application that assists with coding tasks). Here's a summary of its structure and purpose:
 
 ---
 
 ### **Project Overview**
+
 - **Purpose**: Demonstrates a coding agent implementation using **Ollama** (a framework for running large language models locally) and **Glob** (for file pattern matching).
 - **Type**: A lightweight Node.js module (ES modules, as indicated by `"type": "module"` in `package.json`).
 - **Dependencies**:
@@ -1060,6 +1392,7 @@ Agent:
 ---
 
 ### **Key Files**
+
 1. **`package.json`**:
    - Defines the project as a Node.js module.
    - Includes a `start` script to run `index.js`.
@@ -1071,6 +1404,7 @@ Agent:
 ---
 
 ### **Assumptions**
+
 - The project is **incomplete** (no `index.js` or other source files found in the current directory).
 - It is likely a **blog post example** showing how to:
   - Use Ollama for AI-driven coding assistance.
@@ -1083,19 +1417,23 @@ Agent:
 ---
 
 ### **Next Steps**
+
 If you’d like, I can:
+
 1. Search for code snippets or patterns in the project (e.g., Ollama API calls, `glob` usage).
 2. Help you reconstruct missing files (e.g., `index.js`).
 3. Clarify how the dependencies (`ollama`, `glob`) are used.
 ```
 
-The secret sauce of every coding agent starts with two essential ingredients: a clear system prompt and reliable tools.
+The secret sauce of every coding agent starts with two essential ingredients: a **clear system prompt** and **reliable tools**.
 
 # What now?
 
-I challenge you to improve this basic coding agent using the agent itself—the program programming itself!
+Now comes the fun part. I challenge you to improve this basic coding agent using the agent itself—the program programming itself!
 
-Try implementing a to-do list tool for the agent without writing any code manually. Give it a try and see what it can do. You will see how he thinks and be able to tweak how it uses its tools and why.
+As a first experiment, try adding a simple to-do list tool without writing any code manually. Just describe what you want, and let the agent figure out how to connect everything.
+
+Watch how it thinks: when it searches, reads, edits, and even when it gets confused. That feedback loop is where most of the good stuff happens, and it will quickly reveal where your tools or system prompt need tweaking. Here, less is definitely more.
 
 You can find the code of this whole agent [here](https://github.com/asierzapata/coding-agent-blog-post/tree/f936aa4809b64eda6ce791965ccb7133e5f43ff1).
 
