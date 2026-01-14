@@ -3,6 +3,7 @@ import { ClientRouter } from 'astro:transitions'
 import '../styles/global.css'
 import Button from '../components/button.astro'
 import BreakpointIndicator from '../components/dev/breakpoint-indicator.astro'
+import Analytics from '@vercel/analytics/astro'
 
 interface Props {
 	title?: string
@@ -32,7 +33,12 @@ const socialImageURL = new URL(image, Astro.url)
 		<title>{title}</title>
 		<meta name="description" content={description} />
 		<link rel="canonical" href={canonicalURL} />
-		<link rel="alternate" type="application/rss+xml" title="Async by Asier Zapata" href="/rss.xml" />
+		<link
+			rel="alternate"
+			type="application/rss+xml"
+			title="Async by Asier Zapata"
+			href="/rss.xml"
+		/>
 
 		<!-- Open Graph / Facebook -->
 		<meta property="og:type" content={type} />
@@ -49,6 +55,7 @@ const socialImageURL = new URL(image, Astro.url)
 		<meta property="twitter:image" content={socialImageURL} />
 
 		<ClientRouter />
+		<Analytics />
 	</head>
 	<body>
 		<div class="border-b border-border px-3 md:px-8 lg:px-12">
