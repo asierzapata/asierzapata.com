@@ -32,8 +32,10 @@ export default defineEcConfig({
 			inlineButtonBackgroundActiveOpacity: '0.2',
 			inlineButtonBackgroundHoverOrFocusOpacity: '0.1',
 			terminalBackground: ({ theme }) => '#fafafa',
-			tooltipSuccessBackground: ({ theme }) =>
-				setLuminance(theme.colors['terminal.ansiGreen'] || '#0dbc79', 0.22),
+			tooltipSuccessBackground: ({ theme }) => 'var(--color-primary-subtle)',
+			tooltipSuccessForeground: ({ theme }) => 'var(--color-slate-500)',
+			editorActiveTabIndicatorTopColor: ({ theme }) => 'var(--color-primary)',
+			editorActiveTabForeground: ({ theme }) => 'var(--color-primary)',
 		},
 
 		/* Text & Line Markers */
