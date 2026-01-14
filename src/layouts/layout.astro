@@ -2,6 +2,7 @@
 import { ClientRouter } from 'astro:transitions'
 import '../styles/global.css'
 import Button from '../components/button.astro'
+import BreakpointIndicator from '../components/dev/breakpoint-indicator.astro'
 
 interface Props {
 	title?: string
@@ -121,6 +122,7 @@ const socialImageURL = new URL(image, Astro.url)
 				<p class="text-primary-light text-sm">Written with ❤️ from Barcelona</p>
 			</div>
 		</footer>
+		<BreakpointIndicator />
 	</body><style>
 		body {
 			display: flex;
