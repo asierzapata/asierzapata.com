@@ -122,7 +122,7 @@ export async function chat() {
 	while (true) {
 		const userInput = await terminal.question(`${styleText(['blueBright', 'bold'], 'You')}: `)
 		console.log(`${styleText(['yellowBright', 'bold'], 'Agent')}: ${userInput}`)
-		// We will save the role of who sent the mesage, this will be important later
+		// We will save the role of who sent the message, this will be important later
 		messages.push({ role: 'user', content: userInput })
 		process.stdout.write(`${styleText(['yellowBright', 'bold'], 'Agent')}: `)
 
@@ -221,7 +221,7 @@ export async function chat() {
 	while (true) {
 		const userInput = await terminal.question(`${styleText(['blueBright', 'bold'], 'You')}: `)
 		console.log(`${styleText(['yellowBright', 'bold'], 'Agent')}: ${userInput}`)
-		// We will save the role of who sent the mesage, this will be important later
+		// We will save the role of who sent the message, this will be important later
 		messages.push({ role: 'user', content: userInput })
 		process.stdout.write(`${styleText(['yellowBright', 'bold'], 'Agent')}: `)
 
@@ -1304,7 +1304,7 @@ async function executeTool(toolCall) {
 
 	console.log(`${styleText(['dim'], `[Tool Call: ${functionName}]`)}`)
 
-	const tool = availableTools[functionName]
+	const tool = toolFunctions[functionName]
 	if (!tool) {
 		return `Error: Tool ${functionName} not found.`
 	}
@@ -1348,7 +1348,7 @@ export async function chat() {
 			}
 
 			for (const toolCall of toolCalls) {
-				const result = await executeAction(toolCall)
+				const result = await executeTool(toolCall)
 				messages.push({
 					role: 'tool',
 					content: result,
