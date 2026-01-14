@@ -5,7 +5,7 @@ import Header from '../components/header.astro'
 import PostLink from '../components/post-link.astro'
 import Layout from '../layouts/layout.astro'
 import Separator from '../components/separator.astro'
-import { Linkedin, Github } from '@lucide/astro'
+import { Linkedin, Github, Rss } from '@lucide/astro'
 
 let posts = await getCollection('posts', ({ data }) => {
 	return import.meta.env.PROD ? !data.draft && data.date <= new Date() : true
@@ -38,6 +38,13 @@ posts = posts.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
 				target="_blank"
 				aria-label="LinkedIn Profile"
 				rel="noopener noreferrer"><Linkedin /></a
+			>
+			<a
+				href="/rss.xml"
+				class="text-primary hover:underline hover:opacity-80 transition duration-150 ease-in-out hover:text-primary-hover hover:scale-105"
+				target="_blank"
+				aria-label="RSS Feed"
+				rel="noopener noreferrer"><Rss /></a
 			>
 		</p>
 	</section>

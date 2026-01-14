@@ -31,6 +31,7 @@ const socialImageURL = new URL(image, Astro.url)
 		<title>{title}</title>
 		<meta name="description" content={description} />
 		<link rel="canonical" href={canonicalURL} />
+		<link rel="alternate" type="application/rss+xml" title="Async by Asier Zapata" href="/rss.xml" />
 
 		<!-- Open Graph / Facebook -->
 		<meta property="og:type" content={type} />
