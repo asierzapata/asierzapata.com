@@ -1,0 +1,59 @@
+---
+import Button from './button.astro'
+
+interface Props {
+	slug: string
+	title: string
+	date: Date
+	tags?: string[]
+}
+
+const { slug, title, date, tags = [] } = Astro.props
+
+// Format date to full format (e.g., "June 15, 2024")
+const formatDate = (date: Date) => {
+	return date.toLocaleDateString('en-US', {
+		year: 'numeric',
+		month: 'long',
+		day: 'numeric',
+	})
+}
+
+const formattedDate = formatDate(date)
+const displayTags = tags.slice(0, 2)
+---
+
+<Button url={`posts/${slug}`} id={slug} size="lg">
+	<!-- Title -->
+	<h2
+		transition:name={`title-${slug}`}
+		class="underline decoration-blue-300/20 hover:decoration-blue-400/80 group-hover:decoration-blue-400/80 text-gray-900 text-base font-medium transition-all"
+	>
+		{title}
+	</h2>
+
+	<!-- Horizontal divider line (visible only on large screens) -->
+	<hr
+		class="hidden lg:block grow border-t border-gray-200 opacity-60 group-hover:opacity-40 transition-opacity"
+	/>
+
+	<!-- Tags and Date Container -->
+	<div class="flex flex-wrap items-center gap-2 lg:ml-0">
+		{
+			displayTags.length > 0 && (
+				<div class="flex gap-2">
+					{displayTags.map(tag => (
+						<span class="text-xs px-2 py-1 rounded bg-primary-surface text-primary-active">
+							{tag}
+						</span>
+					))}
+				</div>
+			)
+		}
+
+		<!-- Date -->
+		<p class="ml-auto lg:ml-0 text-gray-600 font-mono text-xs shrink-0">
+			{formattedDate}
+		</p>
+	</div>
+</Button>

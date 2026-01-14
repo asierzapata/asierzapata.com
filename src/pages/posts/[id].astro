@@ -1,0 +1,199 @@
+---
+import { getCollection, render } from 'astro:content'
+import Layout from '../../layouts/layout.astro'
+import Header from '../../components/header.astro'
+import ReadingProgress from '../../components/reading-progress.astro'
+
+// 1. Generate a new path for every collection entry
+export async function getStaticPaths() {
+	const posts = await getCollection('posts', ({ data }) => {
+		return import.meta.env.PROD ? data.draft !== true && data.date <= new Date() : true
+	})
+	return posts.map(post => ({
+		params: { id: post.id },
+		props: { post },
+	}))
+}
+// 2. For your template, you can get the entry directly from the prop
+const { post } = Astro.props
+const { Content, headings, remarkPluginFrontmatter } = await render(post)
+
+// Format date
+const date = new Date(post.data.date)
+const formattedDate = date.toLocaleDateString('en-US', {
+	year: 'numeric',
+	month: 'short',
+	day: 'numeric',
+})
+
+const ogImage = `/open-graph/${post.id}.png`
+---
+
+<Layout
+	title={post.data.title}
+	description={post.data.description || `Read ${post.data.title} on Async`}
+	image={ogImage}
+	type="article"
+>
+	<ReadingProgress />
+	<Header>
+		<hgroup class="w-full sm:w-xl md:w-2xl xl:w-3xl m-auto px-4 sm:px-0">
+			<div class="flex flex-col gap-8 justify-around items-start">
+				<a
+					href="/"
+					class="text-xs text-primary hover:text-primary-active transition-colors hover:underline"
+				>
+					&larr; Back to Home
+				</a>
+				<div class="w-full">
+					<h1
+						transition:name={`title-${post.data.slug}`}
+						class="font-serif text-3xl md:text-4xl text-primary mb-4 text-balance"
+					>
+						{post.data.title}
+					</h1>
+
+					<!-- Metadata -->
+					<div class="flex flex-wrap items-center justify-between gap-4 text-sm">
+						<div class="flex items-center gap-2">
+							<time class="text-muted font-mono text-xs">{formattedDate}</time>
+							<span class="text-muted font-mono text-xs">•</span>
+							<span class="text-muted font-mono text-xs"
+								>{remarkPluginFrontmatter.minutesRead} min read</span
+							>
+						</div>
+						<div class="flex gap-2">
+							{
+								post.data.tags &&
+									post.data.tags
+										.slice(0, 3)
+										.map((tag: string) => (
+											<span class="text-xs px-2 py-1 rounded bg-primary-surface text-primary-active">
+												{tag}
+											</span>
+										))
+							}
+						</div>
+					</div>
+				</div>
+			</div>
+		</hgroup>
+	</Header>
+
+	<div
+		class="px-4 py-6 md:px-8 md:py-12 flex flex-col gap-2 lg:grid lg:grid-cols-[1fr_36rem_1fr] xl:grid-cols-[1fr_48rem_1fr] lg:gap-12 lg:max-w-none"
+	>
+		<!-- Table of Contents for small screens -->
+		<details class="lg:hidden">
+			<summary class="font-serif ml-2 text-sm text-muted uppercase tracking-wider mb-4"
+				>On this page</summary
+			>
+			<ul class="pl-2">
+				{
+					headings.map(h => (
+						<a
+							href={`#${h.slug}`}
+							class="block text-sm text-muted hover:text-primary transition-colors py-1 pl-4 border-l-2 border-transparent"
+							style={`margin-left: ${(h.depth - 2) * 0.5}rem`}
+						>
+							{h.text}
+						</a>
+					))
+				}
+			</ul>
+		</details>
+
+		<!-- Empty spacer for left column to balance the layout -->
+		<div class="hidden lg:block"></div>
+
+		<!-- Post Content -->
+		<article
+			class="lg:col-start-2 prose prose-lg max-w-none
+			prose-headings:font-serif prose-headings:text-primary prose-headings:scroll-mt-24
+			prose-h1:font-light prose-h2:font-light prose-h3:font-light prose-h4:font-light
+			prose-h1:text-3xl prose-h2:text-2xl prose-h3:text-xl prose-h4:text-lg
+			prose-p:text-text-base prose-p:leading-relaxed
+			prose-a:text-primary prose-a:no-underline prose-a:hover:underline
+			prose-code:rounded
+			prose-pre:bg-surface-light prose-pre:border prose-pre:border-border
+			prose-img:rounded prose-img:shadow-sm
+			prose-ul:list-disc prose-ol:list-decimal
+			prose-blockquote:border-l-4 prose-blockquote:border-primary-lighter prose-blockquote:pl-4 prose-blockquote:italic"
+		>
+			<Content />
+		</article>
+
+		<aside class="hidden lg:block lg:col-start-3 lg:w-64 sticky top-24 self-start">
+			<div>
+				<h2 class="font-serif text-sm text-muted uppercase tracking-wider mb-4">On this page</h2>
+				<nav class="toc relative border-l border-border">
+					{
+						headings.map(h => (
+							<a
+								href={`#${h.slug}`}
+								class="block text-sm text-muted hover:text-primary transition-colors py-1 pl-4 border-l-2 border-transparent"
+								style={`margin-left: ${(h.depth - 2) * 0.5}rem`}
+							>
+								{h.text}
+							</a>
+						))
+					}
+				</nav>
+			</div>
+		</aside>
+	</div>
+</Layout>
+
+<style>
+	::marker {
+		color: var(--color-muted);
+	}
+
+	::details-content {
+		transition:
+			height 0.5s ease,
+			content-visibility 0.5s ease allow-discrete;
+		height: 0;
+		overflow: clip;
+	}
+
+	/* Browser supports interpolate-size */
+	@supports (interpolate-size: allow-keywords) {
+		:root {
+			interpolate-size: allow-keywords;
+		}
+
+		[open]::details-content {
+			height: auto;
+		}
+	}
+
+	/* Table of Contents Marker */
+	.toc {
+		scroll-target-group: auto;
+	}
+
+	.toc a:target-current {
+		anchor-name: --active;
+		color: var(--color-primary);
+		font-weight: 500;
+	}
+
+	.toc::after {
+		content: '';
+		position: absolute;
+		left: -1px; /* Align with border */
+		width: 2px;
+		background-color: var(--color-primary);
+
+		/* Anchor positioning */
+		position-anchor: --active;
+		top: anchor(top);
+		bottom: anchor(bottom);
+
+		/* Transition */
+		transition:
+			top 0.2s,
+			bottom 0.2s;
+	}
+</style>

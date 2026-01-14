@@ -1,0 +1,20 @@
+---
+import Separator from './separator.astro'
+---
+
+<section class="relative py-12">
+	<slot />
+	<svg
+		aria-hidden="true"
+		class="absolute inset-0 size-full pointer-events-none select-none text-primary-lighter -z-10 opacity-30"
+	>
+		<defs>
+			<pattern id="header-pattern" width="4" height="4" patternUnits="userSpaceOnUse">
+				<circle cx="0" cy="0" r="1.5" fill="currentColor"></circle>
+			</pattern>
+		</defs>
+		<rect width="100%" height="100%" fill="url(#header-pattern)"></rect>
+	</svg>
+</section>
+
+<Separator />

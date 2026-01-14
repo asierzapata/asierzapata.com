@@ -1,0 +1,114 @@
+@import 'tailwindcss';
+@plugin '@tailwindcss/typography';
+
+@theme {
+	/* Primary Palette */
+	--color-primary: var(--color-blue-500);
+	--color-primary-hover: var(--color-blue-600);
+	--color-primary-active: var(--color-blue-700);
+	--color-primary-light: var(--color-blue-400);
+	--color-primary-lighter: var(--color-blue-300);
+	--color-primary-subtle: var(--color-blue-200);
+	--color-primary-surface: var(--color-blue-100);
+	--color-primary-surface-light: var(--color-blue-50);
+
+	/* Gray Palette */
+	--color-text-base: var(--color-gray-900);
+	--color-muted: var(--color-gray-500);
+	--color-muted-dark: var(--color-gray-600);
+	--color-border: var(--color-gray-200);
+	--color-surface: var(--color-gray-100);
+	--color-surface-light: var(--color-gray-50);
+	--color-border-strong: var(--color-gray-300);
+}
+
+html {
+	overflow-x: hidden;
+	scroll-behavior: smooth;
+}
+
+body {
+	min-height: 100vh;
+	display: flex;
+	flex-direction: column;
+	background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' version='1.1' xmlns:xlink='http://www.w3.org/1999/xlink' xmlns:svgjs='http://svgjs.dev/svgjs' viewBox='0 0 700 700' width='700' height='700' opacity='0.33'%3E%3Cdefs%3E%3Cfilter id='nnnoise-filter' x='-20%25' y='-20%25' width='140%25' height='140%25' filterUnits='objectBoundingBox' primitiveUnits='userSpaceOnUse' color-interpolation-filters='linearRGB'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.141' numOctaves='4' seed='15' stitchTiles='stitch' x='0%25' y='0%25' width='100%25' height='100%25' result='turbulence'%3E%3C/feTurbulence%3E%3CfeSpecularLighting surfaceScale='14' specularConstant='0.6' specularExponent='20' lighting-color='%23155dfc' x='0%25' y='0%25' width='100%25' height='100%25' in='turbulence' result='specularLighting'%3E%3CfeDistantLight azimuth='3' elevation='98'%3E%3C/feDistantLight%3E%3C/feSpecularLighting%3E%3C/filter%3E%3C/defs%3E%3Crect width='700' height='700' fill='transparent'%3E%3C/rect%3E%3Crect width='700' height='700' fill='%23155dfc' filter='url(%23nnnoise-filter)'%3E%3C/rect%3E%3C/svg%3E");
+	background-repeat: repeat;
+	background-size: 200px 200px;
+}
+
+::view-transition-group(*),
+::view-transition-old(*),
+::view-transition-new(*) {
+	animation-duration: 0.5s;
+}
+
+/* GitHub Alerts Styling */
+.markdown-alert {
+	padding: 0.5rem 1rem;
+	border-width: 0.075rem;
+	background-color: var(--color-surface-light);
+	border-radius: 0.375rem;
+}
+
+.markdown-alert > :last-child {
+	margin-bottom: 0 !important;
+}
+
+.markdown-alert-title {
+	display: flex;
+	align-items: center;
+	font-weight: 500;
+	font-size: 0.875rem;
+}
+
+.markdown-alert-title svg {
+	margin-right: 0.5rem;
+	width: 1rem;
+	height: 1rem;
+	fill: currentColor;
+}
+
+.markdown-alert > p {
+	margin: 0 !important;
+	font-size: 1rem;
+}
+
+/* Note (Blue) */
+.markdown-alert-note {
+	border-color: oklch(from var(--color-primary) calc(l + 0.2) calc(c - 0.1) calc(h) / 0.5);
+}
+.markdown-alert-note .markdown-alert-title {
+	color: var(--color-primary);
+}
+
+/* Tip (Green) */
+.markdown-alert-tip {
+	border-color: oklch(from var(--color-green-500) calc(l + 0.2) calc(c - 0.1) calc(h) / 0.5);
+}
+.markdown-alert-tip .markdown-alert-title {
+	color: var(--color-green-700);
+}
+
+/* Important (Purple) */
+.markdown-alert-important {
+	border-color: oklch(from var(--color-purple-500) calc(l + 0.2) calc(c - 0.1) calc(h) / 0.5);
+}
+.markdown-alert-important .markdown-alert-title {
+	color: var(--color-purple-700);
+}
+
+/* Warning (Yellow/Orange) */
+.markdown-alert-warning {
+	border-color: oklch(from var(--color-yellow-500) calc(l + 0.2) calc(c - 0.1) calc(h) / 0.5);
+}
+.markdown-alert-warning .markdown-alert-title {
+	color: var(--color-yellow-700);
+}
+
+/* Caution (Red) */
+.markdown-alert-caution {
+	border-color: oklch(from var(--color-red-500) calc(l + 0.2) calc(c - 0.1) calc(h) / 0.5);
+}
+.markdown-alert-caution .markdown-alert-title {
+	color: var(--color-red-700);
+}
