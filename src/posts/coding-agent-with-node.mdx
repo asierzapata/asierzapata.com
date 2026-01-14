@@ -12,13 +12,13 @@ import { Image } from 'astro:assets'
 import AgentLoop from '../assets/coding-agent-with-node/agent-loop.png'
 import CodingAgentParts from '../assets/coding-agent-with-node/coding-agent-parts.png'
 
-This last year has been a wild ride in the AI coding space, especially with the release of tools like Claude Code and the explosion of CLI Coding Agents. What blows my mind is how simple they actually are once you understand the core idea. In this post, I will try to demystify them by building your own coding agent with JavaScript. I encourage you to follow along!
+This past year has been a wild ride in the AI coding space, especially with the release of tools like Claude Code and the explosion of CLI Coding Agents. What blows my mind is how simple they actually are once you understand the core idea. In this post, I will try to demystify them by helping you build your own coding agent with JavaScript. I encourage you to follow along!
 
 # What is an agent?
 
 Before writing a single line of code, I think it's interesting to talk about what an _agent_ is. It's one of those words that is widespread but may still not have a clear definition in lots of people's heads.
 
-Let's rewind for a second. In early AI applications using LLMs, we had autocomplete. The pioneer here was GitHub's Copilot, which focused on predicting the next piece of code you were writing. Those models were the most powerful we had at the time, but they lacked both the overall context of the code being written and the ability to produce longer code responses, which was a drawback for more complex tasks. Then came the chatbot. With much bigger contexts and longer responses, we could potentially solve bigger problems. This worked well at first, but it is tedious to provide the chatbot with context and then move the solutions to the actual place. It’s also difficult to know which context is the correct one for a given task. Agents come from trying to solve the **problem of how to let the LLM get the context itself and then execute the steps needed to solve the task**.
+Let's rewind for a second. In early AI applications using LLMs, we had autocomplete. The pioneer here was GitHub's Copilot, which focused on predicting the next piece of code you were writing. Those models were the most powerful we had at the time, but they lacked both the overall context of the code being written and the ability to produce longer code responses, which was a drawback for more complex tasks. Then came the chatbot. With much bigger contexts and longer responses, we could potentially solve bigger problems. This worked well at first, but it is tedious to provide the chatbot with context and then move the solutions to the actual place. It’s also difficult to know which context is the correct one for a given task. Agents emerged to solve the problem of allowing the LLM to gather its own context and execute the steps needed to solve a task.
 
 What changed here is that we gave the _chatbot_ some _tools_ to gather context and do something with that. In other words, an agent is an AI system where the LLM dynamically directs its own actions and tool usage in a loop, having autonomy over how it accomplishes the task at hand and when to stop.
 
@@ -50,7 +50,7 @@ First, we will begin with a barebones chat loop to get that out of the way. Then
 
 On Node.js, we can use the **_readline_** module as a straightforward way to create an input/chat loop. **_Readline_** lets us read data from any readable stream one line at a time, such as the terminal’s standard input. Pretty neat!
 
-To configure it, we first need to create an interface to define the input and output (in this case, the terminal), then use it to prompt the user for input with the `question` method. With this code, we have a chat that responds with the same thing we introduce and saves all messages.
+To configure it, we first need to create an interface to define the input and output (in this case, the terminal), then use it to prompt the user for input with the `question` method. With this code, we have a chat that responds with the same thing we type and saves all messages.
 
 ```javascript title="index.js"
 import { styleText } from 'node:util'
@@ -67,8 +67,8 @@ export async function chat() {
 	while (true) {
 		const userInput = await terminal.question(`${styleText(['blueBright', 'bold'], 'You')}: `)
 		console.log(`${styleText(['yellowBright', 'bold'], 'Agent')}: ${userInput}`)
-		// We will save the role of who sent the mesage, this will be important later
-		messages.push({ role: 'user', content: [{ text: userInput }] })
+		// We will save the role of who sent the message, this will be important later
+		messages.push({ role: 'user', content: userInput })
 	}
 }
 
@@ -81,7 +81,7 @@ Now is a good time to run `npm init`, since we’ll need a `package.json` file l
 
 To run our LLM, we will use Ollama because it's free and very easy to use. If you don't know what Ollama is, in a few words, it is a way to run Large Language Models locally. Models like the latest ones from OpenAI, Google, or Anthropic consume a lot of memory (I mean A LOT, like a terabyte of memory in the biggest models we have currently), so on our laptops with 16/32GB of RAM, we will need to run much, much smaller models. Obviously, those models we could have locally on our laptops aren't even close to the latest models in terms of intelligence and capabilities, but I think they are good enough for our purposes.
 
-If you don’t have Ollama installed, you can download it from the official website. Once installed and running, we will need to pull a model to run it. This selection will change over time, but at the time of writing, I recommend using either [`devstral-small-2`](ttps://ollama.com/library/devstral-small-2) if you have at least 32 GB of RAM, or [`ministral-3:8b`](https://ollama.com/library/ministral-3) if you have 16 GB or less. If you are in the 8 GB group, first, my condolences, but fret not. You could use [`ministral-3:3b`](https://ollama.com/library/ministral-3) (but seriously, get more RAM). To get the model, we can run:
+If you don’t have Ollama installed, you can download it from the official website. Once installed and running, we will need to pull a model to run it. This selection will change over time, but at the time of writing, I recommend using either [`devstral-small-2`](https://ollama.com/library/devstral-small-2) if you have at least 32 GB of RAM, or [`ministral-3:8b`](https://ollama.com/library/ministral-3) if you have 16 GB or less. If you are in the 8 GB group, first, my condolences, but fret not. You could use [`ministral-3:3b`](https://ollama.com/library/ministral-3) (but seriously, get more RAM). To get the model, we can run:
 
 ```bash
 // For folks with 32Gb or more
@@ -123,7 +123,7 @@ export async function chat() {
 		const userInput = await terminal.question(`${styleText(['blueBright', 'bold'], 'You')}: `)
 		console.log(`${styleText(['yellowBright', 'bold'], 'Agent')}: ${userInput}`)
 		// We will save the role of who sent the mesage, this will be important later
-		messages.push({ role: 'user', content: [{ text: userInput }] })
+		messages.push({ role: 'user', content: userInput })
 		process.stdout.write(`${styleText(['yellowBright', 'bold'], 'Agent')}: `)
 
 		const response = await ollama.chat({
@@ -183,7 +183,7 @@ Concretely, the tools we need are:
 
 One of the cool things about the tools is that they are closely tied to language, which is what the LLM really understands. I told you before that you could think of tools as normal functions in code. That's almost right, but you might not get everything out of the model if you’re purely thinking like a programmer. Instead, write things closer to how they would read in plain English. Think of tools as something you would tell someone who needs to know exactly what to do, not necessarily as writing a traditional computer program. The more naturally and precisely you describe the tool’s behavior, the better the model can use it.
 
-### Lets get hacking!
+### Let's get hacking!
 
 We will start by writing the code that will run for each of the tools. We will use a combination of built-in Node modules, terminal utilities, and an external dependency (the `glob` package).
 
@@ -222,7 +222,7 @@ export async function chat() {
 		const userInput = await terminal.question(`${styleText(['blueBright', 'bold'], 'You')}: `)
 		console.log(`${styleText(['yellowBright', 'bold'], 'Agent')}: ${userInput}`)
 		// We will save the role of who sent the mesage, this will be important later
-		messages.push({ role: 'user', content: [{ text: userInput }] })
+		messages.push({ role: 'user', content: userInput })
 		process.stdout.write(`${styleText(['yellowBright', 'bold'], 'Agent')}: `)
 
 		const response = await ollama.chat({
@@ -356,7 +356,7 @@ export async function edit({ filePath, oldString, newString, replaceAll }) {
 export async function chat() {
 	while (true) {
 		const userInput = await terminal.question(`${styleText(['blueBright', 'bold'], 'You')}: `)
-		messages.push({ role: 'user', content: [{ text: userInput }] })
+		messages.push({ role: 'user', content: userInput })
 		process.stdout.write(`${styleText(['yellowBright', 'bold'], 'Agent')}: `)
 
 		const response = await ollama.chat({
@@ -542,11 +542,11 @@ const tools = [
 ]
 
 const toolFunctions = {
-	findFiles,
-	searchFileContents,
-	readFile,
-	createFile,
-	editFile,
+	find,
+	grep,
+	read,
+	create,
+	edit,
 }
 
 export async function find({ pattern }) {
@@ -624,7 +624,7 @@ export async function edit({ filePath, oldString, newString, replaceAll }) {
 export async function chat() {
 	while (true) {
 		const userInput = await terminal.question(`${styleText(['blueBright', 'bold'], 'You')}: `)
-		messages.push({ role: 'user', content: [{ text: userInput }] })
+		messages.push({ role: 'user', content: userInput })
 		process.stdout.write(`${styleText(['yellowBright', 'bold'], 'Agent')}: `)
 
 		const response = await ollama.chat({
@@ -810,11 +810,11 @@ const tools = [
 ]
 
 const toolFunctions = {
-	findFiles,
-	searchFileContents,
-	readFile,
-	createFile,
-	editFile,
+	find,
+	grep,
+	read,
+	create,
+	edit,
 }
 
 export async function find({ pattern }) {
@@ -927,7 +927,7 @@ async function executeTool(toolCall) {
 
 	console.log(`${styleText(['dim'], `[Tool Call: ${functionName}]`)}`)
 
-	const tool = availableTools[functionName]
+	const tool = toolFunctions[functionName]
 	if (!tool) {
 		return `Error: Tool ${functionName} not found.`
 	}
@@ -945,7 +945,7 @@ async function executeTool(toolCall) {
 export async function chat() {
 	while (true) {
 		const userInput = await terminal.question(`${styleText(['blueBright', 'bold'], 'You')}: `)
-		messages.push({ role: 'user', content: [{ text: userInput }] })
+		messages.push({ role: 'user', content: userInput })
 
 		process.stdout.write(`${styleText(['yellowBright', 'bold'], 'Agent')}: `)
 		const response = await ollama.chat({
@@ -971,7 +971,7 @@ export async function chat() {
 			}
 
 			for (const toolCall of toolCalls) {
-				const result = await executeAction(toolCall)
+				const result = await executeTool(toolCall)
 				messages.push({
 					role: 'tool',
 					content: result,
@@ -989,7 +989,7 @@ And that’s it. We have our own coding agent in 331 lines of code!
 
 # The test drive
 
-Now we can try it ourselves to see what it does. Let’s ask him to describe the project.
+Now we can try it ourselves to see what it does. Let’s ask it to describe the project.
 
 ```markdown showLineNumbers=false frame="terminal"
 You: could you describe me this project?
@@ -1187,11 +1187,11 @@ const tools = [
 ]
 
 const toolFunctions = {
-	findFiles,
-	searchFileContents,
-	readFile,
-	createFile,
-	editFile,
+	find,
+	grep,
+	read,
+	create,
+	edit,
 }
 
 export async function find({ pattern }) {
@@ -1322,7 +1322,7 @@ async function executeTool(toolCall) {
 export async function chat() {
 	while (true) {
 		const userInput = await terminal.question(`${styleText(['blueBright', 'bold'], 'You')}: `)
-		messages.push({ role: 'user', content: [{ text: userInput }] })
+		messages.push({ role: 'user', content: userInput })
 
 		process.stdout.write(`${styleText(['yellowBright', 'bold'], 'Agent')}: `)
 		const response = await ollama.chat({
@@ -1367,15 +1367,15 @@ This isn’t a perfect system prompt, but watch how it transforms the agent’s 
 ```markdown showLineNumbers=false frame="terminal"
 You: could you describe me this project?
 Agent:
-[Tool Call: findFiles] inputs: {"pattern":"README\*"}
+[Tool Call: find] inputs: {"pattern":"README\*"}
 Agent:
-[Tool Call: findFiles] inputs: {"pattern":".gitignore"}
+[Tool Call: find] inputs: {"pattern":".gitignore"}
 Agent:
-[Tool Call: readFile] inputs: {"filePath":".gitignore"}
+[Tool Call: read] inputs: {"filePath":".gitignore"}
 Agent:
-[Tool Call: findFiles] inputs: {"pattern":"package.json"}
+[Tool Call: find] inputs: {"pattern":"package.json"}
 Agent:
-[Tool Call: readFile] inputs: {"filePath":"package.json"}
+[Tool Call: read] inputs: {"filePath":"package.json"}
 
 > This project appears to be a **blog post code example** related to a **coding agent** (likely a tool or application that assists with coding tasks). Here's a summary of its structure and purpose:
 
