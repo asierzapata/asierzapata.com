@@ -10,7 +10,7 @@ import { Image } from 'astro:assets'
 import photoAsier from '../assets/photo-asier.jpg'
 
 let posts = await getCollection('posts', ({ data }) => {
-	return import.meta.env.PROD ? !data.draft && data.date <= new Date() : true
+	return import.meta.env.PROD ? !data.draft && new Date(data.date) <= new Date() : true
 })
 posts = posts.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
 ---
