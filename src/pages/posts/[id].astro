@@ -84,23 +84,26 @@ const ogImage = `/open-graph/${post.id}.png`
 		class="px-4 py-6 md:px-8 md:py-12 flex flex-col gap-2 lg:grid lg:grid-cols-[1fr_36rem_1fr] xl:grid-cols-[1fr_48rem_1fr] lg:gap-12 lg:max-w-none"
 	>
 		<!-- Table of Contents for small screens -->
-		<details class="lg:hidden">
+		<details class="toc-mobile lg:hidden">
 			<summary class="font-serif ml-2 text-sm text-muted uppercase tracking-wider mb-4"
 				>On this page</summary
 			>
-			<ul class="pl-2">
-				{
-					headings.map(h => (
-						<a
-							href={`#${h.slug}`}
-							class="block text-sm text-muted hover:text-primary transition-colors py-1 pl-4 border-l-2 border-transparent"
-							style={`margin-left: ${(h.depth - 2) * 0.5}rem`}
-						>
-							{h.text}
-						</a>
-					))
-				}
-			</ul>
+			<div class="toc-mobile-content">
+				<ul class="pl-2 mb-4">
+					{
+						headings.map(h => (
+							<a
+								href={`#${h.slug}`}
+								class="block text-sm text-muted hover:text-primary transition-colors py-1 pl-4 border-l-2 border-transparent"
+								style={`margin-left: ${(h.depth - 2) * 0.5}rem`}
+								aria-label={`Go to ${h.text} section`}
+							>
+								{h.text}
+							</a>
+						))
+					}
+				</ul>
+			</div>
 		</details>
 
 		<!-- Empty spacer for left column to balance the layout -->
@@ -145,27 +148,53 @@ const ogImage = `/open-graph/${post.id}.png`
 </Layout>
 
 <style>
-	::marker {
-		color: var(--color-muted);
+	/* Custom caret for iOS Safari compatibility */
+	.toc-mobile summary {
+		list-style: none;
+		display: flex;
+		align-items: center;
+		gap: 0.5rem;
+		cursor: pointer;
 	}
 
-	::details-content {
-		transition:
-			height 0.5s ease,
-			content-visibility 0.5s ease allow-discrete;
-		height: 0;
-		overflow: clip;
+	.toc-mobile summary::-webkit-details-marker {
+		display: none;
 	}
 
-	/* Browser supports interpolate-size */
-	@supports (interpolate-size: allow-keywords) {
-		:root {
-			interpolate-size: allow-keywords;
-		}
+	.toc-mobile summary::before {
+		content: '';
+		width: 0.5rem;
+		height: 0.5rem;
+		border-right: 2px solid var(--color-muted);
+		border-bottom: 2px solid var(--color-muted);
+		transform: rotate(-45deg);
+		transition: transform 0.2s ease-out;
+	}
 
-		[open]::details-content {
-			height: auto;
-		}
+	.toc-mobile[open] summary::before {
+		transform: rotate(45deg);
+	}
+
+	/* Override browser's native details-content behavior */
+	.toc-mobile::details-content {
+		display: block;
+		height: auto;
+		overflow: visible;
+	}
+
+	/* Mobile TOC smooth animation using CSS Grid trick */
+	.toc-mobile-content {
+		display: grid;
+		grid-template-rows: 0fr;
+		transition: grid-template-rows 0.3s ease-out;
+	}
+
+	.toc-mobile[open] .toc-mobile-content {
+		grid-template-rows: 1fr;
+	}
+
+	.toc-mobile-content > ul {
+		overflow: hidden;
 	}
 
 	/* Table of Contents Marker */
