@@ -11,7 +11,7 @@
 	"dependencies": {
 		"@astrojs/mdx": "^4.3.13",
 		"@astrojs/react": "^4.4.2",
-		"@astrojs/rss": "^4.0.14",
+		"@astrojs/rss": "^4.0.15",
 		"@expressive-code/plugin-collapsible-sections": "^0.41.5",
 		"@expressive-code/plugin-line-numbers": "^0.41.5",
 		"@fontsource/merriweather": "^5.2.11",
@@ -19,7 +19,7 @@
 		"@resvg/resvg-js": "^2.6.2",
 		"@tailwindcss/vite": "^4.1.16",
 		"@vercel/analytics": "^1.6.1",
-		"astro": "^5.16.9",
+		"astro": "^5.18.0",
 		"astro-expressive-code": "^0.41.5",
 		"remark-github-blockquote-alert": "^2.0.1",
 		"satori": "^0.18.3",
