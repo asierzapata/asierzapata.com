@@ -2,8 +2,8 @@
 title: First, build the brain - My experience learning Rust with AI in the mix
 slug: first-build-the-brain-my-experience-learning-rust-with-ai-in-the-mix
 description: I wanted to learn Rust from scratch. AI wanted to write it for me. This is what I learned about learning when the machine already knows the answer.
-date: 2026-01-29
-draft: true
+date: 2026-03-17
+draft: false
 tags:
   - Software Engineering
   - AI
