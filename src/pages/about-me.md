@@ -10,6 +10,6 @@ I love working on the Education sector, where I can help teachers make their liv
 
 I also love everything tech-related, from keeping up with industry developments and trends to geeking out for every new tech device.
 
-When I’m not coding, you can find me hiking, or just exploring new places with my camera in hand.
+When I’m not coding, you can find me exploring new places with my camera in hand or with my telescopes doing some stargazing and astrophotography.
 
 This is my digital garden, where I write about my thoughts, learnings, and experiences. I hope you find something useful here!
