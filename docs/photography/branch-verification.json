@@ -1,0 +1,17 @@
+{
+  "date": "2026-11-05",
+  "numericalTests": 10,
+  "regularBuild": {
+    "regular_build_omits_original_draft": true,
+    "regular_build_omits_visual_draft": true,
+    "homepage_omits_drafts": true,
+    "rss_omits_drafts": true
+  },
+  "draftEnabledBuild": {
+    "original_draft_route_present": true,
+    "visual_draft_route_present": true,
+    "homepage_still_omits_drafts": true,
+    "rss_still_omits_drafts": true
+  },
+  "browserVerification": "Historical 2026-10-30 reports retained; not rerun for branch packaging and documentation."
+}

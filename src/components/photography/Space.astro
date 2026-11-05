@@ -1,0 +1,39 @@
+---
+import data from '../../lib/photography/article-data.json'
+import { sensorMarkup } from '../../lib/photography/sensor-geometry.js'
+import './anatomy.css'
+const target = data.patch.sites.find(s => s.x === data.patch.x && s.y === data.patch.y)!
+const letters = ['R', 'G', 'B']
+---
+<figure class="mechanism space-figure iso iso-plate" data-theme="light" aria-label="Across space: actual samples and their bilinear contributors">
+  <div class="figure-header"><span>FIG. 01 / SPACE</span><span data-figure-title>A small piece of the photograph</span></div>
+  <div class="figure-stage">
+    <div class="space-panel crop-panel" data-space-panel="crop">
+      <div class="context-inset"><img src="/photography/photograph.webp" width="759" height="1012" alt="Location of the enlarged region in the original photograph" loading="lazy" /><span></span></div>
+      <img class="native-crop" src="/photography/frame-0.webp" width="384" height="384" alt="The selected 384 by 384 sensor region, enlarged with no enhancement" loading="lazy" />
+      <span class="image-stamp">384 × 384 native sites</span>
+    </div>
+    <div class="space-panel sensor-panel" hidden data-space-panel="sensor" set:html={sensorMarkup}></div>
+    <div class="space-panel grid-panel" hidden data-space-panel="grid">
+      <svg viewBox="0 0 490 404" role="img" aria-label="Seven by seven actual Bayer samples in original sensor orientation. Each square shows the filter and normalized scalar measurement.">
+        <rect x="18" y="7" width="454" height="390" rx="8" class="grid-mount" />
+        {[24,466].flatMap(x=>[13,391].map(y=><circle cx={x} cy={y} r="2" class="mount-screw" />))}
+        {data.patch.cells.map((s, i) => {
+          const x=34+(i%7)*61,y=23+Math.floor(i/7)*51
+          return <g data-cell={`${s.x},${s.y}`} data-channel={s.c} class:list={['sample-cell', { selected: s.x===target.x && s.y===target.y }]}>
+            <rect x={x} y={y} width="57" height="47" rx="3" />
+            <text x={x+7} y={y+15} class="cell-channel">{letters[s.c]}</text>
+            <text x={x+28.5} y={y+35} text-anchor="middle">{s.value.toFixed(3)}</text>
+          </g>
+        })}
+      </svg>
+    </div>
+    <div class="space-panel rebuilt-panel" hidden data-space-panel="rebuilt"><img src="/photography/frame-0.webp" width="384" height="384" alt="Reconstructed full crop using the same bilinear contributor function" loading="lazy" /><img class="detail-inset" src="/photography/detail.webp" width="32" height="32" alt="A 32 by 32 native site detail around the numerical target" loading="lazy" /></div>
+  </div>
+  <div class="rgb-readout" aria-label="Sensor component estimates">
+    {target.channels.map(c=><div data-readout-channel={c.c} class:list={[{ measured:c.c===0, estimated:c.c!==0 }]}><span>{letters[c.c]} <small>{c.c===0 ? 'measured' : 'missing'}</small></span><strong>{c.c===0 ? c.value.toFixed(4) : '—'}</strong></div>)}
+  </div>
+  <div class="figure-arithmetic" data-arithmetic>Magnification changes the inspection scale, not the evidence.</div>
+  <div class="figure-footer"><span data-figure-hint>Follow the outlined region</span><span data-step-count>01 / 06</span></div>
+  <figcaption>Colour marks the filter. Each stored sample is one number. The grid stays in sensor orientation; photographs rotate 90° for display.</figcaption>
+</figure>

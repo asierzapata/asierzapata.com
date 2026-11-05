@@ -1,0 +1,172 @@
+---
+title: How your phone cheats when taking photos
+slug: how-your-phone-cheats
+description: One photograph, two understandable computations. How neighbouring sensor sites reconstruct colour, and neighbouring moments improve the estimate.
+date: 2026-10-30
+draft: true
+immersive: true
+tags:
+  - Photography
+  - Engineering
+---
+
+import Photo from '../components/photography/Photo.astro'
+import Story from '../components/photography/Story.astro'
+import Comparison from '../components/photography/Comparison.astro'
+import '../components/photography/story.css'
+
+<div class="reading intro">
+<p class="eyebrow">A photograph, taken apart</p>
+<p>How much of this picture did the camera actually measure?</p>
+<p>Look at the bark, the needles, the rocks in the shade. They seem like things a camera simply records. But a finished photograph combines what the sensor measured with what software estimated.</p>
+</div>
+
+<Photo />
+
+<div class="reading">
+<p>I first put this together for a ten-minute engineering talk. After <a href="/posts/coding-agent-with-node/">building a small coding agent</a>, I wanted to take apart another familiar bit of apparent magic. Again, the useful part is finding the concrete computations underneath.</p>
+<p>We only need two. The first borrows evidence from nearby positions. The second borrows evidence from nearby moments.</p>
+<p class="thesis">Reconstruction across space.<br />Then reconstruction across time.</p>
+<p>Scroll to follow the evidence. There is nothing you need to operate along the way.</p>
+</div>
+
+<div class="reading">
+<p class="eyebrow">01 / Neighbouring positions</p>
+<h2 id="across-space">First, fill in the colour.</h2>
+</div>
+
+<Story kind="space">
+<section data-story-step="0">
+<span class="step-number">01 / A CLOSER LOOK</span>
+<h3>A small window into the photograph.</h3>
+<p>Keep an eye on the outlined region on the mountain beneath the branches. We are enlarging a real 384 × 384 region of this capture. The little locator keeps it connected to the whole photograph.</p>
+<p>Enlargement gives us room to inspect. It adds no information.</p>
+<img class="step-fallback" src="/photography/frame-0.webp" width="384" height="384" loading="lazy" alt="The selected region on the mountain, enlarged" />
+</section>
+<section data-story-step="1">
+<span class="step-number">02 / WHAT A SITE MEASURES</span>
+<h3>One site. One number.</h3>
+<p>Over each sensing site is a tiny lens and a colour filter. Light produces electrical charge; the camera digitizes that signal into a number.</p>
+<p>A conventional Bayer pattern alternates red, green and blue filters, with twice as many green sites. The filters have overlapping spectral responses. They are not perfect sorters of three pure colours.</p>
+<p>The cutaway is schematic. The important part is the number: <strong>one filtered intensity per site</strong>, not a complete RGB triplet.</p>
+</section>
+<section data-story-step="2">
+<span class="step-number">03 / AN INCOMPLETE TRIPLET</span>
+<h3>Red was measured here. Green and blue were not.</h3>
+<p>The amber outline selects a red-filtered site. Its original digital measurement is 145. Subtract its black level, 63.75, and divide by its usable range, 1023 − 63.75: we get <strong>R = 0.0847</strong>.</p>
+<p>These normalized numbers are sensor components, before white balance and display colour conversion. The red tint identifies the filter; the stored sample itself is a scalar.</p>
+<p>To show this position as a full-colour pixel, we need estimates for the two missing components.</p>
+<img class="step-fallback" src="/photography/grid-red.svg" width="490" height="430" loading="lazy" alt="Actual normalized sensor samples. Target R equals 0.0847; G and B are missing." />
+</section>
+<section data-story-step="3">
+<span class="step-number">04 / LOOK NEXT DOOR</span>
+<h3>Four neighbours give us green.</h3>
+<p>The nearest green-filtered sites sit directly above, below, left and right. Give each a weight of one quarter.</p>
+<p>Their values are approximately 0.131, 0.183, 0.170 and 0.159. Averaging the unrounded values gives <strong>G ≈ 0.1608</strong>.</p>
+<p>This is an estimate at the selected position. We did not discover a hidden green measurement there.</p>
+<img class="step-fallback" src="/photography/grid-green.svg" width="490" height="430" loading="lazy" alt="Four orthogonal green contributors, weight one quarter each, estimate G as 0.1608" />
+</section>
+<section data-story-step="4">
+<span class="step-number">05 / LOOK DIAGONALLY</span>
+<h3>Four more give us blue.</h3>
+<p>The nearest blue-filtered sites are on the diagonals. Again, each contributes one quarter. Their normalized values are approximately 0.084, 0.073, 0.098 and 0.089.</p>
+<p>Using the unrounded values, <strong>B ≈ 0.0860</strong>. Now our site has one measured component and two estimated ones. The solid and hatched readouts keep that distinction visible.</p>
+<img class="step-fallback" src="/photography/grid-blue.svg" width="490" height="430" loading="lazy" alt="Four diagonal blue contributors, weight one quarter each, estimate B as 0.0860; red remains measured" />
+</section>
+<section data-story-step="5">
+<span class="step-number">06 / REPEAT</span>
+<h3>A colour image from incomplete samples.</h3>
+<p>Do the same thing at every site. At green sites the neighbourhood changes: the missing red or blue component comes from two neighbours along the appropriate axis.</p>
+<p>This simple method is <strong>bilinear demosaicing</strong>. The photograph uses the same contributor function as the arithmetic, with calibration and a fixed display transform applied for viewing. More sophisticated methods try to preserve edges and avoid false colour.</p>
+<p><strong>We reconstructed colour using measurements from neighbouring positions.</strong></p>
+<img class="step-fallback" src="/photography/frame-0.webp" width="384" height="384" loading="lazy" alt="The reconstructed crop, using the demonstrated bilinear interpolation kernel" />
+</section>
+</Story>
+
+<div class="reading">
+<p class="eyebrow">The same idea, in another direction</p>
+<h2 id="one-observation">What if we could look again?</h2>
+<p>Neighbours helped us fill in missing colour. But a single observation still has uncertainty: even with an unchanged scene, repeated measurements differ. In dim areas, those fluctuations can become especially visible.</p>
+<p>What if we observed the same scene several times?</p>
+<p>We have four real captures from this Google Pixel burst: N000 through N003. We will use the <strong>same prepared 384 × 384 region</strong>. The opening photograph is N000, not the finished burst merge.</p>
+</div>
+
+<div class="reading">
+<p class="eyebrow">02 / Neighbouring moments</p>
+<h2 id="across-time">Then, bring the observations together.</h2>
+</div>
+
+<Story kind="time">
+<section data-story-step="0">
+<span class="step-number">01 / LOOK AGAIN</span>
+<h3>The same scene, four observations.</h3>
+<p>These are separate exposures with matching exposure time, ISO and calibration. They are not one photograph animated four ways.</p>
+<p>The scene is broadly consistent. Noise differs, and the camera shifts slightly between captures. That gives us more evidence, along with a correspondence problem.</p>
+<img class="step-fallback" src="/photography/frame-1.webp" width="384" height="384" loading="lazy" alt="Actual second capture N001, same region as N000" />
+</section>
+<section data-story-step="1">
+<span class="step-number">02 / AN INSTRUCTIVE MISTAKE</span>
+<h3>Just average the pictures?</h3>
+<p>Averaging repeated, independent noisy measurements can make an estimate less noisy. But here the same scene detail falls at slightly different coordinates in each capture.</p>
+<p>This is the actual average <em>before</em> alignment. Look at the edges in the magnified inset. Mixing different positions softens or doubles structure, even if some fluctuations average out.</p>
+<img class="step-fallback" src="/photography/unaligned.webp" width="384" height="384" loading="lazy" alt="Unregistered average: detail softens because corresponding scene positions do not yet coincide" />
+</section>
+<section data-story-step="2">
+<span class="step-number">03 / FIND CORRESPONDENCE</span>
+<h3>Find the same detail in each capture.</h3>
+<p>Our implementation compares luminance at successively finer scales and estimates a horizontal and vertical shift relative to N000. The readout shows the actual calculated offsets, in sensor pixels.</p>
+<p>For N002, the matching position is sampled <strong>3.625 pixels left and 1.375 pixels up</strong> from the reference coordinate. These are fractional positions, so we interpolate between neighbouring samples.</p>
+<p>The lifted carriers separate the photographs for inspection. Their lift is schematic; the small horizontal corrections come from measured transforms.</p>
+</section>
+<section data-story-step="3">
+<span class="step-number">04 / ALIGN, THEN AVERAGE</span>
+<h3>Bring matching positions together.</h3>
+<p>The carriers lower onto the light table. Software shifts each observation into the reference frame, resamples it and averages valid overlapping observations.</p>
+<p>This is translation-only registration after reconstruction into common linear RGB. It is useful for our prepared region. Rotation, parallax, subject movement and rolling shutter can break that simple model.</p>
+<img class="step-fallback" src="/photography/aligned.webp" width="384" height="384" loading="lazy" alt="Actual registered average before robust rejection" />
+</section>
+<section data-story-step="4">
+<span class="step-number">05 / COMBINE WHAT AGREES</span>
+<h3>More observations, with some judgment.</h3>
+<p>Even after alignment, an observation can disagree with the reference. Our robust merge rejects overlapping samples whose luminance residual exceeds a stated threshold, then averages the accepted evidence.</p>
+<p>Here it rejects <strong>6,264 of 437,007 candidate observations: about 1.4%</strong>. This detects disagreement, not “moving objects.” Registration error, parallax and other differences can also cause rejection. Invalid overlap is excluded separately.</p>
+<p><strong>We improved the estimate using measurements from neighbouring moments.</strong> Averaging cannot recover scene information absent from every observation.</p>
+<img class="step-fallback" src="/photography/merged.webp" width="384" height="384" loading="lazy" alt="Actual registered robust merge, with the same rendering as the reference" />
+</section>
+</Story>
+
+<div class="reading">
+<h2 id="compare">The same window. More evidence.</h2>
+<p>Compare one capture with the robust merge. Both have exactly the same framing and display settings. The change is subtle at this size; you can magnify both equally to inspect the detail. This is an educational merge of a small, mostly static region, not a claim of a particular noise reduction factor.</p>
+</div>
+
+<Comparison />
+
+<div class="reading">
+<p class="eyebrow">Two computations. One connection.</p>
+<h2 id="the-connection">A photograph is an informed estimate.</h2>
+<p><strong>Across space:</strong> neighbouring sites help reconstruct colour.</p>
+<p><strong>Across time:</strong> repeated captures help improve the estimate.</p>
+<p>In both cases, software uses additional evidence about the same scene. It estimates missing components and combines imperfect observations; these examples do not invent arbitrary scene details.</p>
+<p class="thesis">Your phone builds a photograph<br />from incomplete, noisy evidence.</p>
+<p>Once we have estimated what was there, we still have to choose how to show it.</p>
+</div>
+
+<Photo close />
+
+<div class="reading source-note">
+<h2 id="sources">The photograph and the fine print</h2>
+<p>Photographs and derived image assets: <a href="https://www.hdrplusdata.org/dataset.html">HDR+ Burst Photography Dataset</a>, Hasinoff et al. (2016), <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>. Google Pixel burst <code>0006_20160722_115157_431</code>, captures N000–N003. These are actual Bayer RAWs. This is a representative teaching pipeline, not a reproduction of Apple’s or Google’s proprietary processing.</p>
+<details>
+<summary>Processing, reproducibility and source details</summary>
+<p>Samuel W. Hasinoff, Dillon Sharlet, Ryan Geiss, Andrew Adams, Jonathan T. Barron, Florian Kainz, Jiawen Chen and Marc Levoy. <em>Burst photography for high dynamic range and low-light imaging on mobile cameras.</em> ACM Transactions on Graphics 35(6), 2016.</p>
+<ul>
+<li>The numerical patch uses original BGGR sensor coordinates and exact rational black levels. Sample normalization is (DN − black) / (white − black). Demosaicing preserves the measured component before calibration. Green uses four orthogonal contributors at our red target; blue uses four diagonal contributors, each with weight ¼.</li>
+<li>Photographs additionally apply the supplied lens shading, inverse AsShotNeutral white balance, the supplied sensor-to-linear-sRGB matrix, +2 EV, a luminance shoulder of strength 1, gamut clipping and sRGB encoding. Display orientation is 90° clockwise. No comparison side is independently normalized.</li>
+<li>The full-image locator point-samples native reconstruction at stride 4. Crop and merge calculations use the native 384 × 384 region starting at raw (2109, 2009). Magnification is an inspection transform only.</li>
+<li>Registration uses luminance-pyramid translation estimation and bilinear resampling. The robust threshold is |Ysample − Yreference| &gt; 0.012 + 0.12 × max(0, Yreference). Rejected observations and invalid overlap are distinct; the displayed count covers residual rejection only.</li>
+<li>The original capture has no saturated sites: its maximum is 814 DN against white level 1023. Bright display pixels do not establish sensor saturation.</li>
+<li><a href="/photography/manifest.json">Original source URLs, metadata and attribution</a>; <a href="/photography/burst-validation.json">independent decoded-sample hashes</a>; <a href="/photography/article-data.json">article calculations, derivative hashes and viewing settings</a>. The source manifest retains descriptions of the broader reference application; only the documented two mechanisms are used here. Photographic derivatives remain CC BY-SA 4.0; the schematic Anatomy figures use the MIT-licensed kit.</li>
+</ul>
+</details>
+</div>

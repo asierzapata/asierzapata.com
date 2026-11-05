@@ -1,0 +1,20 @@
+---
+import data from '../../../lib/photography/article-data.json'
+const letters=['R','G','B']
+const {patch}=data
+const cells=patch.cells.map((s,i)=>({...s,px:10+(i%7)*64,py:14+Math.floor(i/7)*53}))
+const target=patch.sites.find(s=>s.x===patch.x&&s.y===patch.y)!
+---
+<div class="hf-grid-composition">
+  <svg class="hf-sample-grid" viewBox="0 0 462 399" role="img" aria-label="Actual normalized Bayer sample neighbourhood. Amber selects the red target. Dashed outlines identify its contributors.">
+    {cells.map(s=>(<g class="hf-sample" data-hf-cell={`${s.x},${s.y}`} data-channel={s.c} data-selected={s.x===target.x&&s.y===target.y ? '' : undefined}>
+      <rect x={s.px} y={s.py} width="57" height="46" rx="4" />
+      <text x={s.px+8} y={s.py+15} class="hf-filter-letter">{letters[s.c]}</text>
+      <text x={s.px+28.5} y={s.py+34} text-anchor="middle" class="hf-scalar">{s.value.toFixed(3)}</text>
+    </g>))}
+  </svg>
+  <div class="hf-components" aria-label="Components at the selected position">
+    {target.channels.map((c,i)=><div data-hf-component={i} class:list={[{'is-measured':i===0}]}><span>{letters[i]}</span><strong>{i===0?c.value.toFixed(4):'—'}</strong><small>{i===0?'measured':'not measured'}</small></div>)}
+  </div>
+  <div class="hf-equation" data-hf-equation>R = (145 − 63.75) / (1023 − 63.75)</div>
+</div>

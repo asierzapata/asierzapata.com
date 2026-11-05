@@ -1,0 +1,145 @@
+{
+  "id": "hdrplus-0006-N000",
+  "source": "source.dng",
+  "sourceUrl": "https://storage.googleapis.com/hdrplusdata/20171106_subset/bursts/0006_20160722_115157_431/payload_N000.dng",
+  "dataset": "HDR+ Burst Photography Dataset",
+  "attribution": "Samuel W. Hasinoff, Dillon Sharlet, Ryan Geiss, Andrew Adams, Jonathan T. Barron, Florian Kainz, Jiawen Chen, Marc Levoy. Burst photography for high dynamic range and low-light imaging on mobile cameras. ACM TOG 35(6), 2016.",
+  "license": "CC-BY-SA-4.0",
+  "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+  "documentation": "https://www.hdrplusdata.org/dataset.html",
+  "burst": {
+    "id": "0006_20160722_115157_431",
+    "frames": [
+      "source.dng",
+      "burst-1.dng",
+      "burst-2.dng",
+      "burst-3.dng"
+    ],
+    "license": "CC-BY-SA-4.0",
+    "attribution": "Samuel W. Hasinoff, Dillon Sharlet, Ryan Geiss, Andrew Adams, Jonathan T. Barron, Florian Kainz, Jiawen Chen, Marc Levoy. Burst photography for high dynamic range and low-light imaging on mobile cameras. ACM TOG 35(6), 2016.",
+    "sourceBaseUrl": "https://storage.googleapis.com/hdrplusdata/20171106_subset/bursts/0006_20160722_115157_431/",
+    "calibration": "same exposure, ISO, WB, black, white and byte-identical per-frame shading maps",
+    "validation": "burst-validation.json",
+    "registration": "burst-registration.json",
+    "operation": "Per-frame calibrated linear RGB crop; luminance-pyramid translation; bilinear resampling; valid-overlap robust average with reference residual rejection",
+    "cropRawCoordinates": [
+      2109,
+      2009,
+      384,
+      384
+    ],
+    "residualThreshold": "abs(Ysample-Yreference) > 0.012 + 0.12*max(0,Yreference)",
+    "sourceSamplingOffsets": [
+      [
+        0,
+        0
+      ],
+      [
+        -1.375,
+        -1.125
+      ],
+      [
+        -3.625,
+        -1.375
+      ],
+      [
+        -2.875,
+        0.625
+      ]
+    ],
+    "shadingMapSha256": "6ea112db3c3bdfa8c5fe0351a00bce304376d3a6ac192349d7ca52265e13c9a2"
+  },
+  "frame": "N000",
+  "camera": "Google Pixel (DNG model: google sailfish)",
+  "sourceSha256": "9744f7c309c7aa278d470e497126ae58da439910f46c4c09f3021b76586689d9",
+  "decodedSamplesSha256": "0aed50690ef774eda672b8aed669a6beae36beeb4402f0538299d6f62410520e",
+  "storage": {
+    "width": 4048,
+    "height": 3036,
+    "type": "Uint16",
+    "strideSamples": 4048,
+    "CFA": "BGGR",
+    "CFAOrigin": [
+      0,
+      0
+    ],
+    "activeArea": [
+      0,
+      0,
+      3036,
+      4048
+    ],
+    "defaultCrop": [
+      0,
+      0,
+      4048,
+      3036
+    ],
+    "orientation": 6
+  },
+  "calibration": {
+    "blackLevelsBySite": [
+      63.75,
+      63.5,
+      63.5,
+      63.75
+    ],
+    "whiteLevel": 1023,
+    "AsShotNeutral": [
+      0.496063,
+      1,
+      0.614173
+    ],
+    "matrix": "rgb2rgb.txt",
+    "matrixDirection": "sensor RGB with separate white balance to linear sRGB, row-major",
+    "lensShading": "shading.json",
+    "lensShadingOriginal": "shading.tiff",
+    "lensShadingChannels": [
+      "R",
+      "Gred",
+      "Gblue",
+      "B"
+    ]
+  },
+  "sidecarBaseUrl": "https://storage.googleapis.com/hdrplusdata/20171106_subset/bursts/0006_20160722_115157_431/",
+  "transformLog": [
+    "Lossless JPEG predictor-1 unpack, no demosaic or rendering",
+    "Use full active array; no crop",
+    "Subtract exact rational per-site black levels",
+    "Normalize by corresponding white minus black",
+    "Bilinearly interpolate lens-shading gain map",
+    "Apply inverse AsShotNeutral white balance",
+    "Bilinear demosaic with clipped neighborhood and renormalized edge weights",
+    "Apply supplied sensor-to-linear-sRGB matrix",
+    "Apply 2^EV",
+    "Luminance shoulder RGB/(1 + strength*luminance)",
+    "Clamp output gamut and sRGB encode",
+    "Rotate 90 degrees clockwise for display"
+  ],
+  "validation": "validation.json",
+  "independentDecode": "rawpy 0.27.1 / LibRaw 0.22.1: all decoded samples byte-identical. DNG rational black tags retain fractions that rawpy's integer black API rounds down.",
+  "reference": {
+    "file": "reference.jpg",
+    "relationship": "Independent LibRaw rendering of the SAME source DNG for diagnostic comparison; not a Google HDR+ final result, Apple result, or ground truth",
+    "parameters": "rawpy postprocess(use_camera_wb=True,no_auto_bright=True,bright=2,output_bps=8), resized to 768x1024",
+    "license": "CC-BY-SA-4.0 (adaptation)"
+  },
+  "adaptations": "shading.json is a lossless JSON representation of the supplied TIFF gain map; reference.jpg is a LibRaw-rendered derivative. Browser previews and crops are our own rendered adaptations, CC-BY-SA-4.0.",
+  "capabilities": {
+    "bundledBrowserRawDecode": true,
+    "generalRawImport": false,
+    "iPhoneValidated": false,
+    "burstMerge": true,
+    "HEIC": false,
+    "processedImageImport": "JPEG/PNG, explicitly synthetic RGGB sampling after browser sRGB conversion"
+  },
+  "limitations": [
+    "One validated fixture only; no generic DNG color management",
+    "Sidecar lens-shading correction uses an explicit endpoint-aligned bilinear grid approximation",
+    "Bilinear demosaic is educational and can produce false color/zippering",
+    "Full-frame locator point-samples native reconstructed RGB at stride 6; it is not a quality export",
+    "Real fusion is limited to the prepared 384x384 static-region crop, translation only; residual rejection is not semantic motion detection",
+    "The original bundled capture has zero saturated sensor sites (maximum 814 vs white 1023); finite-capacity saturation is a labeled schematic",
+    "iPhone/Halide capture, actual projector readability, and a spoken ten-minute rehearsal remain unvalidated"
+  ]
+}

@@ -1,0 +1,15 @@
+---
+import Space from './Space.astro'
+import Time from './Time.astro'
+import './story.css'
+interface Props { kind: 'space' | 'time' }
+const { kind } = Astro.props
+---
+<photo-story class="photo-story" data-kind={kind} data-step="0">
+  <div class="story-visual">{kind === 'space' ? <Space /> : <Time />}</div>
+  <div class="story-copy"><slot /></div>
+</photo-story>
+<script>
+  import { mountStories } from '../../lib/photography/scroll'
+  document.addEventListener('astro:page-load', mountStories)
+</script>
