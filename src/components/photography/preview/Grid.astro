@@ -1,20 +1,72 @@
 ---
 import data from '../../../lib/photography/article-data.json'
+import {reconstructionSteps} from '../../../lib/photography/preview/reconstruction-model.js'
+import './reconstruction.css'
 const letters=['R','G','B']
 const {patch}=data
-const cells=patch.cells.map((s,i)=>({...s,px:10+(i%7)*64,py:14+Math.floor(i/7)*53}))
+const cells=patch.cells.map((s,i)=>({...s,px:10+(i%7)*62,py:10+Math.floor(i/7)*62}))
 const target=patch.sites.find(s=>s.x===patch.x&&s.y===patch.y)!
+const first=reconstructionSteps(patch)[0]
 ---
-<div class="hf-grid-composition">
-  <svg class="hf-sample-grid" viewBox="0 0 462 399" role="img" aria-label="Actual normalized Bayer sample neighbourhood. Amber selects the red target. Dashed outlines identify its contributors.">
-    {cells.map(s=>(<g class="hf-sample" data-hf-cell={`${s.x},${s.y}`} data-channel={s.c} data-selected={s.x===target.x&&s.y===target.y ? '' : undefined}>
-      <rect x={s.px} y={s.py} width="57" height="46" rx="4" />
-      <text x={s.px+8} y={s.py+15} class="hf-filter-letter">{letters[s.c]}</text>
-      <text x={s.px+28.5} y={s.py+34} text-anchor="middle" class="hf-scalar">{s.value.toFixed(3)}</text>
-    </g>))}
-  </svg>
-  <div class="hf-components" aria-label="Components at the selected position">
-    {target.channels.map((c,i)=><div data-hf-component={i} class:list={[{'is-measured':i===0}]}><span>{letters[i]}</span><strong>{i===0?c.value.toFixed(4):'—'}</strong><small>{i===0?'measured':'not measured'}</small></div>)}
+<div class="rc" data-reconstruction data-channel="0">
+  <div class="rc-heading"><span>Reconstructing colour</span><span data-rc-counter>01 / 03</span></div>
+  <div class="rc-main">
+    <div class="rc-sensor">
+      <div class="rc-label">On the sensor <span>one value per site</span></div>
+      <svg class="hf-sample-grid rc-grid" viewBox="0 0 448 448" role="img" aria-labelledby="rc-grid-title rc-grid-description">
+        <title id="rc-grid-title">Bayer sensor measurements around a selected red-filtered site</title>
+        <desc id="rc-grid-description">The selected site measures red only. Four adjacent green sites estimate its green component; four diagonal blue sites estimate its blue component. Sensor measurements do not change.</desc>
+        <defs>
+          <linearGradient id="rc-filter-surface" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="#fff" stop-opacity=".25" />
+            <stop offset=".45" stop-color="#fff" stop-opacity="0" />
+            <stop offset="1" stop-color="#000" stop-opacity=".12" />
+          </linearGradient>
+        </defs>
+        <rect class="rc-substrate" x="2" y="2" width="444" height="444" rx="9" />
+        {cells.map(s=>(<g class="rc-site" data-hf-cell={`${s.x},${s.y}`} data-channel={s.c} data-selected={s.x===target.x&&s.y===target.y ? '' : undefined}>
+          <rect class="rc-site-base" x={s.px} y={s.py+2} width="56" height="56" rx="4" />
+          <rect class="rc-site-face" x={s.px} y={s.py} width="56" height="56" rx="4" />
+          <rect class="rc-site-glass" x={s.px+3} y={s.py+3} width="50" height="50" rx="2" />
+          <path class="rc-site-etch" d={`M${s.px+7} ${s.py+2}H${s.px+49}M${s.px+2} ${s.py+7}V${s.py+49}`} />
+          <text x={s.px+8} y={s.py+16} class="rc-letter">{letters[s.c]}</text>
+          <text x={s.px+28} y={s.py+39} text-anchor="middle" class="rc-scalar">{s.value.toFixed(s.x===target.x&&s.y===target.y?4:3)}</text>
+        </g>))}
+        <path class="rc-target-bracket" d="M191 207V191H207M241 191H257V207M257 241V257H241M207 257H191V241" />
+      </svg>
+      <div class="rc-sensor-caption"><span class="rc-target-key"></span>Selected red site <span class="rc-unchanged">· measurements stay unchanged</span></div>
+    </div>
+    <div class="rc-output">
+      <div class="rc-label">Reconstructed pixel <span>at the selected location</span></div>
+      <div class="rc-components" aria-label="Reconstructed components at the selected location">
+        {first.components.map((c,i)=><div data-hf-component={i} data-channel={i} class:list={['rc-component',{'is-measured':i===0,'is-active':i===0}]}>
+          <span class="rc-port" aria-hidden="true"></span>
+          <span class="rc-channel">{c.letter}</span>
+          <strong>{c.value}</strong>
+          <small>{c.status}</small>
+          <span class="rc-component-origin" aria-hidden="true">{i===0?'this site':'4 neighbours'}</span>
+        </div>)}
+      </div>
+      <span class="rc-output-note">One measurement.<br />Two estimates.</span>
+    </div>
+    <svg class="rc-connections" aria-hidden="true">
+      {[0,1,2,3].map(()=><g class="rc-connection" visibility="hidden"><path class="rc-route-halo" /><path class="rc-route" /><circle class="rc-source-port" r="2.5" /><g class="rc-token" opacity="0"><circle r="9" /><text text-anchor="middle" dy=".35em">¼</text></g></g>)}
+    </svg>
   </div>
-  <div class="hf-equation" data-hf-equation>R = (145 − 63.75) / (1023 − 63.75)</div>
+  <div class="rc-explanation" aria-live="polite" aria-atomic="true">
+    <span class="rc-explanation-index" aria-hidden="true" data-rc-index>01</span>
+    <div><strong data-rc-title>One measured. Two still missing.</strong><span data-rc-description>This site measures red, but not green or blue.</span></div>
+    <button type="button" class="rc-replay" aria-label="Replay the current reconstruction step" title="Replay this step"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M5 8a8 8 0 1 1-1 7M5 3v5h5" /></svg></button>
+  </div>
+  <div class="rc-controls" role="group" aria-label="Colour reconstruction steps">
+    {['Measure R','Estimate G','Estimate B'].map((label,i)=><button type="button" data-rc-step={i} aria-pressed={i===0?'true':'false'}><span class="rc-step-dot" data-channel={i}></span><span>{label}</span><span class="rc-step-number">0{i+1}</span></button>)}
+  </div>
+  <details class="rc-calculation">
+    <summary>Inspect the calculation <span aria-hidden="true">+</span></summary>
+    <div class="rc-calculation-body">
+      <span class="rc-calculation-label">Actual normalized RAW measurements</span>
+      <div data-hf-equation>{first.equation}</div>
+      <p>Bilinear interpolation, before white balance and colour rendering. Values shown rounded; calculations use full precision. Tile colours identify filters, not measured intensity.</p>
+    </div>
+  </details>
 </div>

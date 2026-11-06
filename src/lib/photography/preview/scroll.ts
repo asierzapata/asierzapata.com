@@ -1,6 +1,6 @@
 import {beats} from './beats'
 import {cameraGeometry} from './camera-geometry.js'
-import data from '../article-data.json'
+import {mountReconstruction} from './reconstruction'
 let cleanup: (()=>void)|undefined
 const clamp=(n:number,min=0,max=1)=>Math.max(min,Math.min(max,n))
 const smooth=(n:number)=>{const x=clamp(n);return x*x*(3-2*x)}
@@ -15,10 +15,15 @@ export function mountPreview(){
   const world=root.querySelector<SVGGElement>('[data-camera-world]')!
   const cameraPanel=root.querySelector<HTMLElement>('.hf-camera-panel')!
   const selection=root.querySelector<SVGPathElement>('.camera-selection-ring')!
-  const grid=root.querySelector<SVGSVGElement>('.hf-sample-grid')!
-  const target=data.patch.sites.find(s=>s.x===data.patch.x&&s.y===data.patch.y)!
-  const cells=[...root.querySelectorAll<SVGGElement>('[data-hf-cell]')]
-  const components=[...root.querySelectorAll<HTMLElement>('[data-hf-component]')]
+  const reconstruction=mountReconstruction(root,signal.signal,channel=>{
+    const next=beats.findIndex(beat=>'channel' in beat&&beat.channel===channel)
+    const step=steps[next]
+    const offset=innerWidth<900&&innerHeight>580
+      ?Math.min(innerHeight*.7-35,root!.querySelector('.hf-visual-column')!.getBoundingClientRect().height+35)
+      :innerHeight*.43-(step.querySelector('h2')!.getBoundingClientRect().top-step.getBoundingClientRect().top)
+    scrollTo({top:scrollY+step.getBoundingClientRect().top-offset,behavior:'instant'})
+    schedule()
+  })
   const caption=root.querySelector('[data-hf-caption]')!,source=root.querySelector('[data-hf-source]')!
   let frame=0,last=0,dirty=true,index=-1,travel=0,focus=0,targetTravel=0,targetFocus=0,visible=true
   let paintOrder=pieces.map(p=>p.el)
@@ -31,24 +36,18 @@ export function mountPreview(){
     panels.forEach(panel=>panel.hidden=panel.dataset.hfPanel!==beat.view)
     const words=captions[beat.view];caption.textContent=words[0];source.textContent=words[1]
     if(index===2){caption.textContent='The exposed sensor';source.textContent='A stable pause for your physical camera'}
-    if(beat.view==='grid'){
-      const channel='channel' in beat?beat.channel:0
-      const selected=target.channels[channel]
-      cells.forEach(el=>{const [x,y]=el.dataset.hfCell!.split(',').map(Number);el.classList.toggle('is-contributor',channel!==0&&selected.sites.some(p=>p.x===x&&p.y===y))})
-      components.forEach((el,c)=>{const known=c===0||c<=channel;el.querySelector('strong')!.textContent=known?target.channels[c].value.toFixed(4):'—';el.querySelector('small')!.textContent=c===0?'measured':known?'estimated':'not measured';el.classList.toggle('is-estimated',known&&c!==0)})
-      root!.querySelector('[data-hf-equation]')!.textContent=channel===0?'R = (145 − 63.75) / (1023 − 63.75)':`${['R','G','B'][channel]} ≈ (${selected.sites.map(s=>s.value.toFixed(3)).join(' + ')}) × ¼ = ${selected.value.toFixed(4)}`
-    }
+    reconstruction.update('channel' in beat?beat.channel:null)
     root!.querySelector('.hf-alignment-panel')?.classList.remove('is-registered')
   }
   function measure(){
     dirty=false
     const mobile=matchMedia('(max-width:899px)').matches
-    const line=mobile?Math.min(innerHeight*.7,root!.querySelector('.hf-visual-column')!.getBoundingClientRect().bottom+85):innerHeight*.52
+    const line=innerHeight*(mobile&&innerHeight>580?.7:.52)
     let next=0
     const boxes=steps.map(step=>step.getBoundingClientRect())
     for(let i=0;i<boxes.length;i++)if(boxes[i].top<=line)next=i
     setState(next)
-    grid.setAttribute('viewBox',mobile?'138 120 192 159':'0 0 462 399')
+    reconstruction.layout()
     if(next===0){targetTravel=0;targetFocus=0}
     else if(next===1){const p=clamp((line-boxes[1].top)/(boxes[1].height*.5));targetTravel=reduce.matches?1:smooth(p);targetFocus=reduce.matches?1:smooth(clamp(p*1.8))}
     else {targetTravel=1;targetFocus=1}
