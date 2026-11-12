@@ -1,0 +1,131 @@
+---
+title: How your phone cheats when taking photos
+slug: how-your-phone-cheats
+description: We take one real phone photo apart, raw sensor data and all, to see three tricks behind it. Guessing color from neighboring pixels, merging a burst of frames, and brightening the picture region by region.
+date: 2026-11-12
+draft: true
+immersive: true
+tags:
+  - Photography
+  - Engineering
+---
+
+import Reveal from '../components/photography/lake/Reveal.astro'
+import Mosaic from '../components/photography/lake/Mosaic.astro'
+import Burst from '../components/photography/lake/Burst.astro'
+import Exposure from '../components/photography/lake/Exposure.astro'
+import data from '../lib/photography/lake/data.json'
+import '../components/photography/story.css'
+
+export const frames = data.frames.length
+export const shutter = Math.round(1 / data.frames[0].exposure)
+export const megapixels = Math.round(data.sensor.width * data.sensor.height / 1e6)
+export const times = ev => (2 ** ev).toFixed(1).replace(/\.0$/, '')
+
+<section class="beat title-slide" data-beat aria-hidden="true">
+<p class="talk-title">{frontmatter.title}</p>
+</section>
+
+<section class="beat" data-beat>
+<div class="reading intro">
+<p class="eyebrow">A photograph, taken apart</p>
+<h2 id="the-photo">This is not what the camera saw</h2>
+<p>Someone took this photo at sunset with a Nexus 6P. Google later published it, together with the raw sensor data, as part of a research dataset. That gives us something we rarely get: the finished photo and the measurements behind it, side by side.</p>
+</div>
+
+<Reveal />
+
+<div class="reading">
+<p>Same phone, same instant. One is what the phone showed. The other is what the sensor recorded: no color, dark corners, and a foreground that is almost black.</p>
+<p>Everything between those two pictures is software. We will look at three of its tricks on this one photo, and each cheats a little more than the one before.</p>
+<p class="present-hint">I first gave this as a ten-minute lightning talk. Press <kbd>P</kbd> to see it as slides, then use the arrow keys. Or just keep scrolling.</p>
+</div>
+</section>
+
+<section class="beat" data-beat>
+<div class="reading">
+<p class="eyebrow">Cheat 1 / Neighboring pixels</p>
+<h2 id="cheat-one">Your sensor is color-blind.</h2>
+<p>The sensor in this phone has {megapixels} million pixels, tiny light sensors laid out in a grid. Each one records a single number: how much light landed on it. That number says nothing about color.</p>
+<p>To get color, the sensor wears a checkerboard of tiny colored filters. Each pixel sits under a red, a green or a blue one (there are twice as many greens, because our eyes are most sensitive to green). So every pixel measures one color out of the three it needs.</p>
+</div>
+
+<Mosaic />
+
+<div class="reading">
+<p>The phone guesses the two missing colors from the neighbors. The simplest guess, and the one we use on this page, is the average of the nearest pixels that did measure that color. Real phones use smarter guesses that follow edges, but the idea is the same. Engineers call this step demosaicing, in case you want to look it up.</p>
+<p class="thesis">Two thirds of the color in this photo was never measured.</p>
+<p>That is true of nearly every photo any phone takes. It works because neighboring pixels usually look alike, and it fails in small ways where they don't: fine fabric, distant fences, thin text.</p>
+</div>
+</section>
+
+<section class="beat" data-beat>
+<div class="reading">
+<p class="eyebrow">Cheat 2 / Neighboring moments</p>
+<h2 id="cheat-two">You never took one photo.</h2>
+<p>The phone had a problem at this lake. To keep the sunset from turning white, it opened the shutter for only 1/{shutter}&nbsp;s, and in that time almost no light from the rocks reached the sensor. We can brighten them afterwards, but every reading also carries a bit of random error, which we call noise. With so little light, that noise is a big part of what was recorded, and brightening multiplies it along with the picture.</p>
+<p>So it didn't take one photo. It took {frames}.</p>
+</div>
+
+<Burst />
+
+<div class="reading">
+<p>Averaging works because the rocks look the same in every frame, while the noise is random and different each time, so it cancels out. The catch is that nobody holds a phone perfectly still. Before averaging anything, the software has to work out how far each frame moved and shift it back.</p>
+<p class="thesis">One press of the button. {frames} frames, lined up and averaged.</p>
+<p>In 2015 the burst started when you pressed the button. As far as I know, newer phones go one step further: they keep recent frames in memory while the camera app is open, so part of your photo can come from frames taken before you pressed anything.</p>
+</div>
+</section>
+
+<section class="beat" data-beat>
+<div class="reading">
+<p class="eyebrow">Cheat 3 / Region by region</p>
+<h2 id="cheat-three">The rocks were never this bright.</h2>
+<p>After the first two cheats we have clean color for every pixel. We still have to decide how bright to show it, and in this scene no single brightness works for both the sky and the rocks.</p>
+</div>
+
+<Exposure />
+
+<div class="reading">
+<p>Nothing in the sensor data asked for that ×{times(data.gain.groundEv)} on the ground. Someone wrote software that decided a good sunset photo has a colorful sky and readable rocks, and the phone edited this one toward it.</p>
+<p class="thesis">The first two cheats recover what was there.<br />This one chooses what we see.</p>
+<p>In 2015 the rule for where to brighten was simple: favor pixels that are neither too dark nor too bright. How much to brighten was a matter of taste, literally. The team labeled about 5,000 scenes by hand with the result they liked best, and the phone looked up the ones most like ours. Phones today go further. They recognize skies and faces and treat each one differently, and portrait mode blurs backgrounds that a lens this small can barely blur at all.</p>
+<p>My favorite example goes even further. If I remember it right, in 2023 someone photographed a deliberately blurred picture of the moon with a Samsung phone, and the phone gave back crisp craters that the blurred picture did not contain.</p>
+</div>
+</section>
+
+<section class="beat" data-beat>
+<div class="reading">
+<p class="eyebrow">Three cheats, one ladder</p>
+<h2 id="the-ladder">So, how much of this photo did the camera see?</h2>
+</div>
+
+<ol class="ladder">
+<li><img src="/photography/lake/mosaic.webp" alt="" width="56" height="56" loading="lazy" /><strong>Measured</strong><span>One color per pixel, in {frames} noisy frames.</span></li>
+<li><img src="/photography/lake/stack-8.webp" alt="" width="56" height="56" loading="lazy" /><strong>Estimated</strong><span>The other two colors, from the neighbors. A cleaner picture, from the other frames.</span></li>
+<li><img src="/photography/lake/gain.webp" alt="" width="56" height="56" loading="lazy" /><strong>Decided</strong><span>How bright each region should be. What a sky, a face or a moon should look like.</span></li>
+</ol>
+
+<div class="reading">
+<p>Each step up the ladder is further from what the sensor saw, and most of us would still call the result a photo. I don't have a clean answer for where that stops being true, and I'm not sure there is one. Next time your phone pulls off a surprisingly good picture in bad light, it might be fun to guess which of these three it leaned on.</p>
+<p>Thanks for sticking with it until the end! None of this would have been possible if the HDR+ team hadn't published their raw bursts next to the phone's results, so if you want to dig further, the dataset and the paper are linked below.</p>
+</div>
+</section>
+
+<div class="reading source-note">
+<h2 id="sources">The photograph and the fine print</h2>
+<p>Photograph and derived images: <a href="https://www.hdrplusdata.org/dataset.html">HDR+ Burst Photography Dataset</a>, Hasinoff et al. (2016), <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>. Burst <code>{data.burst}</code>, a Nexus 6P, {frames} frames at ISO {data.frames[0].iso}. "What the phone showed" is the dataset's own HDR+ result. Everything else is a small teaching pipeline of ours, not a reproduction of Google's processing.</p>
+<details>
+<summary>How each picture was made</summary>
+<ul>
+<li>The raw sensor view averages every {data.bin} × {data.bin} block of sensor pixels, with no color, white balance, lens correction or brightening.</li>
+<li>The shoreline window is {data.crop.width} × {data.crop.height} sensor sites starting at ({data.crop.x}, {data.crop.y}) in frame {data.frames[0].name}, the frame the dataset uses as its reference. We brighten it ×{data.viewGain} with a soft shoulder so the shadows are visible. Every picture of the window uses that same rendering.</li>
+<li>Color uses bilinear demosaicing, the dataset's lens-shading map, its white balance and its color matrix. "Which filter" shows each site's own measurement in its own color channel and nothing else.</li>
+<li>Alignment is a single shift per frame for this window, found by comparing brightness at three scales and refined to an eighth of a pixel. A whole-frame merge needs more than one shift, because the camera also rotates.</li>
+<li>"Grain" is the strength of pixel-to-pixel variation in the green channel, relative to one frame. It mixes noise with real fine detail, so it understates the improvement. Perfect averaging of {frames} frames would reach {Math.round(100 / Math.sqrt(frames))}%.</li>
+<li>Nothing in this scene moves. A merge that rejects samples disagreeing with the reference frame discards {data.robust.rejected} of {data.robust.total.toLocaleString('en-US')}, so we left that step out of the story.</li>
+<li>Our blend renders the reference frame at ×1 and ×{2 ** data.fuse.longEv}, scores each pixel of both by how close its brightness is to a middle gray, blurs that choice, and mixes the two. HDR+ also fuses two renderings of one merged frame, but it blends them scale by scale, which avoids the glow our single blurred map leaves along the ridge.</li>
+<li>The brightening map divides the brightness of the phone's result by the brightness of our dark (×1) version of the reference frame, in blocks of 48 × 48 sites, then smooths it. The figures quoted are medians over the top fifth and the bottom two fifths of the frame.</li>
+<li>Single frames and the filter mosaic are stored without loss, because lossy compression blurs color at the scale of one pixel. Merged and whole-frame images are WebP at quality 88 to 90.</li>
+</ul>
+</details>
+</div>

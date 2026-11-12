@@ -7,7 +7,7 @@ import ReadingProgress from '../../components/reading-progress.astro'
 // 1. Generate a new path for every collection entry
 export async function getStaticPaths() {
 	const posts = await getCollection('posts', ({ data }) => {
-		return import.meta.env.PROD ? data.draft !== true && data.date <= new Date() : true
+		return import.meta.env.PROD && process.env.INCLUDE_DRAFTS !== 'true' ? data.draft !== true && data.date <= new Date() : true
 	})
 	return posts.map(post => ({
 		params: { id: post.id },
@@ -81,10 +81,10 @@ const ogImage = `/open-graph/${post.id}.png`
 	</Header>
 
 	<div
-		class="px-4 py-6 md:px-8 md:py-12 flex flex-col gap-2 lg:grid lg:grid-cols-[1fr_36rem_1fr] xl:grid-cols-[1fr_48rem_1fr] lg:gap-12 lg:max-w-none"
+		class:list={["px-4 py-6 md:px-8 md:py-12", post.data.immersive ? "immersive-post" : "flex flex-col gap-2 lg:grid lg:grid-cols-[1fr_36rem_1fr] xl:grid-cols-[1fr_48rem_1fr] lg:gap-12 lg:max-w-none"]}
 	>
 		<!-- Table of Contents for small screens -->
-		<details class="toc-mobile lg:hidden">
+		<details class:list={["toc-mobile lg:hidden", { hidden: post.data.immersive }]}>
 			<summary class="font-serif ml-2 text-sm text-muted uppercase tracking-wider mb-4"
 				>On this page</summary
 			>
@@ -107,11 +107,11 @@ const ogImage = `/open-graph/${post.id}.png`
 		</details>
 
 		<!-- Empty spacer for left column to balance the layout -->
-		<div class="hidden lg:block"></div>
+		<div class:list={["hidden", { "lg:block": !post.data.immersive }]}></div>
 
 		<!-- Post Content -->
 		<article
-			class="lg:col-start-2 prose prose-lg max-w-none
+			class:list={[post.data.immersive ? "photography-post" : `lg:col-start-2 prose prose-lg max-w-none
 			prose-headings:font-serif prose-headings:text-primary prose-headings:scroll-mt-24
 			prose-h1:font-light prose-h2:font-light prose-h3:font-light prose-h4:font-light
 			prose-h1:text-3xl prose-h2:text-2xl prose-h3:text-xl prose-h4:text-lg
@@ -121,12 +121,12 @@ const ogImage = `/open-graph/${post.id}.png`
 			prose-pre:bg-surface-light prose-pre:border prose-pre:border-border
 			prose-img:rounded prose-img:shadow-sm
 			prose-ul:list-disc prose-ol:list-decimal
-			prose-blockquote:border-l-4 prose-blockquote:border-primary-lighter prose-blockquote:pl-4 prose-blockquote:italic"
+			prose-blockquote:border-l-4 prose-blockquote:border-primary-lighter prose-blockquote:pl-4 prose-blockquote:italic`]}
 		>
 			<Content />
 		</article>
 
-		<aside class="hidden lg:block lg:col-start-3 lg:w-64 sticky top-24 self-start">
+		<aside class:list={["hidden lg:col-start-3 lg:w-64 sticky top-24 self-start", { "lg:block": !post.data.immersive }]}>
 			<div>
 				<h2 class="font-serif text-sm text-muted uppercase tracking-wider mb-4">On this page</h2>
 				<nav class="toc relative border-l border-border">

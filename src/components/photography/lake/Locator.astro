@@ -1,0 +1,9 @@
+---
+import data from '../../../lib/photography/lake/data.json'
+const { crop, sensor } = data
+const pct = (v: number, of: number) => `${(v / of * 100).toFixed(2)}%`
+---
+<div class="locator" aria-hidden="true">
+  <img src="/photography/lake/phone.webp" width="1008" height="756" alt="" loading="lazy" />
+  <span style={`left:${pct(crop.x, sensor.width)};top:${pct(crop.y, sensor.height)};width:${pct(crop.width, sensor.width)};height:${pct(crop.height, sensor.height)}`}></span>
+</div>

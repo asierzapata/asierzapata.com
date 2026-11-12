@@ -1,0 +1,13 @@
+---
+import Figure from './Figure.astro'
+import data from '../../../lib/photography/lake/data.json'
+const megapixels = (data.sensor.width * data.sensor.height / 1e6).toFixed(0)
+const steps = [
+  { title: 'What the phone showed', text: `The photo as the phone saved it: a${data.camera === 'angler' ? 'Nexus 6P' : data.camera} at sunset, in 2015.` },
+  { title: 'What the sensor recorded', text: `The same moment, straight off the sensor: ${megapixels} million brightness readings. No color, nothing brightened.` },
+]
+---
+<Figure kind="reveal" label="The finished photo and the sensor data behind it" steps={steps}>
+  <div class="layer" data-show="0" data-on="true"><img src="/photography/lake/phone.webp" width="1008" height="756" alt="A mountain lake at sunset: an orange horizon, a pale blue sky and gray granite with visible detail in the foreground." fetchpriority="high" /></div>
+  <div class="layer" data-show="1" data-on="false"><img src="/photography/lake/sensor.webp" width="1008" height="756" alt="The same moment as raw sensor values: gray, with a bright band of sky, dark corners and an almost black foreground." loading="lazy" /></div>
+</Figure>
