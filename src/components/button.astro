@@ -18,7 +18,7 @@ const classAnchor = `
 const patternId = id ? `pattern-${id}` : `pattern-${url}`
 ---
 
-<a href={url} class={classAnchor}>
+<a href={url} class={classAnchor} aria-label={`Go to ${url} page`}>
 	<!-- SVG Dot Pattern Background (visible on hover) - matches header -->
 	<svg
 		class="pointer-events-none absolute inset-0 size-full select-none text-primary-lighter -z-10 invisible opacity-30 group-hover:visible rounded"
