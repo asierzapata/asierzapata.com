@@ -1,0 +1,24 @@
+---
+import Figure from './Figure.astro'
+import Locator from './Locator.astro'
+const steps = [
+  { title: 'A piece of the photo', text: 'A small window on the shoreline, brightened so we can see into the shadows.' },
+  { title: 'Zoom in', text: 'Zoomed in until each square is one pixel. Every pixel has a full color.' },
+  { title: 'What was stored', text: 'What the sensor stored for those same pixels: one brightness number each. No color anywhere.' },
+  { title: 'Which filter', text: 'Now color each pixel by the filter that sat on top of it. Each one measured red, green or blue, never all three.' },
+  { title: 'Zoom out', text: 'Zoomed back out, this is everything the phone measured: one color per pixel. It is a third of a photo.' },
+  { title: 'Guess the rest', text: 'Guess the two missing colors at every pixel from its neighbors, and we are back at the picture we started with.' },
+]
+---
+<Figure kind="mosaic" label="Cheat one: color guessed from neighboring pixels" steps={steps}>
+  <div class="zoomer">
+    <div class="layer" data-show="0 1 5" data-on="true"><img src="/photography/lake/frame-0.webp" width="512" height="384" alt="A small piece of the shoreline in full color, grainy." loading="lazy" /></div>
+    <div class="layer" data-show="2" data-on="false"><img src="/photography/lake/mosaic-grey.webp" width="512" height="384" alt="The same piece as the sensor stored it: one gray value per pixel." loading="lazy" /></div>
+    <div class="layer measured" data-show="3 4 5" data-on="false"><img src="/photography/lake/mosaic.webp" width="512" height="384" alt="The same piece showing only what was measured: every site is purely red, green or blue." loading="lazy" /></div>
+  </div>
+  <div class="layer overlay" data-show="0" data-on="true"><Locator /><i class="zoom-target"></i></div>
+  <div class="layer overlay divided" data-show="5" data-on="false"><span class="chip l">measured</span><span class="chip r">with the guesses</span></div>
+  <div class="layer overlay" data-show="3 4" data-on="false">
+    <div class="tally"><span><i class="m"></i>1 measured</span><span><i></i><i></i>2 guessed</span></div>
+  </div>
+</Figure>

@@ -7,10 +7,8 @@
 		"build": "astro build",
 		"preview": "astro preview",
 		"astro": "astro",
-		"photography:prepare": "node scripts/photography/prepare.mjs && node scripts/photography/fallbacks.mjs",
-		"photography:figures": "node scripts/photography/sensor.mjs && node scripts/photography/figures.mjs",
-		"test:photography": "node --test tests/photography/*.test.js",
-		"photography:preview-figures": "node scripts/photography/camera.mjs --audit && node scripts/photography/pixel-patch.mjs --audit && node scripts/photography/preview-stills.mjs"
+		"photography:lake": "node scripts/photography/lake/fetch.mjs && node scripts/photography/lake/prepare.mjs",
+		"test:photography": "node --test tests/photography/*.test.js"
 	},
 	"dependencies": {
 		"@astrojs/mdx": "^4.3.13",

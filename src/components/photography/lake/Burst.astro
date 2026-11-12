@@ -1,0 +1,36 @@
+---
+import Figure from './Figure.astro'
+import Locator from './Locator.astro'
+import data from '../../../lib/photography/lake/data.json'
+const n = data.frames.length
+const reach = Math.max(...data.frames.flatMap(f => [Math.abs(f.dx), Math.abs(f.dy)]))
+const scale = 34 / Math.max(8, reach)
+const last = Math.round(data.noise[n - 1] * 100)
+const steps = [
+  { title: 'One frame', text: `One frame, brightened until we can see the rocks. The grain is noise: there was very little light down here.` },
+  { title: `${n} frames`, text: `The phone shot ${n} frames in a row. The scene stays put, the noise is different every time, and the hand drifts by up to ${reach} pixels.` },
+  { title: 'Just average them', text: `Average them as they are and the grain goes, but the rocks smear: each one landed on slightly different pixels in each frame.` },
+  { title: 'Line them up first', text: `Shift each frame back into place, then average. Same ${n} frames, no new light, and the grain drops to ${last}% of a single frame. Drag the slider to merge fewer.` },
+]
+---
+<Figure kind="burst" label="Cheat two: noise averaged away across a burst" steps={steps}>
+  <div class="layer" data-show="0" data-on="true"><img src="/photography/lake/frame-0.webp" width="512" height="384" alt="One frame of the shoreline, brightened: heavy colored grain over the rocks." loading="lazy" /></div>
+  <div class="layer" data-show="1" data-on="false">
+    <img data-flicker data-count={n} src="/photography/lake/frame-0.webp" width="512" height="384" alt={`The ${n} frames of the burst shown in turn: the grain changes every frame and the scene shifts by a few pixels.`} loading="lazy" />
+    <div class="strip">{data.frames.map((_, i) => <img src={`/photography/lake/frame-${i}.webp`} width="512" height="384" alt="" loading="lazy" />)}</div>
+  </div>
+  <div class="layer" data-show="2" data-on="false"><img src="/photography/lake/unaligned.webp" width="512" height="384" alt={`The ${n} frames averaged without alignment: the grain is gone but the rocks are smeared.`} loading="lazy" /></div>
+  <div class="layer" data-show="3" data-on="false"><img data-stack-image src={`/photography/lake/stack-${n}.webp`} width="512" height="384" alt={`The ${n} frames aligned and averaged: clean and sharp.`} loading="lazy" /></div>
+  <div class="layer overlay" data-show="0" data-on="true"><Locator /></div>
+  <div class="layer overlay" data-show="1 2 3" data-on="false">
+    <svg class="shake" viewBox="-44 -44 88 88" role="img" aria-label={`How far the camera moved between frames: up to ${reach} pixels.`}>
+      <rect x="-42" y="-42" width="84" height="84" rx="4" /><path d="M-38 0H38M0-38V38" />
+      {data.frames.map((f, i) => <circle r={i === 0 ? 4 : 3} style={`transform:translate(${(f.dx * scale).toFixed(1)}px,${(f.dy * scale).toFixed(1)}px)`} class:list={{ ref: i === 0 }} />)}
+      <text x="-38" y="38">shake: max {reach} px</text>
+    </svg>
+  </div>
+  <label slot="controls" class="fig-range" data-show="3" data-on="false">Frames merged
+    <input type="range" aria-valuetext={`${n} frames, grain ${last}%`} min="1" max={n} step="1" value={n} data-stack data-noise={JSON.stringify(data.noise)} />
+    <output>{n} · grain {last}%</output>
+  </label>
+</Figure>

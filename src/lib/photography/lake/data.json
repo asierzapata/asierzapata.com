@@ -1,0 +1,302 @@
+{
+ "burst": "0543_20150918_191324_709",
+ "camera": "angler",
+ "frames": [
+  {
+   "name": "N002",
+   "exposure": 0.007993148641659214,
+   "iso": 146,
+   "dx": 0,
+   "dy": 0
+  },
+  {
+   "name": "N000",
+   "exposure": 0.007993148641659214,
+   "iso": 146,
+   "dx": 6,
+   "dy": 2
+  },
+  {
+   "name": "N001",
+   "exposure": 0.007993148641659214,
+   "iso": 146,
+   "dx": 5,
+   "dy": 1
+  },
+  {
+   "name": "N003",
+   "exposure": 0.007993148641659214,
+   "iso": 146,
+   "dx": 0,
+   "dy": 2
+  },
+  {
+   "name": "N004",
+   "exposure": 0.007993148641659214,
+   "iso": 146,
+   "dx": -1,
+   "dy": 3
+  },
+  {
+   "name": "N005",
+   "exposure": 0.007993148641659214,
+   "iso": 146,
+   "dx": -2.875,
+   "dy": 1.125
+  },
+  {
+   "name": "N006",
+   "exposure": 0.007993148641659214,
+   "iso": 146,
+   "dx": -2,
+   "dy": 0
+  },
+  {
+   "name": "N007",
+   "exposure": 0.007993148641659214,
+   "iso": 146,
+   "dx": -2,
+   "dy": 0
+  }
+ ],
+ "sensor": {
+  "width": 4032,
+  "height": 3024,
+  "pattern": [
+   0,
+   1,
+   1,
+   2
+  ],
+  "white": 1023
+ },
+ "crop": {
+  "x": 1750,
+  "y": 1662,
+  "width": 512,
+  "height": 384
+ },
+ "bin": 4,
+ "viewGain": 24,
+ "stops": [
+  0,
+  1,
+  2,
+  3,
+  4,
+  5
+ ],
+ "fuse": {
+  "longEv": 3
+ },
+ "noise": [
+  1,
+  0.7344623765084366,
+  0.6161871552543686,
+  0.543282498312271,
+  0.4999162827267366,
+  0.44918268080494855,
+  0.42601928565496755,
+  0.4045546187684785
+ ],
+ "robust": {
+  "rejected": 10,
+  "total": 1363866
+ },
+ "gain": {
+  "skyEv": 0.3462982773780823,
+  "groundEv": 1.7017902135849,
+  "scaleEv": [
+   0,
+   3
+  ],
+  "ramp": [
+   [
+    13,
+    20,
+    40
+   ],
+   [
+    52,
+    84,
+    160
+   ],
+   [
+    226,
+    120,
+    60
+   ],
+   [
+    255,
+    224,
+    130
+   ]
+  ]
+ },
+ "files": {
+  "sensor.webp": {
+   "width": 1008,
+   "height": 756,
+   "bytes": 22092
+  },
+  "ev-0.webp": {
+   "width": 1008,
+   "height": 756,
+   "bytes": 58902
+  },
+  "ev-1.webp": {
+   "width": 1008,
+   "height": 756,
+   "bytes": 95966
+  },
+  "ev-2.webp": {
+   "width": 1008,
+   "height": 756,
+   "bytes": 146230
+  },
+  "ev-3.webp": {
+   "width": 1008,
+   "height": 756,
+   "bytes": 172094
+  },
+  "ev-4.webp": {
+   "width": 1008,
+   "height": 756,
+   "bytes": 193330
+  },
+  "ev-5.webp": {
+   "width": 1008,
+   "height": 756,
+   "bytes": 217438
+  },
+  "phone.webp": {
+   "width": 1008,
+   "height": 756
+  },
+  "mask.webp": {
+   "width": 1008,
+   "height": 756,
+   "bytes": 5446
+  },
+  "fused.webp": {
+   "width": 1008,
+   "height": 756,
+   "bytes": 162940
+  },
+  "gain.webp": {
+   "width": 1008,
+   "height": 756,
+   "bytes": 34948
+  },
+  "mosaic-grey.webp": {
+   "width": 512,
+   "height": 384,
+   "bytes": 108036
+  },
+  "mosaic.webp": {
+   "width": 512,
+   "height": 384,
+   "bytes": 124694
+  },
+  "frame-0.webp": {
+   "width": 512,
+   "height": 384,
+   "bytes": 451912
+  },
+  "frame-1.webp": {
+   "width": 512,
+   "height": 384,
+   "bytes": 452064
+  },
+  "frame-2.webp": {
+   "width": 512,
+   "height": 384,
+   "bytes": 452226
+  },
+  "frame-3.webp": {
+   "width": 512,
+   "height": 384,
+   "bytes": 452202
+  },
+  "frame-4.webp": {
+   "width": 512,
+   "height": 384,
+   "bytes": 452076
+  },
+  "frame-5.webp": {
+   "width": 512,
+   "height": 384,
+   "bytes": 451904
+  },
+  "frame-6.webp": {
+   "width": 512,
+   "height": 384,
+   "bytes": 452152
+  },
+  "frame-7.webp": {
+   "width": 512,
+   "height": 384,
+   "bytes": 451750
+  },
+  "stack-1.webp": {
+   "width": 512,
+   "height": 384,
+   "bytes": 451912
+  },
+  "stack-2.webp": {
+   "width": 512,
+   "height": 384,
+   "bytes": 73290
+  },
+  "stack-3.webp": {
+   "width": 512,
+   "height": 384,
+   "bytes": 61808
+  },
+  "stack-4.webp": {
+   "width": 512,
+   "height": 384,
+   "bytes": 57030
+  },
+  "stack-5.webp": {
+   "width": 512,
+   "height": 384,
+   "bytes": 52596
+  },
+  "stack-6.webp": {
+   "width": 512,
+   "height": 384,
+   "bytes": 48424
+  },
+  "stack-7.webp": {
+   "width": 512,
+   "height": 384,
+   "bytes": 48446
+  },
+  "stack-8.webp": {
+   "width": 512,
+   "height": 384,
+   "bytes": 44702
+  },
+  "unaligned.webp": {
+   "width": 512,
+   "height": 384,
+   "bytes": 40434
+  }
+ },
+ "sources": {
+  "final.jpg": "https://storage.googleapis.com/hdrplusdata/20171106_subset/results_20171023/0543_20150918_191324_709/final.jpg",
+  "rgb2rgb.txt": "https://storage.googleapis.com/hdrplusdata/20171106_subset/bursts/0543_20150918_191324_709/rgb2rgb.txt",
+  "shading.tiff": "https://storage.googleapis.com/hdrplusdata/20171106_subset/bursts/0543_20150918_191324_709/lens_shading_map_N002.tiff",
+  "N000.dng": "https://storage.googleapis.com/hdrplusdata/20171106_subset/bursts/0543_20150918_191324_709/payload_N000.dng",
+  "N001.dng": "https://storage.googleapis.com/hdrplusdata/20171106_subset/bursts/0543_20150918_191324_709/payload_N001.dng",
+  "N002.dng": "https://storage.googleapis.com/hdrplusdata/20171106_subset/bursts/0543_20150918_191324_709/payload_N002.dng",
+  "N003.dng": "https://storage.googleapis.com/hdrplusdata/20171106_subset/bursts/0543_20150918_191324_709/payload_N003.dng",
+  "N004.dng": "https://storage.googleapis.com/hdrplusdata/20171106_subset/bursts/0543_20150918_191324_709/payload_N004.dng",
+  "N005.dng": "https://storage.googleapis.com/hdrplusdata/20171106_subset/bursts/0543_20150918_191324_709/payload_N005.dng",
+  "N006.dng": "https://storage.googleapis.com/hdrplusdata/20171106_subset/bursts/0543_20150918_191324_709/payload_N006.dng",
+  "N007.dng": "https://storage.googleapis.com/hdrplusdata/20171106_subset/bursts/0543_20150918_191324_709/payload_N007.dng"
+ },
+ "license": "CC-BY-SA-4.0",
+ "attribution": "Hasinoff et al., Burst photography for high dynamic range and low-light imaging on mobile cameras, ACM TOG 35(6), 2016"
+}

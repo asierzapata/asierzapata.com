@@ -1,0 +1,144 @@
+/* Three-cheats figures. Reading typography comes from ../story.css. */
+/* On a big screen the figures may grow wider than the old drafts allow. */
+.photography-post:has(.cheat-fig){max-width:1480px}
+.cheat-fig{margin:3rem auto;max-width:1480px;display:grid;grid-template-columns:minmax(0,1.7fr) minmax(15rem,26rem);justify-content:center;gap:0 clamp(1.5rem,4vw,3.5rem);align-items:start}
+/* The picture starts right under the prose and sticks at the middle of the screen, so there is no empty screen before it. */
+.fig-pin{align-self:stretch;container-type:inline-size}
+/* A light card in the blog's own colours. Only the picture and the labels drawn on it are dark. */
+.fig-frame{--w:min(100cqi,calc((100svh - 7rem)*4/3));--h:calc(var(--w)*3/4 + 48px);width:var(--w);margin-inline:auto;position:sticky;top:calc((100svh - var(--h))/2);background:#fbfcfe;border:1px solid var(--color-border-strong);border-radius:7px;overflow:hidden;box-shadow:0 8px 32px #1e40af0f}
+.fig-stage{position:relative;aspect-ratio:4/3;overflow:hidden;background:#05070c;color:#d5dceb;container-type:inline-size}
+.fig-stage .layer{position:absolute;inset:0;transition:opacity .4s ease,visibility .4s}
+.fig-stage .layer>img{display:block;width:100%;height:100%;object-fit:cover}
+/* Hard pixel edges only while zoomed in. Zoomed out they cause moire. */
+[data-fig="mosaic"]:is([data-state="1"],[data-state="2"],[data-state="3"]) .layer>img{image-rendering:pixelated}
+/* Labels drawn on a picture scale with it, so they survive a projector. */
+.chip,.tally,.legend{font:clamp(11px,2.5cqi,22px)/1.4 ui-monospace,monospace}
+.chip{position:absolute;top:12px;max-width:calc(50% - 18px);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding:.5em .8em;border-radius:5px;background:#14202edd}.chip.l{left:12px}.chip.r{right:12px}
+/* One picture, two halves, a white seam between them. */
+.split>img{position:absolute;inset:0}.split>img.half{clip-path:inset(0 0 0 50%)}
+.split::after,.divided::after{content:"";position:absolute;left:50%;top:0;bottom:0;width:2px;margin-left:-1px;background:#fff;box-shadow:0 0 6px #0008}
+[data-on="false"]{opacity:0;visibility:hidden;pointer-events:none}
+.layer.overlay{pointer-events:none}
+
+/* Cheat one: the same window, sixteen times closer. */
+.zoomer{position:absolute;inset:0;transform-origin:46.33% 76%;transition:transform 1s cubic-bezier(.3,.1,.2,1)}
+[data-fig="mosaic"]:is([data-state="1"],[data-state="2"],[data-state="3"]) .zoomer{transform:scale(16)}
+.tally{position:absolute;left:12px;top:12px;display:flex;gap:14px;padding:7px 11px;border-radius:5px;background:#14202edd}
+.tally span{display:flex;align-items:center;gap:4px}
+.tally i{width:11px;height:11px;border-radius:2px;border:1px dashed #8d99b0}.tally i.m{border:0;background:linear-gradient(90deg,#ef4444 0 33%,#22c55e 0 66%,#3b82f6 0)}
+.measured{clip-path:inset(0 0 0 0);transition:opacity .4s ease,visibility .4s,clip-path .8s ease}
+[data-fig="mosaic"][data-state="5"] .measured{clip-path:inset(0 50% 0 0)}
+.zoom-target{position:absolute;left:43.44%;top:71.25%;width:6.25%;height:6.25%;outline:2px solid #fbbf24;box-shadow:0 0 0 1px #0009}
+
+.locator{position:absolute;left:12px;top:12px;width:26%;border:2px solid #fff;box-shadow:0 2px 12px #0008}
+.locator img{display:block;width:100%;height:auto}
+.locator span{position:absolute;outline:2px solid #fbbf24;box-shadow:0 0 0 1px #0009}
+
+/* Cheat two. */
+.strip{display:none;position:absolute;inset:0;grid-template-columns:repeat(4,1fr);align-content:end;gap:4px;padding:10px;background:#05070c}
+.strip img{width:100%;height:auto;image-rendering:pixelated}
+.shake{position:absolute;right:12px;top:12px;width:26%;min-width:92px}
+.shake rect{fill:#14202edd;stroke:#3b465c}.shake path{stroke:#3b465c;stroke-width:1;fill:none}
+.shake circle{fill:#fbbf24;transition:transform .7s ease}
+[data-fig="burst"][data-state="3"] .shake circle{transform:none!important}
+.shake circle{}.shake circle.ref{fill:#fff}
+.shake text{font:8px ui-monospace,monospace;fill:#d5dceb}
+
+/* Cheat three. */
+.legend{position:absolute;left:12px;bottom:12px;display:flex;align-items:center;gap:8px;padding:7px 11px;border-radius:5px;background:#14202edd}
+.legend i{display:block;width:max(90px,18cqi);height:.8em;border-radius:2px}
+
+/* The steps scroll past the pinned stage. The one at the reading line is lit. */
+.fig-steps{list-style:none;margin:0;padding:0;overflow-anchor:none}
+.fig-steps li{min-height:70svh;display:flex;align-items:center;transition:opacity .35s}
+/* A little longer, so the picture is still pinned while we read the last step. */
+.fig-steps li:last-child{min-height:90svh}
+[data-live] .fig-steps li[data-active="false"]{opacity:.28}
+.fig-steps .step-n{display:block;font:11px/1.5 ui-monospace,monospace;letter-spacing:.14em;color:#2563eb}
+.photography-post .eyebrow{color:#2563eb}
+.fig-steps strong{display:block;margin:.3rem 0 .6rem;font-family:var(--font-serif);font-weight:400;font-size:1.55rem;line-height:1.25;color:var(--color-primary)}
+.fig-steps p{margin:0;font-size:17px;line-height:1.65}
+/* The foot is always there and always the same height, so the pinned picture never resizes mid-scroll. */
+.fig-foot{display:flex;align-items:center;height:46px;padding:0 14px;border-top:1px solid var(--color-border);font:11px/1.5 ui-monospace,monospace;color:#475569}
+.fig-foot-label{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.fig-foot:has(.fig-range[data-on="true"]) .fig-foot-label{display:none}
+.fig-range{flex:1;display:flex;align-items:center;gap:12px}
+.fig-range[data-on="false"]{display:none}
+.fig-range input{flex:1;min-width:80px;height:32px;accent-color:var(--color-primary)}
+.fig-range output{min-width:9ch;text-align:right;color:var(--color-text-base)}
+.fig-range input:focus-visible{outline:2px solid var(--color-primary);outline-offset:4px}
+
+/* The closing ladder. */
+/* Read from the bottom rung up: each step is further from the sensor. */
+.ladder{list-style:none;padding:0;margin:2.5rem auto;max-width:700px;display:flex;flex-direction:column-reverse;gap:10px}
+.ladder li{display:grid;grid-template-columns:56px 9.5rem 1fr;gap:16px;align-items:center;padding:14px 16px;border:1px solid var(--color-border-strong);border-radius:6px;background:#fff9}
+.ladder strong{font-family:var(--font-serif);font-weight:400;font-size:1.3rem;color:var(--color-primary)}
+.ladder li:nth-child(2){margin-left:1.5rem}.ladder li:nth-child(3){margin-left:3rem}
+.ladder span{font-size:16px;line-height:1.6}
+.ladder img{width:56px;height:56px;object-fit:cover;border-radius:4px;margin:0}
+.beat{scroll-margin-top:1rem}
+/* Each cheat is a chapter. */
+.beat:not(.title-slide)+.beat{margin-top:clamp(3rem,8vh,6rem);padding-top:3rem;border-top:1px solid var(--color-border)}
+.photography-post h2{text-wrap:balance}.photography-post .source-note h2{font-size:1.3rem}
+.present-hint{font:11px/1.6 ui-monospace,monospace;color:var(--color-muted-dark)}
+kbd{font:11px ui-monospace,monospace;border:1px solid var(--color-border-strong);border-radius:3px;padding:1px 5px;background:#fff}
+
+@media(prefers-reduced-motion:reduce){[data-flicker]{display:none!important}.strip{display:grid}}
+@media(max-width:899px){
+  .cheat-fig{display:block;max-width:660px}
+  /* The picture pins inside an opaque band as wide as the screen, so steps disappear cleanly behind it. */
+  .fig-pin{position:sticky;top:0;container-type:normal;z-index:2;display:block;margin-inline:-16px;padding:8px 16px 10px;background:var(--fig-band,#f8fafc)}
+  .fig-pin::after{content:"";position:absolute;inset:100% 0 auto;height:22px;background:linear-gradient(var(--fig-band,#f8fafc),transparent);pointer-events:none}
+  .fig-frame{position:static;width:100%;box-shadow:none}
+  .fig-steps strong{color:#2563eb}
+  .fig-steps li,.fig-steps li:first-child,.fig-steps li:last-child{min-height:38svh;align-items:flex-start;padding-top:2.2rem}
+  .cheat-fig:has(.fig-range) .fig-steps li:last-child{min-height:55svh}
+  [data-live] .fig-steps li[data-active="false"]{opacity:.45}
+  .fig-steps strong{font-size:1.3rem}.fig-steps p{font-size:16px}
+}
+@media(max-width:899px) and (max-height:600px){.fig-pin{position:static}.fig-pin::after{display:none}}
+@media(hover:none),(pointer:coarse){.present-hint{display:none}}
+@media(max-width:640px){.chip{top:8px;padding:.35em .6em}.chip.l{left:8px}.chip.r{right:8px}.ladder li{grid-template-columns:48px 1fr;gap:2px 12px}.ladder img{grid-row:span 2;width:48px;height:48px}.ladder li:nth-child(n){margin-left:0}.locator{width:34%}}
+
+/* Presenter mode: one beat per screen, prose becomes speaker notes we keep in our head. */
+.presenting .beat,.presenting .beat+.beat{min-height:100svh;display:flex;flex-direction:column;justify-content:center;margin-top:0;padding:2svh 0;border:0}
+/* Slides with a picture hang from the top, so the picture never shifts as the text under it changes length. */
+.presenting .beat:has([data-fig]){justify-content:flex-start;padding-top:4svh}
+.presenting .beat .reading{margin:0 auto 1.5svh;max-width:none;text-align:center}
+.presenting .beat .reading>:not(h2,.eyebrow,.thesis){display:none}
+.presenting .beat h2{font-size:clamp(1.8rem,3.2vw,2.8rem);margin:.1em 0}
+.presenting .cheat-fig{display:block;margin:0 auto;max-width:none;width:100%}
+.presenting .fig-pin{position:static;display:block;container-type:normal}
+.presenting .fig-frame{position:static;margin:0 auto;width:min(100%,calc((100svh - 430px)*4/3))}
+.presenting .fig-steps li{min-height:5.6em;padding:12px 0 0;justify-content:center;text-align:center;opacity:1}
+.presenting .fig-steps li[data-active="false"],.presenting .fig-steps :is(.step-n,strong){display:none}
+.presenting .fig-steps p{font-size:clamp(15px,1.5vw,22px);line-height:1.45;max-width:56em}
+.presenting .beat .thesis br{display:none}
+.presenting .beat .thesis{font-size:clamp(1.3rem,2.3vw,2rem);line-height:1.3;border:0;margin:0;padding:.6rem 0 0}
+/* The punchline of a cheat arrives with the last step of its figure. */
+.presenting .beat:has([data-fig]:not([data-last="true"])) .thesis{visibility:hidden}
+.presenting .ladder{max-width:820px;width:100%}.presenting .ladder strong{font-size:1.8rem}.presenting .ladder span{font-size:20px}
+.presenting .source-note,.presenting .present-hint{display:none}
+/* The talk opens on a slide with only its title. Readers of the post never see it. */
+.title-slide{display:none}
+.presenting .title-slide{display:flex;align-items:center;text-align:center}
+.presenting .title-slide+.beat{margin-top:0;padding-top:2svh;border:0}
+.talk-title{margin:0;max-width:16em;font-family:var(--font-serif);font-size:clamp(2.6rem,6vw,6rem);line-height:1.15;color:var(--color-primary);text-wrap:balance}
+.present-hud{position:fixed;right:14px;bottom:12px;z-index:50;padding:5px 10px;border-radius:5px;background:#0d1320d9;color:#aab4c8;font:11px ui-monospace,monospace;white-space:pre}
+
+/* Presenter mode with room to spare: picture on the left, heading and the current step on the right. */
+@media(min-width:1100px) and (min-aspect-ratio:4/3){
+  .presenting .beat:has([data-fig]){display:grid;grid-template-columns:minmax(0,1.7fr) minmax(20rem,1fr);grid-template-rows:1fr auto 1fr;column-gap:clamp(2rem,4vw,4rem);padding:3rem 0}
+  .presenting .beat:has([data-fig]) .cheat-fig{display:contents}
+  .presenting .beat:has([data-fig]) .fig-pin{grid-column:1;grid-row:1/-1;align-self:center;container-type:inline-size}
+  .presenting .beat:has([data-fig]) .fig-frame{width:min(100cqi,calc((100svh - 6rem - 48px)*4/3));margin:0 auto}
+  .presenting .beat:has([data-fig]) .reading{grid-column:2;margin:0;text-align:left}
+  .presenting .beat:has([data-fig]) .reading:first-child{grid-row:1;align-self:end}
+  .presenting .beat:has([data-fig]) .cheat-fig~.reading{grid-row:3;align-self:start}
+  .presenting .beat:has([data-fig]) .fig-steps{grid-column:2;grid-row:2}
+  /* A fixed height, so the heading above does not move as the step text changes length. */
+  .presenting .beat:has([data-fig]) .fig-steps li{min-height:17em;padding:1.2rem 0 0;align-items:flex-start;justify-content:flex-start;text-align:left}
+  .presenting .beat:has([data-fig]) .fig-steps p{font-size:clamp(17px,1.45vw,26px);line-height:1.5}
+  .presenting .beat:has([data-fig]) h2{font-size:clamp(2rem,3vw,3.2rem);margin:.2em 0 0}
+  .presenting .beat:has([data-fig]) .thesis{padding-top:0}
+}

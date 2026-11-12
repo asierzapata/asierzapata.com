@@ -1,0 +1,39 @@
+---
+import Figure from './Figure.astro'
+import data from '../../../lib/photography/lake/data.json'
+const times = (ev: number) => (2 ** ev).toFixed(1).replace(/\.0$/, '')
+const { skyEv, groundEv, scaleEv, ramp } = data.gain
+const gradient = `linear-gradient(90deg,${ramp.map((c: number[]) => `rgb(${c.join(',')})`).join(',')})`
+const start = 2
+const long = data.fuse.longEv
+const steps = [
+  { title: 'One brightness for everything', text: `One frame with a single brightness for the whole picture. Drag the slider: we can have the sunset or the rocks, not both.` },
+  { title: 'Make two versions', text: `So the software makes two versions of the same frame: a dark one, where the sky looks right, and one ×${times(long)} brighter, where the rocks do. Nothing new is measured. The bright one is just the dark one multiplied.` },
+  { title: 'Choose, area by area', text: `For every area, a rule prefers whichever version is closer to middle gray: neither too dark nor washed out. White means "use the bright one", black "use the dark one". We blur the map so the seam won't show.` },
+  { title: 'Blend them', text: `Mix the two following that map: a sunset sky over readable rocks, from a single frame. Our blend is rough, and the pale glow along the ridge gives it away.` },
+  { title: 'What the phone did', text: `The phone's own result. Same idea, but applied to the merged burst, with a more careful blend (no glow on the ridge) and contrast and color tuned on top.` },
+  { title: 'Where it brightened', text: `Divide the phone's photo by our dark version, area by area, and we can measure what it chose: about ×${times(skyEv)} in the sky and ×${times(groundEv)} on the ground.` },
+]
+---
+<Figure kind="exposure" label="Cheat three: different brightness for different regions" steps={steps}>
+  <div class="layer" data-show="0" data-on="true"><img data-ev-image src={`/photography/lake/ev-${start}.webp`} width="1008" height="756" alt="The whole frame with one brightness setting: either the sky is right and the rocks are black, or the rocks are visible and the sky is blank white." loading="lazy" /></div>
+  <div class="layer split" data-show="1" data-on="false">
+    <img src="/photography/lake/ev-0.webp" width="1008" height="756" alt="Left half: the frame rendered dark, a colored sunset sky over black rocks." loading="lazy" />
+    <img class="half" src={`/photography/lake/ev-${long}.webp`} width="1008" height="756" alt="Right half: the same frame rendered much brighter, detailed rocks under a blank white sky." loading="lazy" />
+    <span class="chip l">dark: sky right</span><span class="chip r">×{times(long)}: rocks right</span>
+  </div>
+  <div class="layer" data-show="2" data-on="false"><img src="/photography/lake/mask.webp" width="1008" height="756" alt="A black and white map of the frame: the sky is black, the ground and the lake are white, with a soft edge along the ridge." loading="lazy" /></div>
+  <div class="layer overlay" data-show="2" data-on="false">
+    <div class="legend"><span>dark version</span><i style="background:linear-gradient(90deg,#000,#fff);outline:1px solid #3b465c"></i><span>bright version</span></div>
+  </div>
+  <div class="layer" data-show="3" data-on="false"><img src="/photography/lake/fused.webp" width="1008" height="756" alt="Our blend of the two versions: the sunset keeps its color and the rocks are visible, with a faint pale glow along the ridge." loading="lazy" /></div>
+  <div class="layer" data-show="4" data-on="false"><img src="/photography/lake/phone.webp" width="1008" height="756" alt="The phone's finished photo: the sunset keeps its color and the rocks are visible." loading="lazy" /></div>
+  <div class="layer" data-show="5" data-on="false"><img src="/photography/lake/gain.webp" width="1008" height="756" alt="A map of how much the phone brightened each area: the sky is dark blue, barely touched, and the ground glows orange and yellow." loading="lazy" /></div>
+  <div class="layer overlay" data-show="5" data-on="false">
+    <div class="legend"><span>×{times(scaleEv[0])}</span><i style={`background:${gradient}`}></i><span>×{times(scaleEv[1])}</span></div>
+  </div>
+  <label slot="controls" class="fig-range" data-show="0" data-on="true">Brightness
+    <input type="range" aria-valuetext={`×${times(start)} brighter`} min={data.stops[0]} max={data.stops.at(-1)} step="1" value={start} data-ev />
+    <output>×{times(start)}</output>
+  </label>
+</Figure>

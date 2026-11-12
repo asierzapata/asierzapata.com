@@ -1,4 +1,3 @@
 - When you need to search docs, use `context7` tools.
 - If you are unsure how to do something, use `gh_grep` to search code examples from GitHub.
 - When checking if the website works or is displayed correctly, use `chrome-devtools` tools.
-- Photography browser checks are async functions in `scripts/photography/preview-browser.js` and `scripts/photography/reconstruction-browser.js`; evaluate them with Chrome DevTools on the preview route at desktop/mobile sizes and with reduced motion.
