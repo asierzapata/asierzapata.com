@@ -3,7 +3,7 @@ import { getCollection } from 'astro:content'
 
 export async function GET(context) {
 	const posts = await getCollection('posts', ({ data }) => {
-		return import.meta.env.PROD ? data.draft !== true && data.date <= new Date() : true
+		return import.meta.env.PROD ? data.draft !== true && data.unlisted !== true && data.date <= new Date() : true
 	})
 
 	return rss({

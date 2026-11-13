@@ -7,6 +7,8 @@ const posts = defineCollection({
 	schema: z.object({
 		title: z.string(),
 		draft: z.boolean().default(false),
+		// Built and reachable by direct link even while a draft, but kept off the home list and RSS.
+		unlisted: z.boolean().default(false),
 		immersive: z.boolean().default(false),
 		description: z.string().optional(),
 		date: z.date(),

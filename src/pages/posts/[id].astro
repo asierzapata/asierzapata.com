@@ -7,7 +7,7 @@ import ReadingProgress from '../../components/reading-progress.astro'
 // 1. Generate a new path for every collection entry
 export async function getStaticPaths() {
 	const posts = await getCollection('posts', ({ data }) => {
-		return import.meta.env.PROD && process.env.INCLUDE_DRAFTS !== 'true' ? data.draft !== true && data.date <= new Date() : true
+		return import.meta.env.PROD && process.env.INCLUDE_DRAFTS !== 'true' ? data.unlisted || (data.draft !== true && data.date <= new Date()) : true
 	})
 	return posts.map(post => ({
 		params: { id: post.id },
