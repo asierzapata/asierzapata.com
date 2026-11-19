@@ -3,8 +3,8 @@ import Figure from './Figure.astro'
 import data from '../../../lib/photography/lake/data.json'
 const megapixels = (data.sensor.width * data.sensor.height / 1e6).toFixed(0)
 const steps = [
-  { title: 'What the phone showed', text: `The photo as the phone saved it: a${data.camera === 'angler' ? 'Nexus 6P' : data.camera} at sunset, in 2015.` },
-  { title: 'What the sensor recorded', text: `The same moment, straight off the sensor: ${megapixels} million brightness readings. No color, nothing brightened.` },
+  { title: 'What the phone showed', text: `Someone took this photo at sunset with a Nexus 6P, back in 2015. Google later published it together with the raw data from the sensor, and that's why we can take it apart.` },
+  { title: 'What the sensor recorded', text: `And this is what the sensor recorded when they pressed the button: ${megapixels} million brightness readings. No color at all, and the rocks are almost black.` },
 ]
 ---
 <Figure kind="reveal" label="The finished photo and the sensor data behind it" steps={steps}>

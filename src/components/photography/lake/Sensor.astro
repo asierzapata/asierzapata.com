@@ -1,0 +1,13 @@
+---
+import Figure from './Figure.astro'
+import SensorArt from './SensorArt.astro'
+const steps = [
+  { title: 'A grid of light meters', text: `A sensor is a grid of millions of tiny light meters. Each one counts how much light landed on it, and that's it: one number. Red, green and blue all fall in together, so it can't tell them apart.` },
+  { title: 'A color filter on each one', text: `So every meter gets a tiny filter on top that only lets one color through: red, green or blue. Now each number means something: how much red, or green, or blue, reached that spot.` },
+]
+---
+<Figure kind="sensor" label="A sensor in two layers: light meters, and a color filter over each one" steps={steps}>
+  <SensorArt show="0 1" on />
+  <div class="layer overlay" data-show="0" data-on="true"><span class="chip l">light meters: brightness only</span></div>
+  <div class="layer overlay" data-show="1" data-on="false"><span class="chip l">one color filter per meter</span></div>
+</Figure>

@@ -10,9 +10,14 @@
 .fig-stage .layer{position:absolute;inset:0;transition:opacity .4s ease,visibility .4s}
 .fig-stage .layer>img{display:block;width:100%;height:100%;object-fit:cover}
 /* Hard pixel edges only while zoomed in. Zoomed out they cause moire. */
-[data-fig="mosaic"]:is([data-state="1"],[data-state="2"],[data-state="3"]) .layer>img{image-rendering:pixelated}
+[data-fig="mosaic"]:is([data-state="1"],[data-state="2"],[data-state="3"],[data-state="4"]) .layer>img,[data-fig="noise"][data-state="1"] .layer>img,[data-fig="burst"]:is([data-state="0"],[data-state="1"]) .layer>img{image-rendering:pixelated}
 /* Labels drawn on a picture scale with it, so they survive a projector. */
-.chip,.tally,.legend{font:clamp(11px,2.5cqi,22px)/1.4 ui-monospace,monospace}
+/* They stay a step below the text that explains the picture, on a phone and on a laptop. */
+.fig-stage{--label:clamp(11px,1.7cqi,13.5px)}
+.presenting .fig-stage{--label:clamp(12px,1.9cqi,18px)}
+.chip,.tally,.legend{font:var(--label)/1.4 ui-monospace,monospace}
+/* Text inside an SVG is sized in the drawing's own units. The script sets --u to units per pixel, so it matches the chips. */
+.fig-stage svg[data-label] text{font-size:calc(var(--label)*var(--u,.5))}
 .chip{position:absolute;top:12px;max-width:calc(50% - 18px);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding:.5em .8em;border-radius:5px;background:#14202edd}.chip.l{left:12px}.chip.r{right:12px}
 /* One picture, two halves, a white seam between them. */
 .split>img{position:absolute;inset:0}.split>img.half{clip-path:inset(0 0 0 50%)}
@@ -21,14 +26,30 @@
 .layer.overlay{pointer-events:none}
 
 /* Cheat one: the same window, sixteen times closer. */
-.zoomer{position:absolute;inset:0;transform-origin:46.33% 76%;transition:transform 1s cubic-bezier(.3,.1,.2,1)}
-[data-fig="mosaic"]:is([data-state="1"],[data-state="2"],[data-state="3"]) .zoomer{transform:scale(16)}
+.zoomer{position:absolute;inset:0;transform-origin:var(--o);transition:transform 1s cubic-bezier(.3,.1,.2,1)}
+[data-fig="mosaic"]:is([data-state="1"],[data-state="2"],[data-state="3"],[data-state="4"]) .zoomer{transform:scale(16)}
+/* One red pixel and the eight around it. Everything else steps back. */
+.hood{position:absolute;outline:2px solid #fff;box-shadow:0 0 0 100vmax #05070c99}
+.hood i{position:absolute;inset:33.33%;outline:2px solid #fbbf24}
 .tally{position:absolute;left:12px;top:12px;display:flex;gap:14px;padding:7px 11px;border-radius:5px;background:#14202edd}
 .tally span{display:flex;align-items:center;gap:4px}
 .tally i{width:11px;height:11px;border-radius:2px;border:1px dashed #8d99b0}.tally i.m{border:0;background:linear-gradient(90deg,#ef4444 0 33%,#22c55e 0 66%,#3b82f6 0)}
 .measured{clip-path:inset(0 0 0 0);transition:opacity .4s ease,visibility .4s,clip-path .8s ease}
 [data-fig="mosaic"][data-state="5"] .measured{clip-path:inset(0 50% 0 0)}
-.zoom-target{position:absolute;left:43.44%;top:71.25%;width:6.25%;height:6.25%;outline:2px solid #fbbf24;box-shadow:0 0 0 1px #0009}
+.zoom-target{position:absolute;outline:2px solid #fbbf24;box-shadow:0 0 0 1px #0009}
+
+/* The sensor cutaway. Filters drop in on the second step; the bare light is what falls on naked meters. */
+.sensor-art{background:#0b0d12}
+.sensor-art svg{width:100%;height:100%}
+.sensor-art :is(.filters,.bare){transition:opacity .5s ease,transform .8s cubic-bezier(.3,.1,.2,1)}
+[data-fig="sensor"][data-state="0"] .filters{opacity:0;transform:translateY(-5%)}
+[data-fig="sensor"][data-state="1"] .bare,[data-fig="noise"] .bare{opacity:0}
+.sensor-art .charge{fill:#444;transition:fill .35s ease}
+.sensor-art .tint{fill:var(--c);opacity:.92}
+.sensor-art .lens :is(.iso-fill,.iso-top,.iso-shade){fill-opacity:.22}
+.sensor-art .gold :is(.iso-fill,.iso-top){fill:#a8842f}
+.sensor-art .ray{fill:none;stroke:var(--c);stroke-width:1.6;stroke-linecap:round;stroke-dasharray:2 6;animation:iso-flow 1100ms linear infinite reverse}
+
 
 .locator{position:absolute;left:12px;top:12px;width:26%;border:2px solid #fff;box-shadow:0 2px 12px #0008}
 .locator img{display:block;width:100%;height:auto}
@@ -41,8 +62,17 @@
 .shake rect{fill:#14202edd;stroke:#3b465c}.shake path{stroke:#3b465c;stroke-width:1;fill:none}
 .shake circle{fill:#fbbf24;transition:transform .7s ease}
 [data-fig="burst"][data-state="3"] .shake circle{transform:none!important}
+/* The same spot, six times closer, in the noise figure and in the burst. */
+[data-fig="noise"][data-state="1"] .zoomer,[data-fig="burst"]:is([data-state="0"],[data-state="1"]) .zoomer{transform:scale(6)}
+.pin{position:absolute;left:50%;top:50%;width:3.2%;aspect-ratio:1;translate:-50% -50%;outline:2px solid #fbbf24;box-shadow:0 0 0 1px #0009}
+.readings{position:absolute;inset:0;width:100%;height:100%}
+.readings rect{fill:#0d1320ee;stroke:#3b465c}
+.readings text{font-family:ui-monospace,monospace;fill:#d5dceb}.readings .tick,.readings .key{fill:#8d99b0}
+.readings .mean{stroke:#8d99b0;stroke-width:1;stroke-dasharray:3 3;fill:none}
+.readings polyline{fill:none;stroke:#fff;stroke-width:2;stroke-linejoin:round}
+.readings circle{fill:#fbbf24}
 .shake circle{}.shake circle.ref{fill:#fff}
-.shake text{font:8px ui-monospace,monospace;fill:#d5dceb}
+.shake text{font-family:ui-monospace,monospace;fill:#d5dceb}
 
 /* Cheat three. */
 .legend{position:absolute;left:12px;bottom:12px;display:flex;align-items:center;gap:8px;padding:7px 11px;border-radius:5px;background:#14202edd}
@@ -68,15 +98,9 @@
 .fig-range output{min-width:9ch;text-align:right;color:var(--color-text-base)}
 .fig-range input:focus-visible{outline:2px solid var(--color-primary);outline-offset:4px}
 
-/* The closing ladder. */
-/* Read from the bottom rung up: each step is further from the sensor. */
-.ladder{list-style:none;padding:0;margin:2.5rem auto;max-width:700px;display:flex;flex-direction:column-reverse;gap:10px}
-.ladder li{display:grid;grid-template-columns:56px 9.5rem 1fr;gap:16px;align-items:center;padding:14px 16px;border:1px solid var(--color-border-strong);border-radius:6px;background:#fff9}
-.ladder strong{font-family:var(--font-serif);font-weight:400;font-size:1.3rem;color:var(--color-primary)}
-.ladder li:nth-child(2){margin-left:1.5rem}.ladder li:nth-child(3){margin-left:3rem}
-.ladder span{font-size:16px;line-height:1.6}
-.ladder img{width:56px;height:56px;object-fit:cover;border-radius:4px;margin:0}
 .beat{scroll-margin-top:1rem}
+/* A beat that continues the chapter above it. */
+.photography-post .beat.cont{margin-top:0;padding-top:0;border-top:0}
 /* Each cheat is a chapter. */
 .beat:not(.title-slide)+.beat{margin-top:clamp(3rem,8vh,6rem);padding-top:3rem;border-top:1px solid var(--color-border)}
 .photography-post h2{text-wrap:balance}.photography-post .source-note h2{font-size:1.3rem}
@@ -98,7 +122,8 @@ kbd{font:11px ui-monospace,monospace;border:1px solid var(--color-border-strong)
 }
 @media(max-width:899px) and (max-height:600px){.fig-pin{position:static}.fig-pin::after{display:none}}
 @media(hover:none),(pointer:coarse){.present-hint{display:none}}
-@media(max-width:640px){.chip{top:8px;padding:.35em .6em}.chip.l{left:8px}.chip.r{right:8px}.ladder li{grid-template-columns:48px 1fr;gap:2px 12px}.ladder img{grid-row:span 2;width:48px;height:48px}.ladder li:nth-child(n){margin-left:0}.locator{width:34%}}
+@media(max-width:899px){.readings .key{display:none}}
+@media(max-width:640px){.chip{top:8px;padding:.35em .6em}.chip.l{left:8px}.chip.r{right:8px}.locator{width:34%}}
 
 /* Presenter mode: one beat per screen, prose becomes speaker notes we keep in our head. */
 .presenting .beat,.presenting .beat+.beat{min-height:100svh;display:flex;flex-direction:column;justify-content:center;margin-top:0;padding:2svh 0;border:0}
@@ -117,8 +142,19 @@ kbd{font:11px ui-monospace,monospace;border:1px solid var(--color-border-strong)
 .presenting .beat .thesis{font-size:clamp(1.3rem,2.3vw,2rem);line-height:1.3;border:0;margin:0;padding:.6rem 0 0}
 /* The punchline of a cheat arrives with the last step of its figure. */
 .presenting .beat:has([data-fig]:not([data-last="true"])) .thesis{visibility:hidden}
-.presenting .ladder{max-width:820px;width:100%}.presenting .ladder strong{font-size:1.8rem}.presenting .ladder span{font-size:20px}
 .presenting .source-note,.presenting .present-hint{display:none}
+/* Sentence slides carry the talk from one picture to the next. Readers of the post get the same ideas as prose. */
+.say{display:none}
+.presenting .say{display:flex;align-items:center;text-align:center}
+.photography-post .say p{margin:0;max-width:21em;font-family:var(--font-serif);font-size:clamp(1.8rem,3.7vw,4rem);line-height:1.3;text-wrap:balance}
+.photography-post .say p+p{max-width:none;margin-top:1.2em;font:clamp(12px,1vw,16px)/1.6 ui-monospace,monospace;color:var(--color-muted-dark)}
+.say b{font-weight:400;color:var(--color-primary)}
+.agenda ol{list-style:none;margin:0;padding:0;display:grid;gap:.9em;text-align:left;font-family:var(--font-serif);font-size:clamp(1.6rem,3.2vw,3.4rem);line-height:1.2}
+.agenda li{display:grid;grid-template-columns:6.5rem 1fr;gap:1.5rem;align-items:baseline;min-height:1.2em;color:var(--color-muted)}
+.agenda li span{font:clamp(11px,.9vw,15px) ui-monospace,monospace;letter-spacing:.14em;text-transform:uppercase}
+.agenda li strong{font-weight:400}
+.agenda li[data-when="now"]{color:var(--color-primary)}
+.agenda li[data-when="next"]{opacity:.7}
 /* The talk opens on a slide with only its title. Readers of the post never see it. */
 .title-slide{display:none}
 .presenting .title-slide{display:flex;align-items:center;text-align:center}
@@ -142,3 +178,5 @@ kbd{font:11px ui-monospace,monospace;border:1px solid var(--color-border-strong)
   .presenting .beat:has([data-fig]) h2{font-size:clamp(2rem,3vw,3.2rem);margin:.2em 0 0}
   .presenting .beat:has([data-fig]) .thesis{padding-top:0}
 }
+/* A label that has the picture to itself may use its whole width. Only paired labels are held to their half. */
+.chip:only-child{max-width:calc(100% - 24px)}

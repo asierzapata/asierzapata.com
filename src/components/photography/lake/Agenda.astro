@@ -1,0 +1,12 @@
+---
+// The talk's recurring roadmap. A cheat gets its name only once the talk has reached it, so the slide doubles as the reveal.
+import data from '../../../lib/photography/lake/data.json'
+interface Props { at: number }
+const { at } = Astro.props
+const cheats = ['It guesses two thirds of the color', `It takes ${data.frames.length} photos, not one`, 'It decides how bright each area should be']
+---
+<section class="beat say agenda" data-beat aria-hidden="true">
+  <ol>
+    {cheats.map((cheat, i) => <li data-when={i + 1 < at ? 'past' : i + 1 === at ? 'now' : 'next'}><span>Cheat {i + 1}</span><strong>{i + 1 <= at ? cheat : ''}</strong></li>)}
+  </ol>
+</section>

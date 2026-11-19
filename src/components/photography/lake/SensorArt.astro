@@ -1,0 +1,11 @@
+---
+// The sensor cutaway. Each meter is as bright as the light that reaches it.
+// With `wobble`, every reading drifts a little on each exposure, the way noise does.
+import { sensorMarkup } from '../../../lib/photography/lake/sensor.js'
+import '../../../../.agents/skills/anatomy/kit/iso.css'
+interface Props { show: string; on?: boolean; wobble?: boolean }
+const { show, on = false, wobble = false } = Astro.props
+---
+<div class="layer iso sensor-art" data-show={show} data-on={String(on)} data-wobble={wobble ? '' : undefined}>
+  <Fragment set:html={sensorMarkup} />
+</div>

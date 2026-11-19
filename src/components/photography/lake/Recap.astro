@@ -1,0 +1,13 @@
+---
+import Figure from './Figure.astro'
+const steps = [
+  { title: 'Measured, and everything else', text: `The same two pictures from the start. On the left, everything the sensor measured. Everything else on the right was guessed, averaged or decided by software.` },
+]
+---
+<Figure kind="recap" label="The sensor data and the finished photo, side by side" steps={steps}>
+  <div class="layer split" data-show="0" data-on="true">
+    <img src="/photography/lake/sensor.webp" width="1008" height="756" alt="Left half: the raw sensor values, gray and dark." loading="lazy" />
+    <img class="half" src="/photography/lake/phone.webp" width="1008" height="756" alt="Right half: the phone's finished photo, in color, with a bright foreground." loading="lazy" />
+    <span class="chip l">what the sensor recorded</span><span class="chip r">what the phone showed</span>
+  </div>
+</Figure>

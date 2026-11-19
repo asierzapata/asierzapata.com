@@ -1,36 +1,53 @@
 ---
 import Figure from './Figure.astro'
-import Locator from './Locator.astro'
 import data from '../../../lib/photography/lake/data.json'
+import { origin } from './spot'
 const n = data.frames.length
 const reach = Math.max(...data.frames.flatMap(f => [Math.abs(f.dx), Math.abs(f.dy)]))
 const scale = 34 / Math.max(8, reach)
 const last = Math.round(data.noise[n - 1] * 100)
+// One pixel, read once per frame. The white line is the average of the readings so far.
+const { readings } = data.pixel
+const running = readings.map((_, i) => readings.slice(0, i + 1).reduce((a, b) => a + b) / (i + 1))
+const px = (i: number) => 66 + i * 40, py = (v: number) => 262 - (v - .7) / .65 * 88
 const steps = [
-  { title: 'One frame', text: `One frame, brightened until we can see the rocks. The grain is noise: there was very little light down here.` },
-  { title: `${n} frames`, text: `The phone shot ${n} frames in a row. The scene stays put, the noise is different every time, and the hand drifts by up to ${reach} pixels.` },
-  { title: 'Just average them', text: `Average them as they are and the grain goes, but the rocks smear: each one landed on slightly different pixels in each frame.` },
-  { title: 'Line them up first', text: `Shift each frame back into place, then average. Same ${n} frames, no new light, and the grain drops to ${last}% of a single frame. Drag the slider to merge fewer.` },
+  { title: `${n} photos`, text: `You pressed the button once and the phone took ${n} photos in a row. Keep an eye on one spot: the rocks stay, the speckles change every time.` },
+  { title: 'One pixel, eight readings', text: `Follow one pixel through the ${n} frames. Each reading is off by a different amount, some too high and some too low. Average them and the errors cancel out.` },
+  { title: 'Just average them?', text: `So we average the ${n} frames and we're done, right? Not so fast. Nobody holds a phone perfectly still, and here the hand moved up to ${reach} pixels between frames. The noise goes down, but everything gets blurry, like taking your glasses off.` },
+  { title: 'Line them up first', text: `So the phone first lines the frames up, pixel by pixel, and then averages them. Add them one by one and watch the grain go away: with all ${n}, it's down to ${last}% of what a single frame had.` },
 ]
 ---
 <Figure kind="burst" label="Cheat two: noise averaged away across a burst" steps={steps}>
-  <div class="layer" data-show="0" data-on="true"><img src="/photography/lake/frame-0.webp" width="512" height="384" alt="One frame of the shoreline, brightened: heavy colored grain over the rocks." loading="lazy" /></div>
-  <div class="layer" data-show="1" data-on="false">
-    <img data-flicker data-count={n} src="/photography/lake/frame-0.webp" width="512" height="384" alt={`The ${n} frames of the burst shown in turn: the grain changes every frame and the scene shifts by a few pixels.`} loading="lazy" />
-    <div class="strip">{data.frames.map((_, i) => <img src={`/photography/lake/frame-${i}.webp`} width="512" height="384" alt="" loading="lazy" />)}</div>
+  <div class="zoomer" style={`--o:${origin}`}>
+    <div class="layer" data-show="0 1" data-on="true">
+      <img data-flicker data-count={n} src="/photography/lake/frame-0.webp" width="512" height="384" alt={`The ${n} frames of the burst shown in turn: the grain changes every frame and the scene shifts by a few pixels.`} loading="lazy" />
+      <div class="strip">{data.frames.map((_, i) => <img src={`/photography/lake/frame-${i}.webp`} width="512" height="384" alt="" loading="lazy" />)}</div>
+    </div>
+    <div class="layer" data-show="2" data-on="false"><img src="/photography/lake/unaligned.webp" width="512" height="384" alt={`The ${n} frames averaged without alignment: the grain is gone but the rocks are smeared.`} loading="lazy" /></div>
+    <div class="layer" data-show="3" data-on="false"><img data-stack-image src="/photography/lake/stack-1.webp" width="512" height="384" alt="The frames aligned and averaged: the more frames, the cleaner the picture." loading="lazy" /></div>
   </div>
-  <div class="layer" data-show="2" data-on="false"><img src="/photography/lake/unaligned.webp" width="512" height="384" alt={`The ${n} frames averaged without alignment: the grain is gone but the rocks are smeared.`} loading="lazy" /></div>
-  <div class="layer" data-show="3" data-on="false"><img data-stack-image src={`/photography/lake/stack-${n}.webp`} width="512" height="384" alt={`The ${n} frames aligned and averaged: clean and sharp.`} loading="lazy" /></div>
-  <div class="layer overlay" data-show="0" data-on="true"><Locator /></div>
-  <div class="layer overlay" data-show="1 2 3" data-on="false">
-    <svg class="shake" viewBox="-44 -44 88 88" role="img" aria-label={`How far the camera moved between frames: up to ${reach} pixels.`}>
+  <div class="layer overlay" data-show="0" data-on="true"><span class="chip l" data-frame-chip>frame 1 of {n}</span></div>
+  <div class="layer overlay" data-show="1" data-on="false">
+    <i class="pin"></i>
+    <svg class="readings" data-label viewBox="0 0 400 300" role="img" aria-label={`The same pixel in each of the ${n} frames. The readings scatter from ${Math.round(Math.min(...readings) * 100)}% to ${Math.round(Math.max(...readings) * 100)}% of their average, and the average of the readings so far settles as frames are added.`}>
+      <rect x="30" y="150" width="340" height="136" rx="6" />
+      <text x="42" y="170">one pixel, {n} readings</text>
+      <path class="mean" d={`M${px(0) - 14} ${py(1)}H${px(n - 1) + 14}`} />
+      <polyline points={running.map((v, i) => `${px(i)},${py(v).toFixed(1)}`).join(' ')} />
+      {readings.map((v, i) => <circle cx={px(i)} cy={py(v).toFixed(1)} r="4.5" style={`--i:${i}`} />)}
+      {readings.map((_, i) => <text class="tick" x={px(i)} y="279" text-anchor="middle">{i + 1}</text>)}
+      <text class="key" x="358" y="170" text-anchor="end">● reading   ― average so far</text>
+    </svg>
+  </div>
+  <div class="layer overlay" data-show="0 2 3" data-on="true">
+    <svg class="shake" data-label viewBox="-44 -44 88 88" role="img" aria-label={`How far the camera moved between frames: up to ${reach} pixels.`}>
       <rect x="-42" y="-42" width="84" height="84" rx="4" /><path d="M-38 0H38M0-38V38" />
       {data.frames.map((f, i) => <circle r={i === 0 ? 4 : 3} style={`transform:translate(${(f.dx * scale).toFixed(1)}px,${(f.dy * scale).toFixed(1)}px)`} class:list={{ ref: i === 0 }} />)}
-      <text x="-38" y="38">shake: max {reach} px</text>
+      <text x="-38" y="37">max {reach} px</text>
     </svg>
   </div>
   <label slot="controls" class="fig-range" data-show="3" data-on="false">Frames merged
-    <input type="range" aria-valuetext={`${n} frames, grain ${last}%`} min="1" max={n} step="1" value={n} data-stack data-noise={JSON.stringify(data.noise)} />
-    <output>{n} · grain {last}%</output>
+    <input type="range" aria-valuetext="1 frame, grain 100%" min="1" max={n} step="1" value="1" data-stack data-walk={data.frames.map((_, i) => i + 1).join(' ')} data-noise={JSON.stringify(data.noise)} />
+    <output>1 · grain 100%</output>
   </label>
 </Figure>

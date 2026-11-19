@@ -4,7 +4,7 @@ import sharp from 'sharp';
 import {decodeStripDng,decodeShadingTiff} from './dng-strips.js';
 import {BURST,CACHE,FRAMES,REFERENCE,sources} from './fetch.mjs';
 import {stagePixel,channelAt,normalizedAt,shadingAt,multiplyMatrix,toneMap,encodeSrgb,decodeSrgb} from '../../../src/lib/photography/pipeline.js';
-import {estimateTranslation,mergeFrames} from '../../../src/lib/photography/burst.js';
+import {estimateTranslation,mergeFrames,sample} from '../../../src/lib/photography/burst.js';
 const out='public/photography/lake';mkdirSync(out,{recursive:true});
 const CW=512,CH=384,BIN=4,VIEW_GAIN=24,crop={x:1750,y:1662,width:CW,height:CH};
 const matrix=readFileSync(`${CACHE}/rgb2rgb.txt`,'utf8').trim().split(/\s+/).map(Number);
@@ -81,10 +81,22 @@ for(let count=1;count<=FRAMES;count++){const m=mergeFrames(frames,transforms,{co
 await save('unaligned',CW,CH,show(mergeFrames(frames,transforms,{aligned:false,robust:false})));
 ({rejected,total}=mergeFrames(frames,transforms));
 
+// 5. One pixel followed through the burst: the same spot of rock, read eight times.
+// We take the flattest patch of the merged window, so the readings differ because of noise and not because of an edge.
+const merged=mergeFrames(frames,transforms,{robust:false}),lumaAt=(f,x,y)=>luma([0,1,2].map(c=>sample(f.data,CW,CH,x,y,3,c)));
+let spot={x:0,y:0,rough:Infinity};
+for(let y=40;y<CH-40;y+=4)for(let x=40;x<CW-40;x+=4){
+ const v=[];for(let dy=-4;dy<=4;dy++)for(let dx=-4;dx<=4;dx++)v.push(lumaAt(merged,x+dx,y+dy));
+ const mean=v.reduce((a,b)=>a+b)/v.length,rough=Math.sqrt(v.reduce((a,b)=>a+(b-mean)**2,0)/v.length)/mean;
+ if(mean*VIEW_GAIN>.12&&mean*VIEW_GAIN<.5&&rough<spot.rough)spot={x,y,rough};
+}
+const readings=frames.map((f,i)=>lumaAt(f,spot.x+transforms[i].dx,spot.y+transforms[i].dy)),level=readings.reduce((a,b)=>a+b)/readings.length;
+const pixel={x:spot.x,y:spot.y,readings:readings.map(v=>v/level)};
+
 const record={burst:BURST,camera:ref.model,frames:raws.map((f,i)=>({name:f.name,exposure:f.exposure,iso:f.iso,dx:transforms[i].dx,dy:transforms[i].dy})),
  sensor:{width:ref.width,height:ref.height,pattern:ref.pattern,white:ref.white},crop,bin:BIN,viewGain:VIEW_GAIN,stops,
- fuse:{longEv:LONG_EV},noise:noise.map(v=>v/noise[0]),robust:{rejected,total},gain,files,sources,
+ fuse:{longEv:LONG_EV},noise:noise.map(v=>v/noise[0]),pixel,robust:{rejected,total},gain,files,sources,
  license:'CC-BY-SA-4.0',attribution:'Hasinoff et al., Burst photography for high dynamic range and low-light imaging on mobile cameras, ACM TOG 35(6), 2016'};
 mkdirSync('src/lib/photography/lake',{recursive:true});
 writeFileSync('src/lib/photography/lake/data.json',JSON.stringify(record,null,1));
-console.log(JSON.stringify({frames:record.frames,noise:record.noise,robust:record.robust,gain:{sky:gain.skyEv,ground:gain.groundEv,scale:gain.scaleEv}},null,1));
+console.log(JSON.stringify({frames:record.frames,noise:record.noise,pixel,robust:record.robust,gain:{sky:gain.skyEv,ground:gain.groundEv,scale:gain.scaleEv}},null,1));

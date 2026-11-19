@@ -1,0 +1,20 @@
+---
+import Figure from './Figure.astro'
+import Locator from './Locator.astro'
+import SensorArt from './SensorArt.astro'
+import { origin } from './spot'
+const steps = [
+  { title: 'After the first cheat', text: `This is our window after the first cheat, brightened so we can see the rocks. See all those speckles?` },
+  { title: 'Noise', text: `They weren't in the scene. That's noise (or grain), and it's one of those things that make a photo look bad.` },
+  { title: 'Where it comes from', text: `It comes from the sensor itself. Nothing in the scene is changing, and still every meter reads a slightly different number each time, because the electronics and the heat add a small random error. These rocks got very little light, so that error is a big part of each number.` },
+]
+---
+<Figure kind="noise" label="The noise in a single frame" steps={steps}>
+  <div class="zoomer" style={`--o:${origin}`}>
+    <div class="layer" data-show="0 1" data-on="true"><img src="/photography/lake/frame-0.webp" width="512" height="384" alt="One frame of the shoreline, brightened: heavy colored grain over the rocks." loading="lazy" /></div>
+  </div>
+  <div class="layer overlay" data-show="0" data-on="true"><Locator /></div>
+  <div class="layer overlay" data-show="1" data-on="false"><span class="chip l">one frame, up close</span></div>
+  <SensorArt show="2" wobble />
+  <div class="layer overlay" data-show="2" data-on="false"><span class="chip l">same light, flickering meters</span></div>
+</Figure>

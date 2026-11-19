@@ -1,24 +1,35 @@
 ---
 import Figure from './Figure.astro'
 import Locator from './Locator.astro'
+import data from '../../../lib/photography/lake/data.json'
+// We zoom 16 times into a 32 x 24 pixel patch, placed so that whole pixels fill the picture.
+const { width, height } = data.crop
+const ZOOM = 16, patch = { x: 222, y: 274, w: width / ZOOM, h: height / ZOOM }
+const pct = (v: number) => `${(v * 100).toFixed(3)}%`
+const origin = `${pct(patch.x * ZOOM / (ZOOM - 1) / width)} ${pct(patch.y * ZOOM / (ZOOM - 1) / height)}`
+const target = `left:${pct(patch.x / width)};top:${pct(patch.y / height)};width:${pct(1 / ZOOM)};height:${pct(1 / ZOOM)}`
+// A red pixel in the middle of the patch (both coordinates even), and the 3 x 3 block around it.
+const red = { x: 238, y: 286 }
+const hood = `left:${pct((red.x - 1 - patch.x) / patch.w)};top:${pct((red.y - 1 - patch.y) / patch.h)};width:${pct(3 / patch.w)};height:${pct(3 / patch.h)}`
 const steps = [
-  { title: 'A piece of the photo', text: 'A small window on the shoreline, brightened so we can see into the shadows.' },
-  { title: 'Zoom in', text: 'Zoomed in until each square is one pixel. Every pixel has a full color.' },
-  { title: 'What was stored', text: 'What the sensor stored for those same pixels: one brightness number each. No color anywhere.' },
-  { title: 'Which filter', text: 'Now color each pixel by the filter that sat on top of it. Each one measured red, green or blue, never all three.' },
-  { title: 'Zoom out', text: 'Zoomed back out, this is everything the phone measured: one color per pixel. It is a third of a photo.' },
-  { title: 'Guess the rest', text: 'Guess the two missing colors at every pixel from its neighbors, and we are back at the picture we started with.' },
+  { title: 'A piece of the raw data', text: `Back to our photo. This is a small window on the shoreline, exactly as the sensor stored it. We brightened it so we can see into the shadows.` },
+  { title: 'Zoom in', text: `Zoom in until each square is one pixel. Each one is a single brightness number.` },
+  { title: 'Which filter', text: `Now paint each pixel with the color of the filter it had on top. Every pixel measured red, green or blue. Never all three.` },
+  { title: 'Ask the neighbors', text: `So the phone guesses the other two by asking the neighbors. This red pixel takes its green from the four green pixels touching it, and its blue from the four at its corners.` },
+  { title: 'Every pixel', text: `Do the same for every pixel and the color shows up.` },
+  { title: 'Zoom out', text: `Zoomed back out. On the left, what the phone measured. On the right, the same data plus the guesses.` },
 ]
 ---
 <Figure kind="mosaic" label="Cheat one: color guessed from neighboring pixels" steps={steps}>
-  <div class="zoomer">
-    <div class="layer" data-show="0 1 5" data-on="true"><img src="/photography/lake/frame-0.webp" width="512" height="384" alt="A small piece of the shoreline in full color, grainy." loading="lazy" /></div>
-    <div class="layer" data-show="2" data-on="false"><img src="/photography/lake/mosaic-grey.webp" width="512" height="384" alt="The same piece as the sensor stored it: one gray value per pixel." loading="lazy" /></div>
-    <div class="layer measured" data-show="3 4 5" data-on="false"><img src="/photography/lake/mosaic.webp" width="512" height="384" alt="The same piece showing only what was measured: every site is purely red, green or blue." loading="lazy" /></div>
+  <div class="zoomer" style={`--o:${origin}`}>
+    <div class="layer" data-show="4 5" data-on="false"><img src="/photography/lake/frame-0.webp" width="512" height="384" alt="The same piece in full color, grainy." loading="lazy" /></div>
+    <div class="layer" data-show="0 1" data-on="true"><img src="/photography/lake/mosaic-grey.webp" width="512" height="384" alt="A small piece of the shoreline as the sensor stored it: one gray value per pixel." loading="lazy" /></div>
+    <div class="layer measured" data-show="2 3 5" data-on="false"><img src="/photography/lake/mosaic.webp" width="512" height="384" alt="The same piece showing only what was measured: every pixel is purely red, green or blue." loading="lazy" /></div>
   </div>
-  <div class="layer overlay" data-show="0" data-on="true"><Locator /><i class="zoom-target"></i></div>
+  <div class="layer overlay" data-show="0" data-on="true"><Locator /><i class="zoom-target" style={target}></i></div>
+  <div class="layer overlay" data-show="2 3" data-on="false">
+    <div class="tally"><span><i class="m"></i>1 measured</span><span><i></i><i></i>2 missing</span></div>
+  </div>
+  <div class="layer overlay" data-show="3" data-on="false"><i class="hood" style={hood}><i></i></i></div>
   <div class="layer overlay divided" data-show="5" data-on="false"><span class="chip l">measured</span><span class="chip r">with the guesses</span></div>
-  <div class="layer overlay" data-show="3 4" data-on="false">
-    <div class="tally"><span><i class="m"></i>1 measured</span><span><i></i><i></i>2 guessed</span></div>
-  </div>
 </Figure>

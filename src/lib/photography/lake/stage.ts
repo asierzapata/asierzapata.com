@@ -30,17 +30,26 @@ function mountBurst(fig: HTMLElement) {
   const noise: number[] = JSON.parse(range.dataset.noise!)
   const output = range.parentElement!.querySelector('output')!
   const stacked = fig.querySelector<HTMLImageElement>('[data-stack-image]')!
-  let timer = 0, frame = 0
+  const chip = fig.querySelector<HTMLElement>('[data-frame-chip]')
+  let timer = 0, frame = 0, visible = false
+  const show = (next: number) => {
+    frame = next
+    flicker.src = `${BASE}/frame-${frame}.webp`
+    if (chip) chip.textContent = `frame ${frame + 1} of ${count}`
+  }
   const stop = () => { clearInterval(timer); timer = 0 }
-  fig.addEventListener('fig:state', event => {
-    stop()
-    if ((event as CustomEvent).detail !== 1 || reduced()) return
+  // The frames play in turn while the first step is on screen. The figure opens on that step, so we cannot wait for a state change.
+  const update = () => {
+    const play = visible && fig.dataset.state === '0' && !reduced()
+    if (!play) { stop(); if (frame) show(0); return }
+    if (timer) return
     preload(Array.from({ length: count }, (_, i) => `frame-${i}`))
-    timer = window.setInterval(() => {
-      if (!fig.isConnected) return stop()
-      frame = (frame + 1) % count
-      flicker.src = `${BASE}/frame-${frame}.webp`
-    }, 400)
+    timer = window.setInterval(() => fig.isConnected ? show((frame + 1) % count) : stop(), 500)
+  }
+  new IntersectionObserver(entries => { visible = entries.at(-1)!.isIntersecting; update() }).observe(fig)
+  fig.addEventListener('fig:state', event => {
+    update()
+    if ((event as CustomEvent).detail === 3) preload(Array.from({ length: count }, (_, i) => `stack-${i + 1}`))
   })
   range.addEventListener('input', () => {
     const n = Number(range.value)
@@ -48,7 +57,26 @@ function mountBurst(fig: HTMLElement) {
     output.textContent = `${n} · grain ${Math.round(noise[n - 1] * 100)}%`
     range.setAttribute('aria-valuetext', `${n} frames, grain ${Math.round(noise[n - 1] * 100)}%`)
   })
-  range.addEventListener('pointerdown', () => preload(Array.from({ length: count }, (_, i) => `stack-${i + 1}`)), { once: true })
+}
+
+/** The sensor cutaway: each meter's brightness follows the light that reaches it. */
+function mountSensor(fig: HTMLElement, art: HTMLElement) {
+  const charges = [...art.querySelectorAll<SVGPathElement>('.charge')]
+  const wobble = art.hasAttribute('data-wobble')
+  // Two uniform draws make a bell-shaped error, which is close enough to how noise behaves.
+  const error = () => wobble && !reduced() ? (Math.random() + Math.random() - 1) * .22 : 0
+  const paint = () => {
+    const filtered = fig.dataset.fig !== 'sensor' || fig.dataset.state !== '0'
+    for (const charge of charges) {
+      const value = Number(charge.dataset.light) * (filtered ? Number(charge.dataset.pass) : 1) * (1 + error())
+      const grey = Math.round(28 + 227 * Math.sqrt(Math.min(1, value)))
+      charge.style.fill = `rgb(${grey},${grey},${grey})`
+    }
+  }
+  paint()
+  fig.addEventListener('fig:state', paint)
+  if (!wobble || reduced()) return
+  const timer = window.setInterval(() => !fig.isConnected ? clearInterval(timer) : art.dataset.on === 'true' && paint(), 800)
 }
 
 function mountExposure(fig: HTMLElement) {
@@ -60,7 +88,11 @@ function mountExposure(fig: HTMLElement) {
     output.textContent = `×${times(Number(range.value))}`
     range.setAttribute('aria-valuetext', `×${times(Number(range.value))} brighter`)
   })
-  range.addEventListener('pointerdown', () => preload(Array.from({ length: Number(range.max) + 1 }, (_, i) => `ev-${i}`)), { once: true })
+  new IntersectionObserver((entries, observer) => {
+    if (!entries.some(e => e.isIntersecting)) return
+    observer.disconnect()
+    preload(Array.from({ length: Number(range.max) + 1 }, (_, i) => `ev-${i}`))
+  }).observe(fig)
 }
 
 /** Reading mode: the step that has reached the reading line decides what its figure shows. */
@@ -83,21 +115,33 @@ function sync() {
 }
 const queue = () => { if (!queued) { queued = true; requestAnimationFrame(sync) } }
 
-/** Presenter mode: every figure state is one step. Arrow keys walk the whole talk. */
-type Step = { beat: HTMLElement; fig: HTMLElement | null; state: number }
+/** Presenter mode: every figure state is one step. Arrow keys walk the whole talk.
+ * A slider with `data-walk` adds one step per value, so a clicker can drag it for us. */
+type Step = { beat: HTMLElement; fig: HTMLElement | null; state: number; value?: string }
 let steps: Step[] = [], index = 0, hud: HTMLElement | null = null
 const presenting = () => document.documentElement.classList.contains('presenting')
 
 function collect() {
   steps = [...document.querySelectorAll<HTMLElement>('[data-beat]')].flatMap<Step>(beat => {
     const fig = beat.querySelector<HTMLElement>('[data-fig]')
-    return fig ? Array.from({ length: Number(fig.dataset.states) }, (_, state) => ({ beat, fig, state })) : [{ beat, fig: null, state: 0 }]
+    if (!fig) return [{ beat, fig: null, state: 0 }]
+    const walk = fig.querySelector<HTMLInputElement>('input[data-walk]')
+    const walked = walk?.closest<HTMLElement>('[data-show]')?.dataset.show!.split(' ').map(Number) ?? []
+    return Array.from({ length: Number(fig.dataset.states) }, (_, state) => state).flatMap<Step>(state =>
+      walked.includes(state) ? walk!.dataset.walk!.split(' ').map(value => ({ beat, fig, state, value })) : [{ beat, fig, state }])
   })
 }
 function go(next: number) {
   index = Math.max(0, Math.min(steps.length - 1, next))
   const step = steps[index]
   if (step.fig) setState(step.fig, step.state)
+  if (step.fig && step.value !== undefined) {
+    const range = step.fig.querySelector<HTMLInputElement>('input[data-walk]')!
+    range.value = step.value
+    range.dispatchEvent(new Event('input'))
+  }
+  // The punchline waits for the last click on a figure, which may be the end of a slider walk.
+  if (step.fig) step.fig.dataset.last = String(steps[index + 1]?.fig !== step.fig)
   step.beat.scrollIntoView({ block: 'start', behavior: reduced() ? 'auto' : 'smooth' })
   if (hud) hud.textContent = `${index + 1} / ${steps.length}   ← →   P to exit`
 }
@@ -149,8 +193,14 @@ export function mountLake() {
   document.querySelectorAll<HTMLElement>('[data-fig]:not([data-live])').forEach(fig => {
     fig.dataset.live = 'true'
     fig.querySelectorAll<HTMLInputElement>('input[type=range]').forEach(r => r.addEventListener('change', () => { if (presenting()) r.blur() }))
+    // Labels drawn inside an SVG follow the size of the HTML labels: tell each drawing how many of its units make a pixel.
+    const fit = new ResizeObserver(entries => entries.forEach(({ target, contentRect }) => {
+      if (contentRect.width) (target as SVGSVGElement).style.setProperty('--u', String((target as SVGSVGElement).viewBox.baseVal.width / contentRect.width))
+    }))
+    fig.querySelectorAll('svg[data-label]').forEach(svg => fit.observe(svg))
+    fig.querySelectorAll<HTMLElement>('.sensor-art').forEach(art => mountSensor(fig, art))
     if (fig.dataset.fig === 'burst') mountBurst(fig)
-    if (fig.dataset.fig === 'exposure') mountExposure(fig)
+    if (fig.dataset.fig === 'tradeoff') mountExposure(fig)
   })
   if (!listening) {
     listening = true
