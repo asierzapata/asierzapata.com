@@ -1,5 +1,5 @@
 ---
-layout: ../layouts/about-me-layout.astro
+layout: ../layouts/page-layout.astro
 ---
 
 # Hi!
