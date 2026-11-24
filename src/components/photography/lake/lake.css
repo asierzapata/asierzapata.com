@@ -6,6 +6,8 @@
 .fig-pin{align-self:stretch;container-type:inline-size}
 /* A light card in the blog's own colours. Only the picture and the labels drawn on it are dark. */
 .fig-frame{--w:min(100cqi,calc((100svh - 7rem)*4/3));--h:calc(var(--w)*3/4 + 48px);width:var(--w);margin-inline:auto;position:sticky;top:calc((100svh - var(--h))/2);background:#fbfcfe;border:1px solid var(--color-border-strong);border-radius:7px;overflow:hidden;box-shadow:0 8px 32px #1e40af0f}
+/* The picture inside the border gets a whole number of pixels, in a multiple of four so its 4:3 height is whole too. A fraction of a pixel there becomes several pixels once we zoom in sixteen times, and the outlines drawn on top stop lining up. Every rule below sets --w, never the width. */
+@supports (width:round(down,1px,1px)){.fig-frame{width:calc(round(down,var(--w) - 2px,4px) + 2px)}}
 .fig-stage{position:relative;aspect-ratio:4/3;overflow:hidden;background:#05070c;color:#d5dceb;container-type:inline-size}
 .fig-stage .layer{position:absolute;inset:0;transition:opacity .4s ease,visibility .4s}
 .fig-stage .layer>img{display:block;width:100%;height:100%;object-fit:cover}
@@ -23,6 +25,13 @@
 .split>img{position:absolute;inset:0}.split>img.half{clip-path:inset(0 0 0 50%)}
 .split::after,.divided::after{content:"";position:absolute;left:50%;top:0;bottom:0;width:2px;margin-left:-1px;background:#fff;box-shadow:0 0 6px #0008}
 [data-on="false"]{opacity:0;visibility:hidden;pointer-events:none}
+/* The ending opens on the finished photo and the sensor's half wipes in, once, when the picture comes into view. */
+[data-fig="recap"] .split>img.half{transition:clip-path .8s cubic-bezier(.77,0,.175,1)}
+[data-fig="recap"] .split::after{transition:translate .8s cubic-bezier(.77,0,.175,1),opacity .2s ease}
+[data-fig="recap"] .chip.l{transition:opacity .3s ease .6s}
+[data-fig="recap"][data-live]:not([data-seen]) .split>img.half{clip-path:inset(0)}
+[data-fig="recap"][data-live]:not([data-seen]) .split::after{translate:-50cqi 0;opacity:0}
+[data-fig="recap"][data-live]:not([data-seen]) .chip.l{opacity:0}
 .layer.overlay{pointer-events:none}
 
 /* Cheat one: the same window, sixteen times closer. */
@@ -70,7 +79,11 @@
 .readings text{font-family:ui-monospace,monospace;fill:#d5dceb}.readings .tick,.readings .key{fill:#8d99b0}
 .readings .mean{stroke:#8d99b0;stroke-width:1;stroke-dasharray:3 3;fill:none}
 .readings polyline{fill:none;stroke:#fff;stroke-width:2;stroke-linejoin:round}
-.readings circle{fill:#fbbf24}
+.readings circle{fill:#fbbf24;transform-box:fill-box;transform-origin:center;transition:opacity .2s cubic-bezier(.23,1,.32,1),transform .2s cubic-bezier(.23,1,.32,1);transition-delay:calc(.3s + var(--i)*.11s)}
+/* The readings land one at a time and the average is drawn along with them, so we watch it settle. Hidden, they reset at once. */
+.readings polyline{clip-path:inset(-4px 0 -4px 0);transition:clip-path .77s linear .4s}
+[data-on="false"]>.readings circle{opacity:0;transform:scale(.6);transition:none}
+[data-on="false"]>.readings polyline{clip-path:inset(-4px 100% -4px 0);transition:none}
 .shake circle{}.shake circle.ref{fill:#fff}
 .shake text{font-family:ui-monospace,monospace;fill:#d5dceb}
 
@@ -78,11 +91,24 @@
 .legend{position:absolute;left:12px;bottom:12px;display:flex;align-items:center;gap:8px;padding:7px 11px;border-radius:5px;background:#14202edd}
 .legend i{display:block;width:max(90px,18cqi);height:.8em;border-radius:2px}
 
+/* The ending: the three cheats sit on the seam between the two pictures, and arrive one after another. */
+.between{position:absolute;left:50%;top:50%;translate:-50% -50%;list-style:none;margin:0;padding:0;display:grid;gap:.7em;font:var(--label)/1.4 ui-monospace,monospace}
+.between li{display:flex;box-sizing:border-box;width:100%;margin:0;align-items:center;gap:.8em;padding:.55em .9em;border-radius:5px;background:#14202eee;white-space:nowrap;transition:opacity .4s cubic-bezier(.23,1,.32,1) calc(var(--i)*.14s),translate .4s cubic-bezier(.23,1,.32,1) calc(var(--i)*.14s)}
+.between b{font-weight:400;color:#fbbf24}
+/* They leave together and faster than they arrive. */
+[data-on="false"]>.between li{opacity:0;translate:-.8em 0;transition-duration:.2s;transition-delay:0s}
+/* Reduced motion keeps the fade and drops the slide. */
+@media(prefers-reduced-motion:reduce){.between li{translate:none!important}}
+
 /* The steps scroll past the pinned stage. The one at the reading line is lit. */
 .fig-steps{list-style:none;margin:0;padding:0;overflow-anchor:none}
-.fig-steps li{min-height:70svh;display:flex;align-items:center;transition:opacity .35s}
-/* A little longer, so the picture is still pinned while we read the last step. */
-.fig-steps li:last-child{min-height:90svh}
+/* Each step starts at the top of its own slot, so the first one lines up with the picture and only the gaps between steps are tall. */
+.fig-steps li{min-height:70svh;display:flex;align-items:flex-start;transition:opacity .35s}
+/* The last one is as tall as the picture (the script measures it), so its text travels to the top of the picture, like every other step, before the picture lets go. */
+.fig-steps li:last-child{min-height:var(--frame-h,70svh)}
+/* The first step sits a little below the top of the picture, so the picture is pinned for a while before the second step takes over. */
+.fig-steps li:where(:first-child){padding-top:16svh}
+.fig-steps li:where(:first-child:not(:last-child)){min-height:86svh}
 [data-live] .fig-steps li[data-active="false"]{opacity:.28}
 .fig-steps .step-n{display:block;font:11px/1.5 ui-monospace,monospace;letter-spacing:.14em;color:#2563eb}
 .photography-post .eyebrow{color:#2563eb}
@@ -104,7 +130,8 @@
 /* Each cheat is a chapter. */
 .beat:not(.title-slide)+.beat{margin-top:clamp(3rem,8vh,6rem);padding-top:3rem;border-top:1px solid var(--color-border)}
 .photography-post h2{text-wrap:balance}.photography-post .source-note h2{font-size:1.3rem}
-.present-hint{font:11px/1.6 ui-monospace,monospace;color:var(--color-muted-dark)}
+/* The way into the slides, for readers only. It sits above the first rule, in the space the hidden opening slides leave. */
+.present-hint{font:11px/1.6 ui-monospace,monospace;color:var(--color-muted-dark)}.present-hint p{margin:0}
 kbd{font:11px ui-monospace,monospace;border:1px solid var(--color-border-strong);border-radius:3px;padding:1px 5px;background:#fff}
 
 @media(prefers-reduced-motion:reduce){[data-flicker]{display:none!important}.strip{display:grid}}
@@ -113,7 +140,7 @@ kbd{font:11px ui-monospace,monospace;border:1px solid var(--color-border-strong)
   /* The picture pins inside an opaque band as wide as the screen, so steps disappear cleanly behind it. */
   .fig-pin{position:sticky;top:0;container-type:normal;z-index:2;display:block;margin-inline:-16px;padding:8px 16px 10px;background:var(--fig-band,#f8fafc)}
   .fig-pin::after{content:"";position:absolute;inset:100% 0 auto;height:22px;background:linear-gradient(var(--fig-band,#f8fafc),transparent);pointer-events:none}
-  .fig-frame{position:static;width:100%;box-shadow:none}
+  .fig-frame{position:static;--w:100%;box-shadow:none}
   .fig-steps strong{color:#2563eb}
   .fig-steps li,.fig-steps li:first-child,.fig-steps li:last-child{min-height:38svh;align-items:flex-start;padding-top:2.2rem}
   .cheat-fig:has(.fig-range) .fig-steps li:last-child{min-height:55svh}
@@ -134,14 +161,15 @@ kbd{font:11px ui-monospace,monospace;border:1px solid var(--color-border-strong)
 .presenting .beat h2{font-size:clamp(1.8rem,3.2vw,2.8rem);margin:.1em 0}
 .presenting .cheat-fig{display:block;margin:0 auto;max-width:none;width:100%}
 .presenting .fig-pin{position:static;display:block;container-type:normal}
-.presenting .fig-frame{position:static;margin:0 auto;width:min(100%,calc((100svh - 430px)*4/3))}
-.presenting .fig-steps li{min-height:5.6em;padding:12px 0 0;justify-content:center;text-align:center;opacity:1}
+.presenting .fig-frame{position:static;margin:0 auto;--w:min(100%,calc((100svh - 430px)*4/3))}
+.presenting .fig-steps li{min-height:5.6em;padding:12px 0 0;align-items:center;justify-content:center;text-align:center;opacity:1}
 .presenting .fig-steps li[data-active="false"],.presenting .fig-steps :is(.step-n,strong){display:none}
 .presenting .fig-steps p{font-size:clamp(15px,1.5vw,22px);line-height:1.45;max-width:56em}
 .presenting .beat .thesis br{display:none}
 .presenting .beat .thesis{font-size:clamp(1.3rem,2.3vw,2rem);line-height:1.3;border:0;margin:0;padding:.6rem 0 0}
 /* The punchline of a cheat arrives with the last step of its figure. */
-.presenting .beat:has([data-fig]:not([data-last="true"])) .thesis{visibility:hidden}
+.presenting .beat:has([data-fig]) .thesis{transition:opacity .3s cubic-bezier(.23,1,.32,1),translate .3s cubic-bezier(.23,1,.32,1)}
+.presenting .beat:has([data-fig]:not([data-last="true"])) .thesis{opacity:0;translate:0 6px;transition:none}
 .presenting .source-note,.presenting .present-hint{display:none}
 /* Sentence slides carry the talk from one picture to the next. Readers of the post get the same ideas as prose. */
 .say{display:none}
@@ -154,6 +182,9 @@ kbd{font:11px ui-monospace,monospace;border:1px solid var(--color-border-strong)
 .agenda li span{font:clamp(11px,.9vw,15px) ui-monospace,monospace;letter-spacing:.14em;text-transform:uppercase}
 .agenda li strong{font-weight:400}
 .agenda li[data-when="now"]{color:var(--color-primary)}
+/* The cheat we have just reached gets its name a moment after its slide arrives. */
+.agenda li[data-when="now"] strong{opacity:0;translate:0 .3em}
+.agenda[data-current] li[data-when="now"] strong{opacity:1;translate:none;transition:opacity .4s cubic-bezier(.23,1,.32,1) .15s,translate .4s cubic-bezier(.23,1,.32,1) .15s}
 .agenda li[data-when="next"]{opacity:.7}
 /* The talk opens on a slide with only its title. Readers of the post never see it. */
 .title-slide{display:none}
@@ -167,7 +198,7 @@ kbd{font:11px ui-monospace,monospace;border:1px solid var(--color-border-strong)
   .presenting .beat:has([data-fig]){display:grid;grid-template-columns:minmax(0,1.7fr) minmax(20rem,1fr);grid-template-rows:1fr auto 1fr;column-gap:clamp(2rem,4vw,4rem);padding:3rem 0}
   .presenting .beat:has([data-fig]) .cheat-fig{display:contents}
   .presenting .beat:has([data-fig]) .fig-pin{grid-column:1;grid-row:1/-1;align-self:center;container-type:inline-size}
-  .presenting .beat:has([data-fig]) .fig-frame{width:min(100cqi,calc((100svh - 6rem - 48px)*4/3));margin:0 auto}
+  .presenting .beat:has([data-fig]) .fig-frame{--w:min(100cqi,calc((100svh - 6rem - 48px)*4/3));margin:0 auto}
   .presenting .beat:has([data-fig]) .reading{grid-column:2;margin:0;text-align:left}
   .presenting .beat:has([data-fig]) .reading:first-child{grid-row:1;align-self:end}
   .presenting .beat:has([data-fig]) .cheat-fig~.reading{grid-row:3;align-self:start}

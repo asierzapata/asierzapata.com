@@ -10,11 +10,13 @@ const last = Math.round(data.noise[n - 1] * 100)
 const { readings } = data.pixel
 const running = readings.map((_, i) => readings.slice(0, i + 1).reduce((a, b) => a + b) / (i + 1))
 const px = (i: number) => 66 + i * 40, py = (v: number) => 262 - (v - .7) / .65 * 88
+// On stage we double the frames each click. Every doubling is a step we can see.
+const walk = data.frames.map((_, i) => i + 1).filter(k => (k & (k - 1)) === 0)
 const steps = [
   { title: `${n} photos`, text: `You pressed the button once and the phone took ${n} photos in a row. Keep an eye on one spot: the rocks stay, the speckles change every time.` },
   { title: 'One pixel, eight readings', text: `Follow one pixel through the ${n} frames. Each reading is off by a different amount, some too high and some too low. Average them and the errors cancel out.` },
   { title: 'Just average them?', text: `So we average the ${n} frames and we're done, right? Not so fast. Nobody holds a phone perfectly still, and here the hand moved up to ${reach} pixels between frames. The noise goes down, but everything gets blurry, like taking your glasses off.` },
-  { title: 'Line them up first', text: `So the phone first lines the frames up, pixel by pixel, and then averages them. Add them one by one and watch the grain go away: with all ${n}, it's down to ${last}% of what a single frame had.` },
+  { title: 'Line them up first', text: `So the phone first lines the frames up, pixel by pixel, and then averages them. Keep adding frames and watch the grain go away: with all ${n}, it's down to ${last}% of what a single frame had.` },
 ]
 ---
 <Figure kind="burst" label="Cheat two: noise averaged away across a burst" steps={steps}>
@@ -47,7 +49,7 @@ const steps = [
     </svg>
   </div>
   <label slot="controls" class="fig-range" data-show="3" data-on="false">Frames merged
-    <input type="range" aria-valuetext="1 frame, grain 100%" min="1" max={n} step="1" value="1" data-stack data-walk={data.frames.map((_, i) => i + 1).join(' ')} data-noise={JSON.stringify(data.noise)} />
+    <input type="range" aria-valuetext="1 frame, grain 100%" min="1" max={n} step="1" value="1" data-stack data-walk={walk.join(' ')} data-noise={JSON.stringify(data.noise)} />
     <output>1 · grain 100%</output>
   </label>
 </Figure>

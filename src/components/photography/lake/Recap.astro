@@ -1,13 +1,20 @@
 ---
 import Figure from './Figure.astro'
+import data from '../../../lib/photography/lake/data.json'
+const n = data.frames.length
+const cheats = ['guessed two thirds of the color', `averaged ${n} photos`, 'chose a brightness for each area']
 const steps = [
-  { title: 'Measured, and everything else', text: `The same two pictures from the start. On the left, everything the sensor measured. Everything else on the right was guessed, averaged or decided by software.` },
+  { title: 'Back to the start', text: `The same two pictures from the beginning. On the left, everything the sensor measured. On the right, what the phone showed us.` },
+  { title: 'Three cheats in between', text: `To get from one to the other, the phone guessed two thirds of the color, averaged ${n} photos and decided how bright each area should be. All of this has a name: computational photography. Every photo your phone takes goes through it.` },
 ]
 ---
-<Figure kind="recap" label="The sensor data and the finished photo, side by side" steps={steps}>
-  <div class="layer split" data-show="0" data-on="true">
+<Figure kind="recap" label="The sensor data and the finished photo, with the three cheats between them" steps={steps}>
+  <div class="layer split" data-show="0 1" data-on="true">
     <img src="/photography/lake/sensor.webp" width="1008" height="756" alt="Left half: the raw sensor values, gray and dark." loading="lazy" />
     <img class="half" src="/photography/lake/phone.webp" width="1008" height="756" alt="Right half: the phone's finished photo, in color, with a bright foreground." loading="lazy" />
     <span class="chip l">what the sensor recorded</span><span class="chip r">what the phone showed</span>
+  </div>
+  <div class="layer overlay" data-show="1" data-on="false">
+    <ol class="between">{cheats.map((cheat, i) => <li style={`--i:${i}`}><b>{i + 1}</b>{cheat}</li>)}</ol>
   </div>
 </Figure>

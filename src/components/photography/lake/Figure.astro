@@ -1,8 +1,9 @@
 ---
 // One figure, a few named states. The stage stays on screen while its steps scroll past;
 // whichever step is at the reading line sets `data-state`. Presenter mode drives the same attribute.
+// A step with `talk: false` is for readers only: the slides skip it.
 import './lake.css'
-interface Props { kind: string; label: string; steps: { title: string; text: string }[] }
+interface Props { kind: string; label: string; steps: { title: string; text: string; talk?: boolean }[] }
 const { kind, label, steps } = Astro.props
 ---
 <figure class="cheat-fig" data-fig={kind} data-state="0" data-states={steps.length} aria-label={label}>
@@ -16,7 +17,7 @@ const { kind, label, steps } = Astro.props
     </div>
   </div>
   <ol class="fig-steps">
-    {steps.map((step, i) => <li data-step={i} data-active={i === 0 ? 'true' : 'false'}><div><span class="step-n">{i + 1} / {steps.length}</span><strong>{step.title}</strong><p>{step.text}</p></div></li>)}
+    {steps.map((step, i) => <li data-step={i} data-talk={step.talk === false ? 'false' : undefined} data-active={i === 0 ? 'true' : 'false'}><div><span class="step-n">{i + 1} / {steps.length}</span><strong>{step.title}</strong><p>{step.text}</p></div></li>)}
   </ol>
 </figure>
 <script>

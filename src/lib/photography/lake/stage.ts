@@ -15,7 +15,9 @@ export function setState(fig: HTMLElement, next: number) {
   fig.querySelectorAll<HTMLElement>('[data-step]').forEach(li => { li.dataset.active = String(Number(li.dataset.step) === state) })
   const title = fig.querySelector(`[data-step="${state}"] strong`)?.textContent
   const foot = fig.querySelector<HTMLElement>('[data-foot]')
-  if (foot) foot.textContent = `${state + 1} / ${count} · ${title}`
+  // On stage the count leaves out the steps that only readers get.
+  const shown = presenting() ? count - fig.querySelectorAll('[data-talk="false"]').length : count
+  if (foot) foot.textContent = `${state + 1} / ${shown} · ${title}`
   fig.dispatchEvent(new CustomEvent('fig:state', { detail: state }))
 }
 
@@ -107,7 +109,8 @@ function sync() {
     // Beside the figure on wide screens, so the line is mid-screen. Below it on narrow ones.
     // Clamped, because on short screens the picture is not pinned and scrolls away.
     const pinned = Math.max(0, Math.min(fig.querySelector<HTMLElement>('.fig-pin')!.getBoundingClientRect().bottom, innerHeight * .6))
-    const line = wide ? innerHeight * .55 : pinned + (innerHeight - pinned) * .4
+    // On wide screens a step lights up as its text comes in from the bottom, well before it reaches the middle.
+    const line = wide ? innerHeight * .75 : pinned + (innerHeight - pinned) * .4
     let state = 0
     fig.querySelectorAll<HTMLElement>('[data-step]').forEach((li, i) => { if (li.getBoundingClientRect().top <= line) state = i })
     if (state !== Number(fig.dataset.state)) setState(fig, state)
@@ -127,7 +130,8 @@ function collect() {
     if (!fig) return [{ beat, fig: null, state: 0 }]
     const walk = fig.querySelector<HTMLInputElement>('input[data-walk]')
     const walked = walk?.closest<HTMLElement>('[data-show]')?.dataset.show!.split(' ').map(Number) ?? []
-    return Array.from({ length: Number(fig.dataset.states) }, (_, state) => state).flatMap<Step>(state =>
+    const spoken = Array.from({ length: Number(fig.dataset.states) }, (_, state) => state).filter(state => fig.querySelector(`[data-step="${state}"]`)?.getAttribute('data-talk') !== 'false')
+    return spoken.flatMap<Step>(state =>
       walked.includes(state) ? walk!.dataset.walk!.split(' ').map(value => ({ beat, fig, state, value })) : [{ beat, fig, state }])
   })
 }
@@ -142,7 +146,10 @@ function go(next: number) {
   }
   // The punchline waits for the last click on a figure, which may be the end of a slider walk.
   if (step.fig) step.fig.dataset.last = String(steps[index + 1]?.fig !== step.fig)
-  step.beat.scrollIntoView({ block: 'start', behavior: reduced() ? 'auto' : 'smooth' })
+  // A key press changes the slide at once. What moves is inside the slide.
+  step.beat.scrollIntoView({ block: 'start', behavior: 'instant' })
+  document.querySelectorAll('[data-beat][data-current]').forEach(beat => beat !== step.beat && beat.removeAttribute('data-current'))
+  step.beat.dataset.current = ''
   if (hud) hud.textContent = `${index + 1} / ${steps.length}   ← →   P to exit`
 }
 function toggle(on = !presenting()) {
@@ -198,7 +205,16 @@ export function mountLake() {
       if (contentRect.width) (target as SVGSVGElement).style.setProperty('--u', String((target as SVGSVGElement).viewBox.baseVal.width / contentRect.width))
     }))
     fig.querySelectorAll('svg[data-label]').forEach(svg => fit.observe(svg))
+    // The last step needs the picture's height to scroll all the way up beside it. Only a resize changes it.
+    const frame = fig.querySelector<HTMLElement>('.fig-frame')
+    if (frame) new ResizeObserver(() => fig.style.setProperty('--frame-h', `${frame.offsetHeight}px`)).observe(frame)
     fig.querySelectorAll<HTMLElement>('.sensor-art').forEach(art => mountSensor(fig, art))
+    // The ending wipes its two halves apart the first time it is really on screen.
+    if (fig.dataset.fig === 'recap' && frame) new IntersectionObserver((entries, observer) => {
+      if (!entries.some(e => e.isIntersecting)) return
+      observer.disconnect()
+      fig.dataset.seen = 'true'
+    }, { threshold: .6 }).observe(frame)
     if (fig.dataset.fig === 'burst') mountBurst(fig)
     if (fig.dataset.fig === 'tradeoff') mountExposure(fig)
   })

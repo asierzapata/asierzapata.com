@@ -11,7 +11,7 @@ const steps = [
   { title: 'Choose, area by area', text: `Now it goes area by area and picks the version that looks better there, not too dark and not washed out. White means the bright one, black means the dark one.` },
   { title: 'Blend them', text: `Blend the two following that map and we get the sunset and the rocks in one picture. Our blend is pretty rough, though: that pale glow along the ridge gives it away.` },
   { title: 'What the phone did', text: `And this is what the phone did. Same idea, done with a lot more care: no glow on the ridge, plus contrast and color tuned on top.` },
-  { title: 'Where it brightened', text: `If we divide the phone's photo by our dark version, we can see how much it brightened each area: about ×${times(skyEv)} in the sky and ×${times(groundEv)} on the ground.` },
+  { title: 'Where it brightened', text: `If we divide the phone's photo by our dark version, we can see how much it brightened each area: about ×${times(skyEv)} in the sky and ×${times(groundEv)} on the ground.`, talk: false },
 ]
 ---
 <Figure kind="exposure" label="Cheat three: different brightness for different regions" steps={steps}>
