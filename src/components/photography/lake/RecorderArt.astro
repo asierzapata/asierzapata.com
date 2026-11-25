@@ -1,0 +1,12 @@
+---
+// The chart recorder. Two pens write the readings of two light meters on one scale: one under the sky, one under the rocks.
+// Along the edge of the paper it prints the color each pixel comes out as. In the states listed in `solo` only the sky pen
+// writes. In the states listed in `boost`, the rock pen's reading is multiplied, the way we brighten the picture.
+import { recorderMarkup } from '../../../lib/photography/lake/recorder.js'
+import '../../../../.agents/skills/anatomy/kit/iso.css'
+interface Props { show: string; solo: string; boost: string }
+const { show, solo, boost } = Astro.props
+---
+<div class="layer iso recorder-art" data-show={show} data-on="false" data-solo={solo} data-boost={boost}>
+  <Fragment set:html={recorderMarkup} />
+</div>

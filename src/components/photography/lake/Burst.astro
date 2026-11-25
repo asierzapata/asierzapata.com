@@ -1,7 +1,6 @@
 ---
 import Figure from './Figure.astro'
 import data from '../../../lib/photography/lake/data.json'
-import { origin } from './spot'
 const n = data.frames.length
 const reach = Math.max(...data.frames.flatMap(f => [Math.abs(f.dx), Math.abs(f.dy)]))
 const scale = 34 / Math.max(8, reach)
@@ -10,6 +9,8 @@ const last = Math.round(data.noise[n - 1] * 100)
 const { readings } = data.pixel
 const running = readings.map((_, i) => readings.slice(0, i + 1).reduce((a, b) => a + b) / (i + 1))
 const px = (i: number) => 66 + i * 40, py = (v: number) => 262 - (v - .7) / .65 * 88
+// The pixel we follow, as a place on the patch.
+const pin = `left:${((data.pixel.x + .5) / data.crop.width * 100).toFixed(3)}%;top:${((data.pixel.y + .5) / data.crop.height * 100).toFixed(3)}%`
 // On stage we double the frames each click. Every doubling is a step we can see.
 const walk = data.frames.map((_, i) => i + 1).filter(k => (k & (k - 1)) === 0)
 const steps = [
@@ -20,17 +21,15 @@ const steps = [
 ]
 ---
 <Figure kind="burst" label="Cheat two: noise averaged away across a burst" steps={steps}>
-  <div class="zoomer" style={`--o:${origin}`}>
-    <div class="layer" data-show="0 1" data-on="true">
-      <img data-flicker data-count={n} src="/photography/lake/frame-0.webp" width="512" height="384" alt={`The ${n} frames of the burst shown in turn: the grain changes every frame and the scene shifts by a few pixels.`} loading="lazy" />
-      <div class="strip">{data.frames.map((_, i) => <img src={`/photography/lake/frame-${i}.webp`} width="512" height="384" alt="" loading="lazy" />)}</div>
-    </div>
-    <div class="layer" data-show="2" data-on="false"><img src="/photography/lake/unaligned.webp" width="512" height="384" alt={`The ${n} frames averaged without alignment: the grain is gone but the rocks are smeared.`} loading="lazy" /></div>
-    <div class="layer" data-show="3" data-on="false"><img data-stack-image src="/photography/lake/stack-1.webp" width="512" height="384" alt="The frames aligned and averaged: the more frames, the cleaner the picture." loading="lazy" /></div>
+  <div class="layer" data-show="0 1" data-on="true">
+    <img data-flicker data-count={n} src="/photography/lake/frame-0.webp" width="512" height="384" alt={`The ${n} frames of the burst shown in turn: the grain changes every frame and the scene shifts by a few pixels.`} loading="lazy" />
+    <div class="strip">{data.frames.map((_, i) => <img src={`/photography/lake/frame-${i}.webp`} width="512" height="384" alt="" loading="lazy" />)}</div>
   </div>
+  <div class="layer" data-show="2" data-on="false"><img src="/photography/lake/unaligned.webp" width="512" height="384" alt={`The ${n} frames averaged without alignment: the grain is gone but the rocks are smeared.`} loading="lazy" /></div>
+  <div class="layer" data-show="3" data-on="false"><img data-stack-image src="/photography/lake/stack-1.webp" width="512" height="384" alt="The frames aligned and averaged: the more frames, the cleaner the picture." loading="lazy" /></div>
   <div class="layer overlay" data-show="0" data-on="true"><span class="chip l" data-frame-chip>frame 1 of {n}</span></div>
   <div class="layer overlay" data-show="1" data-on="false">
-    <i class="pin"></i>
+    <i class="pin" style={pin}></i>
     <svg class="readings" data-label viewBox="0 0 400 300" role="img" aria-label={`The same pixel in each of the ${n} frames. The readings scatter from ${Math.round(Math.min(...readings) * 100)}% to ${Math.round(Math.max(...readings) * 100)}% of their average, and the average of the readings so far settles as frames are added.`}>
       <rect x="30" y="150" width="340" height="136" rx="6" />
       <text x="42" y="170">one pixel, {n} readings</text>

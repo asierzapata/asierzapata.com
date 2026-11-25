@@ -59,6 +59,18 @@
 .sensor-art .gold :is(.iso-fill,.iso-top){fill:#a8842f}
 .sensor-art .ray{fill:none;stroke:var(--c);stroke-width:1.6;stroke-linecap:round;stroke-dasharray:2 6;animation:iso-flow 1100ms linear infinite reverse}
 
+/* The chart recorder. The paper is the lightest thing in it, and each pen writes in its own color. */
+.recorder-art{background:#0b0d12}
+.recorder-art svg{width:100%;height:100%}
+.recorder-art .paper :is(.iso-fill,.iso-top){fill:#262c37}
+.recorder-art .paper .iso-shade{fill:#1b1f27}
+.recorder-art .trace{fill:none;stroke:var(--c);stroke-width:1.8;stroke-linejoin:round;stroke-linecap:round}
+.recorder-art :is(.ink .iso-top,.pip){fill:var(--c)}
+.recorder-art .pointer{fill:none;stroke:#fff;stroke-width:1.4;stroke-linecap:round}
+.recorder-art .lamp{fill:#7ee2a8}
+.recorder-art .stamps path{stroke:#0b0d12;stroke-width:.6}
+.recorder-art .charge{transition:fill .12s ease}
+.chip i.ink{display:inline-block;width:.7em;height:.7em;margin-right:.55em;border-radius:50%;background:#e8edf7}.chip i.ink.rock{background:#fbbf24}
 
 .locator{position:absolute;left:12px;top:12px;width:26%;border:2px solid #fff;box-shadow:0 2px 12px #0008}
 .locator img{display:block;width:100%;height:auto}
@@ -71,9 +83,9 @@
 .shake rect{fill:#14202edd;stroke:#3b465c}.shake path{stroke:#3b465c;stroke-width:1;fill:none}
 .shake circle{fill:#fbbf24;transition:transform .7s ease}
 [data-fig="burst"][data-state="3"] .shake circle{transform:none!important}
-/* The same spot, six times closer, in the noise figure and in the burst. */
-[data-fig="noise"][data-state="1"] .zoomer,[data-fig="burst"]:is([data-state="0"],[data-state="1"]) .zoomer{transform:scale(6)}
-.pin{position:absolute;left:50%;top:50%;width:3.2%;aspect-ratio:1;translate:-50% -50%;outline:2px solid #fbbf24;box-shadow:0 0 0 1px #0009}
+/* The noise figure looks at one spot six times closer. The burst stays on the whole patch and pins the same spot. */
+[data-fig="noise"][data-state="1"] .zoomer{transform:scale(6)}
+.pin{position:absolute;width:3.2%;aspect-ratio:1;translate:-50% -50%;outline:2px solid #fbbf24;box-shadow:0 0 0 1px #0009}
 .readings{position:absolute;inset:0;width:100%;height:100%}
 .readings rect{fill:#0d1320ee;stroke:#3b465c}
 .readings text{font-family:ui-monospace,monospace;fill:#d5dceb}.readings .tick,.readings .key{fill:#8d99b0}

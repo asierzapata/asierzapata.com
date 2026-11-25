@@ -81,6 +81,138 @@ function mountSensor(fig: HTMLElement, art: HTMLElement) {
   const timer = window.setInterval(() => !fig.isConnected ? clearInterval(timer) : art.dataset.on === 'true' && paint(), 800)
 }
 
+/** The chart recorder: two pens keep writing the readings of two light meters on moving paper, and a print head
+ * stamps the color each pixel comes out as. In the states `data-solo` lists only the sky pen writes. In the states
+ * `data-boost` lists, the rock pen's reading is multiplied, like brightening the picture. */
+type Recorder = {
+  origin: [number, number]; ux: [number, number]; uy: [number, number]; unit: number; white: number
+  step: number; speed: number; length: number; feed: number; gain: number
+  stamp: { size: number; every: number; half: number; from: number }
+  pens: Record<string, { mean: number; sd: number; lead: number; lane: number; tint: number[] }>
+  knob: { centre: [number, number]; r: number; from: number; span: number; stops: number }
+}
+function mountRecorder(fig: HTMLElement, art: HTMLElement) {
+  const svg = art.querySelector<SVGSVGElement>('svg')!
+  const spec: Recorder = JSON.parse(svg.dataset.spec!)
+  const boost = art.dataset.boost!.split(' '), solo = art.dataset.solo!.split(' ')
+  const feed = svg.querySelector<SVGGElement>('.feed')!, stamps = svg.querySelector<SVGGElement>('.stamps')!
+  const pointer = svg.querySelector<SVGPathElement>('.meter[data-pen="rock"] .pointer')!
+  const count = Math.ceil(spec.length / spec.step) + 2
+  type Stamp = { y: number; node: SVGPathElement }
+  const pens = Object.entries(spec.pens).map(([name, stats]) => ({
+    ...stats, dark: name === 'rock', values: [] as number[], next: 0, written: 0, printed: [] as Stamp[],
+    trace: svg.querySelector<SVGPathElement>(`.trace[data-pen="${name}"]`)!,
+    carriage: svg.querySelector<SVGGElement>(`.carriage[data-pen="${name}"]`)!,
+    charge: svg.querySelector<SVGPathElement>(`.meter[data-pen="${name}"] .charge`)!,
+  }))
+  type Pen = (typeof pens)[number]
+  // Three uniform draws make a bell-shaped error with a spread of one.
+  const bell = () => (Math.random() + Math.random() + Math.random() - 1.5) * 2
+  const target = () => boost.includes(fig.dataset.state!) ? spec.gain : 1
+  const writing = (pen: Pen) => !(pen.dark && solo.includes(fig.dataset.state!))
+  let gain = 1, phase = 0, fed = 0, due = 0, last = 0, frame = 0, visible = false, shown = false
+  const light = (pen: Pen) => Math.max(0, pen.mean + pen.sd * bell())
+  // The meter reads the light. The knob multiplies that reading afterwards, error included.
+  const read = (pen: Pen, show = true) => {
+    const raw = light(pen)
+    if (show) { const grey = Math.round(28 + 227 * Math.sqrt(Math.min(1, raw / spec.white))); pen.charge.style.fill = `rgb(${grey},${grey},${grey})` }
+    return Math.min(spec.white, raw * (pen.dark ? gain : 1))
+  }
+  // A pixel's color takes three readings: red, green and blue. Each has its own error.
+  const print = (pen: Pen, y: number) => {
+    const node = stamps.appendChild(document.createElementNS('http://www.w3.org/2000/svg', 'path'))
+    const scale = (pen.dark ? gain : 1) / spec.white
+    node.setAttribute('fill', `rgb(${pen.tint.map(c => Math.round(255 * c * Math.min(1, light(pen) * scale) ** (1 / 2.2))).join(',')})`)
+    pen.printed.push({ y, node })
+  }
+  const clear = (pen: Pen) => { pen.printed.forEach(one => one.node.remove()); pen.printed = []; pen.written = 0 }
+  const fill = () => {
+    due = 0
+    for (const pen of pens) {
+      clear(pen)
+      pen.values = Array.from({ length: count }, () => read(pen, false)); pen.next = read(pen)
+      if (!writing(pen)) continue
+      pen.written = Infinity
+      for (let y = spec.stamp.from; y < spec.length; y += spec.stamp.every) print(pen, y)
+    }
+  }
+  const at = (value: number, y: number) => {
+    const x = value * spec.unit
+    return `${(spec.origin[0] + spec.ux[0] * x + spec.uy[0] * y).toFixed(1)} ${(spec.origin[1] + spec.ux[1] * x + spec.uy[1] * y).toFixed(1)}`
+  }
+  const paint = () => {
+    const part = phase / spec.step
+    for (const pen of pens) {
+      // The pen is on its way from the last reading to the next one. A pen that is not writing waits on zero.
+      const on = writing(pen), head = on ? pen.values[0] + (pen.next - pen.values[0]) * part : 0
+      let d = ''
+      if (on) {
+        // A pen that sits further along the paper starts its line there, and a line is only as long as the pen has written.
+        d = `M${at(head, pen.lead)}`
+        for (let j = 0; j < pen.values.length; j++) {
+          const run = (part + j) * spec.step
+          if (run > pen.written) break
+          d += `L${at(pen.values[j], pen.lead + run)}`
+          if (pen.lead + run >= spec.length) break
+        }
+      }
+      pen.trace.setAttribute('d', d)
+      const x = head * spec.unit
+      pen.carriage.setAttribute('transform', `translate(${(spec.ux[0] * x).toFixed(2)} ${(spec.ux[1] * x).toFixed(2)})`)
+      for (const { y, node } of pen.printed) {
+        const end = Math.min(spec.length, y + spec.stamp.size), lo = pen.lane - spec.stamp.half, hi = pen.lane + spec.stamp.half
+        node.setAttribute('d', `M${at(lo, y)}L${at(hi, y)}L${at(hi, end)}L${at(lo, end)}Z`)
+      }
+    }
+    feed.setAttribute('transform', `translate(${(spec.uy[0] * fed).toFixed(2)} ${(spec.uy[1] * fed).toFixed(2)})`)
+    const { centre, r, from, span, stops } = spec.knob, angle = from + span * Math.log2(gain) / stops
+    const dx = r * Math.sin(angle), dy = -r * Math.cos(angle)
+    pointer.setAttribute('d', `M${centre[0]} ${centre[1]}L${(centre[0] + spec.ux[0] * dx + spec.uy[0] * dy).toFixed(1)} ${(centre[1] + spec.ux[1] * dx + spec.uy[1] * dy).toFixed(1)}`)
+  }
+  const tick = (now: number) => {
+    frame = 0
+    if (!fig.isConnected) return
+    const dt = Math.min(.05, (now - last) / 1000), move = spec.speed * dt
+    last = now
+    // The knob turns over about a second, evenly in stops, so the pen swings out instead of jumping.
+    gain = Math.exp(Math.log(gain) + (Math.log(target()) - Math.log(gain)) * (1 - Math.exp(-dt / .3)))
+    phase += move
+    fed = (fed + move) % spec.feed
+    due += move
+    const stamp = due >= spec.stamp.every
+    if (stamp) due -= spec.stamp.every
+    for (const pen of pens) {
+      for (const one of pen.printed) one.y += move
+      pen.printed = pen.printed.filter(one => one.y < spec.length || (one.node.remove(), false))
+      if (!writing(pen)) { if (pen.written) clear(pen); continue }
+      pen.written += move
+      if (stamp) print(pen, spec.stamp.from)
+    }
+    while (phase >= spec.step) {
+      phase -= spec.step
+      for (const pen of pens) { pen.values.unshift(pen.next); pen.values.length = count; pen.next = read(pen) }
+    }
+    paint()
+    run()
+  }
+  const run = () => {
+    if (frame || !visible || art.dataset.on !== 'true' || reduced()) return
+    frame = requestAnimationFrame(tick)
+  }
+  const update = () => {
+    const on = art.dataset.on === 'true'
+    // Arriving at the recorder, or with motion turned off, the paper already shows the state we are in.
+    if ((on && !shown) || reduced()) { gain = target(); fill(); paint() }
+    shown = on
+    last = performance.now()
+    run()
+  }
+  fill(); paint()
+  fig.addEventListener('fig:state', update)
+  // We watch the drawing and not the figure: in the wide presenter layout the figure has no box of its own.
+  new IntersectionObserver(entries => { visible = entries.at(-1)!.isIntersecting; last = performance.now(); run() }).observe(art)
+}
+
 function mountExposure(fig: HTMLElement) {
   const range = fig.querySelector<HTMLInputElement>('[data-ev]')!
   const image = fig.querySelector<HTMLImageElement>('[data-ev-image]')!
@@ -209,6 +341,7 @@ export function mountLake() {
     const frame = fig.querySelector<HTMLElement>('.fig-frame')
     if (frame) new ResizeObserver(() => fig.style.setProperty('--frame-h', `${frame.offsetHeight}px`)).observe(frame)
     fig.querySelectorAll<HTMLElement>('.sensor-art').forEach(art => mountSensor(fig, art))
+    fig.querySelectorAll<HTMLElement>('.recorder-art').forEach(art => mountRecorder(fig, art))
     // The ending wipes its two halves apart the first time it is really on screen.
     if (fig.dataset.fig === 'recap' && frame) new IntersectionObserver((entries, observer) => {
       if (!entries.some(e => e.isIntersecting)) return

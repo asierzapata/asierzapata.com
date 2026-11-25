@@ -2,11 +2,15 @@
 import Figure from './Figure.astro'
 import Locator from './Locator.astro'
 import SensorArt from './SensorArt.astro'
+import RecorderArt from './RecorderArt.astro'
 import { origin } from './spot'
 const steps = [
   { title: 'After the first cheat', text: `This is our crop after the first cheat, brightened so we can see the rocks. See all those speckles?` },
 { title: 'Noise', text: `They weren't in the real world. That's noise (or grain), and it's one of those things that can make a photo look bad (or good to be honest, but usually bad).` },
   { title: 'Where it comes from', text: `It comes from the sensor itself. Nothing in the scene is changing, and still every meter reads a slightly different number each time, because the electronics and the heat add a small random error. These rocks got very little light, so that error is a big part of each number.` },
+  { title: 'In the light, the error is small', text: `Here is one of those meters, wired to a pen. It sits under the sky, and each of its readings is off by about 2%, so the line stays almost steady. Along the edge of the paper, the recorder prints the color the pixel comes out as each time. It is always the same.` },
+  { title: 'In the dark, there is almost nothing to read', text: `A second pen, wired to a meter under the rocks, on the same scale. So little light reaches it that the line barely leaves zero, and the pixel prints as black.` },
+  { title: 'Brightened, a third of it is error', text: `To see the rocks we brighten them until they read as much as the sky. Now both lines sit at the same height, and we can see what was hiding near zero: a third of every reading is error. That is why the same pixel prints as a different color every time.` },
 ]
 ---
 <Figure kind="noise" label="The noise in a single frame" steps={steps}>
@@ -17,4 +21,8 @@ const steps = [
   <div class="layer overlay" data-show="1" data-on="false"><span class="chip l">one frame, up close</span></div>
   <SensorArt show="2" wobble />
   <div class="layer overlay" data-show="2" data-on="false"><span class="chip l">same light, flickering meters</span></div>
+  <RecorderArt show="3 4 5" solo="3" boost="5" />
+  <div class="layer overlay" data-show="3 4 5" data-on="false"><span class="chip l"><i class="ink sky"></i>sky: 2% error</span></div>
+  <div class="layer overlay" data-show="4" data-on="false"><span class="chip r"><i class="ink rock"></i>rocks: 32% error</span></div>
+  <div class="layer overlay" data-show="5" data-on="false"><span class="chip r"><i class="ink rock"></i>rocks, brightened: still 32% error</span></div>
 </Figure>
