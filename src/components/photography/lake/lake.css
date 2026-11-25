@@ -211,3 +211,6 @@ kbd{font:11px ui-monospace,monospace;border:1px solid var(--color-border-strong)
 }
 /* A label that has the picture to itself may use its whole width. Only paired labels are held to their half. */
 .chip:only-child{max-width:calc(100% - 24px)}
+
+/* Color names in the prose take the color of their filter. */
+.reading .c-r{color:#dc2626}.reading .c-g{color:#15803d}.reading .c-b{color:#2563eb}

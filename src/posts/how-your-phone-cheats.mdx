@@ -53,11 +53,11 @@ export const times = ev => (2 ** ev).toFixed(1).replace(/\.0$/, '')
 <p class="eyebrow">Disecting a photograph</p>
 <h2 id="the-photo">What your camera truly sees</h2>
 
-Photography is one of my biggest hobbies, its one of my favorite ways to experiment a new place when traveling. And I always come back to thinking about how amazing phone photos are with such contrained hardware. We have all had a few phones on our lives, and over the years I'm sure you've noticed their photos going from pretty bad to surprisingly good. Good enough that most people never think about byuing a camera anymore.
+Photography is one of my biggest hobbies, its one of my favorite ways to experiment a new place when traveling. And I always come back to thinking about how amazing phone photos are with such contrained hardware. We have all had a few phones on our lives, and over the years I'm sure you've noticed their photos going from <b>pretty bad</b> to <b>surprisingly good</b>. Good enough that most people never think about byuing a camera anymore.
 
-The incredible part is that the jump in quality didn't come from hardware mainly, it came from software! In this post, I wanted to explore how software is able to make such a difference in the final image and show you the tricks behind it.
+The incredible part is that the jump in quality didn't come from hardware mainly, <b>it came from software</b>! In this post, I wanted to explore how software is able to make such a difference in the final image and show you the tricks behind it.
 
-To do so, we will look at a photo taken at sunset with a Nexus 6P (yeah, feeling old?). I picked this one because Google later published the raw data from the sensore as part oof a research dataset, so we have both things to compare side by side: a finished photo and what truly the camera "saw".
+To do so, we will look at a photo taken at sunset with a Nexus 6P (yeah, feeling old?). I picked this one because Google later published the <b>raw data</b> from the sensore as part oof a research dataset, so we have both things to compare side by side: a <b>finished photo</b> and <b>what truly the camera "saw"</b>.
 
 </div>
 
@@ -65,12 +65,12 @@ To do so, we will look at a photo taken at sunset with a Nexus 6P (yeah, feeling
 
 <div class="reading">
 <p class="thesis">Everything between these two pictures is software.</p>
-<p>To get from one to the other, the phone cheats three times, and each cheat goes a bit further than the one before. Let's follow them in order on this one photo.</p>
+<p>To get from one to the other, the phone does <b>three different cheats</b>, and each cheat makes the photo a bit better. Let's follow them in order to see how they change the photo.</p>
 </div>
 </section>
 
 <section class="beat say" data-beat aria-hidden="true">
-<p>Between those two pictures, the phone <b>cheats three times</b>.</p>
+<p>Between those two pictures, the phone does <b>three different cheats</b>.</p>
 </section>
 
 <section class="beat say" data-beat aria-hidden="true">
@@ -79,21 +79,21 @@ To do so, we will look at a photo taken at sunset with a Nexus 6P (yeah, feeling
 
 <section class="beat" data-beat>
 <div class="reading">
-<p class="eyebrow">Cheat 1 / Neighboring pixels</p>
-<h2 id="cheat-one">Your sensor is color-blind.</h2>
-<p>First things first: why is the sensor's picture gray? It comes down to how a sensor is built, and it has two parts.</p>
+<p class="eyebrow">Cheat 1 / Color and Neighboring pixels</p>
+<h2 id="cheat-one">Your camera is color-blind.</h2>
+<p>First things first: <b>why the camera "sees" gray?</b> The why, it comes down to how a camera sensor is built, and it has two parts.</p>
 </div>
 
 <Sensor />
 
 <div class="reading">
-<p class="thesis">One pixel, one number, one color.</p>
-<p>So the camera is color-blind, up to a point. It only sees how much light there is, and the filters are what give each number a color. The sensor in this phone has {megapixels} million of these pixels, with twice as many green ones as red or blue, because our eyes are most sensitive to green. That layout is called a Bayer pattern, after Bryce Bayer, who came up with it at Kodak in the seventies. Almost every camera still uses it, the big ones too.</p>
+<p class="thesis">Each pixel is just one number for one color.</p>
+<p>So the camera is color-blind, up to a point. It only sees <b>how much light there is</b>, and the filters are what give each number a color. The sensor in the Nexus phone has {megapixels} million of these pixels, with <b>twice as many <b class="c-g">green</b> ones</b> as <b class="c-r">red</b> or <b class="c-b">blue</b>, because our eyes are most sensitive to green. This is due to how they are laid out on the sensor, with a pattern of squares of <b class="c-g">Green</b>, <b class="c-b">Blue</b>, <b class="c-g">Green</b>, <b class="c-r">Red</b> pixels. That layout is called a <b>Bayer pattern</b>, after Bryce Bayer, who came up with it at Kodak in the seventies. Almost every camera still uses it, the big ones too.</p>
 </div>
 </section>
 
 <section class="beat say" data-beat aria-hidden="true">
-<p>A photo needs <b>three colors</b> in every pixel. The sensor only measured <b>one</b>.</p>
+<p>A photo needs <b>three colors</b> in every pixel, but the sensor only measured <b>one</b>.</p>
 </section>
 
 <Agenda at={1} />
@@ -101,14 +101,14 @@ To do so, we will look at a photo taken at sunset with a Nexus 6P (yeah, feeling
 <section class="beat cont" data-beat>
 <div class="reading">
 <h2 id="a-third-of-a-photo">A third of a photo</h2>
-<p>And here is the problem. A photo needs three colors in every pixel, and the sensor only measured one. That leaves the phone with a third of a photo, so the first cheat is that it guesses the rest. We can watch it happen on a small piece of ours.</p>
+<p>But here is the problem with how the sensor is laid out, what a photo needs is three colors in every pixel, but the sensor only measured one. That leaves the phone with a third of a photo, so the first cheat is that it kinda guesses the rest. Lets see it happen in a small patch of our photo.</p>
 </div>
 
 <Mosaic />
 
 <div class="reading">
 <p class="thesis">Two thirds of the color in this photo was never measured.</p>
-<p>The guess we use on this page is the simplest one: the average of the closest pixels that did measure that color. Real phones use smarter guesses that follow edges, but the idea is the same. Engineers call this step demosaicing, in case you want to look it up.</p>
+<p>The guess we use on this page is the simplest one: the average of the closest pixels that did measure that color. Real phones use smarter guesses that follow edges, but the idea is the same. Engineers call this step <b>demosaicing</b>, in case you want to look it up.</p>
 <p>And this isn't special to our photo. Nearly every photo any phone takes works like this. It works because neighboring pixels usually look alike, and it fails in small ways where they don't. If you have ever seen odd colored ripples on a striped shirt or a distant fence, that was this guess going wrong.</p>
 </div>
 </section>
@@ -120,8 +120,8 @@ To do so, we will look at a photo taken at sunset with a Nexus 6P (yeah, feeling
 <section class="beat" data-beat>
 <div class="reading">
 <p class="eyebrow">Cheat 2 / Neighboring moments</p>
-<h2 id="cheat-two">The color is there. So is the noise.</h2>
-<p>Guessing gave us color, and from far away the picture already looks like a photo. But if we look at it up close, it doesn't look that great.</p>
+<h2 id="cheat-two">Color and its dreaded enemy: Noise</h2>
+<p>Guessing gave us color, and from far away the picture already looks kinda like a photo. But if we look at it up close, it doesn't look that great.</p>
 </div>
 
 <Noise />

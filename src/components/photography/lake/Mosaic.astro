@@ -14,8 +14,8 @@ const hood = `left:${pct((red.x - 1 - patch.x) / patch.w)};top:${pct((red.y - 1 
 const steps = [
   { title: 'A piece of the raw data', text: `Back to our photo. This is a small window on the shoreline, exactly as the sensor stored it. We brightened it so we can see into the shadows.` },
   { title: 'Zoom in', text: `Zoom in until each square is one pixel. Each one is a single brightness number.` },
-  { title: 'Which filter', text: `Now paint each pixel with the color of the filter it had on top. Every pixel measured red, green or blue. Never all three.` },
-  { title: 'Ask the neighbors', text: `So the phone guesses the other two by asking the neighbors. This red pixel takes its green from the four green pixels touching it, and its blue from the four at its corners.` },
+  { title: 'Which filter', text: `Now paint each pixel with the color of the filter it had on top. Every pixel measured red, green or blue.` },
+{ title: 'Ask the neighbors', text: `So the phone guesses the other two by asking the neighbors. This red pixel averages its green from the four green pixels touching it, and its blue from the four at its corners.` },
   { title: 'Every pixel', text: `Do the same for every pixel and the color shows up.` },
   { title: 'Zoom out', text: `Zoomed back out. On the left, what the phone measured. On the right, the same data plus the guesses.` },
 ]
