@@ -8,7 +8,7 @@
 .fig-frame{--w:min(100cqi,calc((100svh - 7rem)*4/3));--h:calc(var(--w)*3/4 + 48px);width:var(--w);margin-inline:auto;position:sticky;top:calc((100svh - var(--h))/2);background:#fbfcfe;border:1px solid var(--color-border-strong);border-radius:7px;overflow:hidden;box-shadow:0 8px 32px #1e40af0f}
 /* The picture inside the border gets a whole number of pixels, in a multiple of four so its 4:3 height is whole too. A fraction of a pixel there becomes several pixels once we zoom in sixteen times, and the outlines drawn on top stop lining up. Every rule below sets --w, never the width. */
 @supports (width:round(down,1px,1px)){.fig-frame{width:calc(round(down,var(--w) - 2px,4px) + 2px)}}
-.fig-stage{position:relative;aspect-ratio:4/3;overflow:hidden;background:#05070c;color:#d5dceb;container-type:inline-size}
+.fig-stage{position:relative;aspect-ratio:4/3;overflow:hidden;background:#05070c;color:var(--ink);container-type:inline-size;--panel:#fffffff0;--ink:#1f2937;--ink-soft:#4b5567;--rule:#c3cad8;--mark:#9a3412;--lift:0 0 0 1px #0f172a24,0 1px 4px #0f172a2e}
 .fig-stage .layer{position:absolute;inset:0;transition:opacity .4s ease,visibility .4s}
 .fig-stage .layer>img{display:block;width:100%;height:100%;object-fit:cover}
 /* Hard pixel edges only while zoomed in. Zoomed out they cause moire. */
@@ -20,7 +20,7 @@
 .chip,.tally,.legend{font:var(--label)/1.4 ui-monospace,monospace}
 /* Text inside an SVG is sized in the drawing's own units. The script sets --u to units per pixel, so it matches the chips. */
 .fig-stage svg[data-label] text{font-size:calc(var(--label)*var(--u,.5))}
-.chip{position:absolute;top:12px;max-width:calc(50% - 18px);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding:.5em .8em;border-radius:5px;background:#14202edd}.chip.l{left:12px}.chip.r{right:12px}
+.chip{position:absolute;top:12px;max-width:calc(50% - 18px);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding:.5em .8em;border-radius:5px;background:var(--panel);box-shadow:var(--lift)}.chip.l{left:12px}.chip.r{right:12px}
 /* One picture, two halves, a white seam between them. */
 .split>img{position:absolute;inset:0}.split>img.half{clip-path:inset(0 0 0 50%)}
 .split::after,.divided::after{content:"";position:absolute;left:50%;top:0;bottom:0;width:2px;margin-left:-1px;background:#fff;box-shadow:0 0 6px #0008}
@@ -40,9 +40,9 @@
 /* One red pixel and the eight around it. Everything else steps back. */
 .hood{position:absolute;outline:2px solid #fff;box-shadow:0 0 0 100vmax #05070c99}
 .hood i{position:absolute;inset:33.33%;outline:2px solid #fbbf24}
-.tally{position:absolute;left:12px;top:12px;display:flex;gap:14px;padding:7px 11px;border-radius:5px;background:#14202edd}
+.tally{position:absolute;left:12px;top:12px;display:flex;gap:14px;padding:7px 11px;border-radius:5px;background:var(--panel);box-shadow:var(--lift)}
 .tally span{display:flex;align-items:center;gap:4px}
-.tally i{width:11px;height:11px;border-radius:2px;border:1px dashed #8d99b0}.tally i.m{border:0;background:linear-gradient(90deg,#ef4444 0 33%,#22c55e 0 66%,#3b82f6 0)}
+.tally i{width:11px;height:11px;border-radius:2px;border:1px dashed var(--ink-soft)}.tally i.m{border:0;background:linear-gradient(90deg,#dc2626 0 33%,#15803d 0 66%,#2563eb 0)}
 .measured{clip-path:inset(0 0 0 0);transition:opacity .4s ease,visibility .4s,clip-path .8s ease}
 [data-fig="mosaic"][data-state="5"] .measured{clip-path:inset(0 50% 0 0)}
 .zoom-target{position:absolute;outline:2px solid #fbbf24;box-shadow:0 0 0 1px #0009}
@@ -61,7 +61,7 @@
 
 /* The chart recorder. The paper is the lightest thing in it, and each pen writes in its own color. */
 .recorder-art{background:#f1f3f7;color:#26262a}
-.recorder-art [data-pen="sky"]{--c:#2563eb!important}.recorder-art [data-pen="rock"]{--c:#d97706!important}
+.recorder-art [data-pen="sky"]{--c:#2563eb!important}.recorder-art [data-pen="rock"]{--c:#b45309!important}
 .recorder-art svg{width:100%;height:100%}
 .recorder-art .paper :is(.iso-fill,.iso-top){fill:#fff}
 .recorder-art .paper .iso-shade{fill:#dfe3ea}
@@ -71,43 +71,43 @@
 .recorder-art .lamp{fill:#30a46c}
 .recorder-art .stamps path{stroke:#f1f3f7;stroke-width:.6}
 .recorder-art .charge{transition:fill .12s ease}
-.chip i.ink{display:inline-block;width:.7em;height:.7em;margin-right:.55em;border-radius:50%;background:#60a5fa}.chip i.ink.rock{background:#fbbf24}
+.chip i.ink{display:inline-block;width:.7em;height:.7em;margin-right:.55em;border-radius:50%;background:#2563eb}.chip i.ink.rock{background:var(--mark)}
 
 .locator{position:absolute;left:12px;top:12px;width:26%;border:2px solid #fff;box-shadow:0 2px 12px #0008}
 .locator img{display:block;width:100%;height:auto}
 .locator span{position:absolute;outline:2px solid #fbbf24;box-shadow:0 0 0 1px #0009}
 
 /* Cheat two. */
-.strip{display:none;position:absolute;inset:0;grid-template-columns:repeat(4,1fr);align-content:end;gap:4px;padding:10px;background:#05070c}
+.strip{display:none;position:absolute;inset:0;grid-template-columns:repeat(4,1fr);align-content:end;gap:4px;padding:10px;background:#f1f3f7}
 .strip img{width:100%;height:auto;image-rendering:pixelated}
 .shake{position:absolute;right:12px;top:12px;width:26%;min-width:92px}
-.shake rect{fill:#14202edd;stroke:#3b465c}.shake path{stroke:#3b465c;stroke-width:1;fill:none}
-.shake circle{fill:#fbbf24;transition:transform .7s ease}
+.shake rect{fill:var(--panel);stroke:var(--rule)}.shake path{stroke:var(--rule);stroke-width:1;fill:none}
+.shake circle{fill:var(--mark);transition:transform .7s ease}
 [data-fig="burst"][data-state="3"] .shake circle{transform:none!important}
 /* The noise figure looks at one spot six times closer. The burst stays on the whole patch and pins the same spot. */
 [data-fig="noise"][data-state="1"] .zoomer{transform:scale(6)}
 .pin{position:absolute;width:3.2%;aspect-ratio:1;translate:-50% -50%;outline:2px solid #fbbf24;box-shadow:0 0 0 1px #0009}
 .readings{position:absolute;inset:0;width:100%;height:100%}
-.readings rect{fill:#0d1320ee;stroke:#3b465c}
-.readings text{font-family:ui-monospace,monospace;fill:#d5dceb}.readings .tick,.readings .key{fill:#8d99b0}
-.readings .mean{stroke:#8d99b0;stroke-width:1;stroke-dasharray:3 3;fill:none}
-.readings polyline{fill:none;stroke:#fff;stroke-width:2;stroke-linejoin:round}
-.readings circle{fill:#fbbf24;transform-box:fill-box;transform-origin:center;transition:opacity .2s cubic-bezier(.23,1,.32,1),transform .2s cubic-bezier(.23,1,.32,1);transition-delay:calc(.3s + var(--i)*.11s)}
+.readings rect{fill:var(--panel);stroke:var(--rule)}
+.readings text{font-family:ui-monospace,monospace;fill:var(--ink)}.readings .tick,.readings .key{fill:var(--ink-soft)}
+.readings .mean{stroke:var(--ink-soft);stroke-width:1;stroke-dasharray:3 3;fill:none}
+.readings polyline{fill:none;stroke:var(--ink);stroke-width:2;stroke-linejoin:round}
+.readings circle{fill:var(--mark);transform-box:fill-box;transform-origin:center;transition:opacity .2s cubic-bezier(.23,1,.32,1),transform .2s cubic-bezier(.23,1,.32,1);transition-delay:calc(.3s + var(--i)*.11s)}
 /* The readings land one at a time and the average is drawn along with them, so we watch it settle. Hidden, they reset at once. */
 .readings polyline{clip-path:inset(-4px 0 -4px 0);transition:clip-path .77s linear .4s}
 [data-on="false"]>.readings circle{opacity:0;transform:scale(.6);transition:none}
 [data-on="false"]>.readings polyline{clip-path:inset(-4px 100% -4px 0);transition:none}
-.shake circle{}.shake circle.ref{fill:#fff}
-.shake text{font-family:ui-monospace,monospace;fill:#d5dceb}
+.shake circle{}.shake circle.ref{fill:var(--ink)}
+.shake text{font-family:ui-monospace,monospace;fill:var(--ink)}
 
 /* Cheat three. */
-.legend{position:absolute;left:12px;bottom:12px;display:flex;align-items:center;gap:8px;padding:7px 11px;border-radius:5px;background:#14202edd}
+.legend{position:absolute;left:12px;bottom:12px;display:flex;align-items:center;gap:8px;padding:7px 11px;border-radius:5px;background:var(--panel);box-shadow:var(--lift)}
 .legend i{display:block;width:max(90px,18cqi);height:.8em;border-radius:2px}
 
 /* The ending: the three cheats sit on the seam between the two pictures, and arrive one after another. */
 .between{position:absolute;left:50%;top:50%;translate:-50% -50%;list-style:none;margin:0;padding:0;display:grid;gap:.7em;font:var(--label)/1.4 ui-monospace,monospace}
-.between li{display:flex;box-sizing:border-box;width:100%;margin:0;align-items:center;gap:.8em;padding:.55em .9em;border-radius:5px;background:#14202eee;white-space:nowrap;transition:opacity .4s cubic-bezier(.23,1,.32,1) calc(var(--i)*.14s),translate .4s cubic-bezier(.23,1,.32,1) calc(var(--i)*.14s)}
-.between b{font-weight:400;color:#fbbf24}
+.between li{display:flex;box-sizing:border-box;width:100%;margin:0;align-items:center;gap:.8em;padding:.55em .9em;border-radius:5px;background:var(--panel);box-shadow:var(--lift);white-space:nowrap;transition:opacity .4s cubic-bezier(.23,1,.32,1) calc(var(--i)*.14s),translate .4s cubic-bezier(.23,1,.32,1) calc(var(--i)*.14s)}
+.between b{font-weight:400;color:var(--mark)}
 /* They leave together and faster than they arrive. */
 [data-on="false"]>.between li{opacity:0;translate:-.8em 0;transition-duration:.2s;transition-delay:0s}
 /* Reduced motion keeps the fade and drops the slide. */
@@ -209,7 +209,7 @@ kbd{font:11px ui-monospace,monospace;border:1px solid var(--color-border-strong)
 .presenting .title-slide{display:flex;align-items:center;text-align:center}
 .presenting .title-slide+.beat{margin-top:0;padding-top:2svh;border:0}
 .talk-title{margin:0;max-width:16em;font-family:var(--font-serif);font-size:clamp(2.6rem,6vw,6rem);line-height:1.15;color:var(--color-primary);text-wrap:balance}
-.present-hud{position:fixed;right:14px;bottom:12px;z-index:50;padding:5px 10px;border-radius:5px;background:#0d1320d9;color:#aab4c8;font:11px ui-monospace,monospace;white-space:pre}
+.present-hud{position:fixed;right:14px;bottom:12px;z-index:50;padding:5px 10px;border-radius:5px;background:#fffffff0;color:#4b5567;box-shadow:0 0 0 1px #0f172a24;font:11px ui-monospace,monospace;white-space:pre}
 
 /* Presenter mode with room to spare: picture on the left, heading and the current step on the right. */
 @media(min-width:1100px) and (min-aspect-ratio:4/3){
