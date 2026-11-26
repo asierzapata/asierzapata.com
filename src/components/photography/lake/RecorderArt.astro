@@ -7,6 +7,6 @@ import '../../../../.agents/skills/anatomy/kit/iso.css'
 interface Props { show: string; solo: string; boost: string }
 const { show, solo, boost } = Astro.props
 ---
-<div class="layer iso recorder-art" data-show={show} data-on="false" data-solo={solo} data-boost={boost}>
+<div class="layer iso recorder-art" data-theme="light" data-show={show} data-on="false" data-solo={solo} data-boost={boost}>
   <Fragment set:html={recorderMarkup} />
 </div>

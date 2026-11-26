@@ -6,6 +6,6 @@ import '../../../../.agents/skills/anatomy/kit/iso.css'
 interface Props { show: string; on?: boolean; wobble?: boolean }
 const { show, on = false, wobble = false } = Astro.props
 ---
-<div class="layer iso sensor-art" data-show={show} data-on={String(on)} data-wobble={wobble ? '' : undefined}>
+<div class="layer iso sensor-art" data-theme="light" data-show={show} data-on={String(on)} data-wobble={wobble ? '' : undefined}>
   <Fragment set:html={sensorMarkup} />
 </div>
