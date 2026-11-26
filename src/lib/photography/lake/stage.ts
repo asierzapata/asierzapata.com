@@ -16,8 +16,9 @@ export function setState(fig: HTMLElement, next: number) {
   const title = fig.querySelector(`[data-step="${state}"] strong`)?.textContent
   const foot = fig.querySelector<HTMLElement>('[data-foot]')
   // On stage the count leaves out the steps that only readers get.
-  const shown = presenting() ? count - fig.querySelectorAll('[data-talk="false"]').length : count
-  if (foot) foot.textContent = `${state + 1} / ${shown} · ${title}`
+  const spoken = [...fig.querySelectorAll<HTMLElement>('[data-step]')].filter(li => !presenting() || li.dataset.talk !== 'false')
+  const place = spoken.findIndex(li => Number(li.dataset.step) === state) + 1
+  if (foot) foot.textContent = `${place} / ${spoken.length} · ${title}`
   fig.dispatchEvent(new CustomEvent('fig:state', { detail: state }))
 }
 

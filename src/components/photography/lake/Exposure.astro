@@ -8,10 +8,10 @@ const long = data.fuse.longEv, n = data.frames.length
 const steps = [
   { title: 'Shoot dark', text: `First, it shoots dark on purpose. All ${n} frames were exposed for the sky, because a sky that burns out to white is gone for good, and dark rocks can still be brightened later.` },
   { title: 'Make a bright version', text: `Then the software makes a second version of that same picture, ×${times(long)} brighter. It doesn't measure anything new, it just multiplies the dark one. (That's why the second cheat had to come first: multiply the shadows and you multiply their noise too.)` },
-  { title: 'Choose, area by area', text: `Now it goes area by area and picks the version that looks better there, not too dark and not washed out. White means the bright one, black means the dark one.` },
-  { title: 'Blend them', text: `Blend the two following that map and we get the sunset and the rocks in one picture. Our blend is pretty rough, though: that pale glow along the ridge gives it away.` },
-  { title: 'What the phone did', text: `And this is what the phone did. Same idea, done with a lot more care: no glow on the ridge, plus contrast and color tuned on top.` },
-  { title: 'Where it brightened', text: `If we divide the phone's photo by our dark version, we can see how much it brightened each area: about ×${times(skyEv)} in the sky and ×${times(groundEv)} on the ground.`, talk: false },
+  { title: 'Choose, area by area', text: `Now it goes area by area and picks the version that looks better there, not too dark and not washed out. White means the bright one, black means the dark one.`, talk: false },
+  { title: 'Blend them', text: `Blend the two following that map and we get the sunset and the rocks in one picture. Our blend is pretty rough, though: that pale glow along the ridge gives it away.`, talk: false },
+  { title: 'Where the phone brightened', text: `This map shows how much the phone itself brightened each area: about ×${times(skyEv)} in the sky and ×${times(groundEv)} on the ground.` },
+  { title: 'What the phone showed', text: `And this is the phone's photo: the sunset and the rocks in one picture, with contrast and color tuned on top.` },
 ]
 ---
 <Figure kind="exposure" label="Cheat three: different brightness for different regions" steps={steps}>
@@ -27,9 +27,9 @@ const steps = [
     <div class="legend"><span>dark version</span><i style="background:linear-gradient(90deg,#000,#fff);outline:1px solid #3b465c"></i><span>bright version</span></div>
   </div>
   <div class="layer" data-show="3" data-on="false"><img src="/photography/lake/fused.webp" width="1008" height="756" alt="Our blend of the two versions: the sunset keeps its color and the rocks are visible, with a faint pale glow along the ridge." loading="lazy" /></div>
-  <div class="layer" data-show="4" data-on="false"><img src="/photography/lake/phone.webp" width="1008" height="756" alt="The phone's finished photo: the sunset keeps its color and the rocks are visible." loading="lazy" /></div>
-  <div class="layer" data-show="5" data-on="false"><img src="/photography/lake/gain.webp" width="1008" height="756" alt="A map of how much the phone brightened each area: the sky is dark blue, barely touched, and the ground glows orange and yellow." loading="lazy" /></div>
-  <div class="layer overlay" data-show="5" data-on="false">
+  <div class="layer" data-show="5" data-on="false"><img src="/photography/lake/phone.webp" width="1008" height="756" alt="The phone's finished photo: the sunset keeps its color and the rocks are visible." loading="lazy" /></div>
+  <div class="layer" data-show="4" data-on="false"><img src="/photography/lake/gain.webp" width="1008" height="756" alt="A map of how much the phone brightened each area: the sky is dark blue, barely touched, and the ground glows orange and yellow." loading="lazy" /></div>
+  <div class="layer overlay" data-show="4" data-on="false">
     <div class="legend"><span>×{times(scaleEv[0])}</span><i style={`background:${gradient}`}></i><span>×{times(scaleEv[1])}</span></div>
   </div>
 </Figure>

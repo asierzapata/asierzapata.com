@@ -100,6 +100,7 @@ To do so, we will look at a photo taken at sunset with a Nexus 6P (yeah, feeling
 
 <section class="beat cont" data-beat>
 <div class="reading">
+<p class="eyebrow slide-only">Cheat 1 / Color and Neighboring pixels</p>
 <h2 id="a-third-of-a-photo">A third of a photo</h2>
 <p>But here is the problem with how the sensor is laid out, what a photo needs is three colors in every pixel, but the sensor only measured one. That leaves the phone with a third of a photo, so the first cheat is that it kinda guesses the rest. Lets see it happen in a small patch of our photo.</p>
 </div>
@@ -127,7 +128,7 @@ To do so, we will look at a photo taken at sunset with a Nexus 6P (yeah, feeling
 <Noise />
 
 <div class="reading">
-<p>And the phone made it worse on purpose. To keep the sunset from turning white, it captured light for only 1/{shutter}&nbsp;s, so almost no light from the rocks reached the sensor. We can brighten them afterwards, but that brightens the noise too. It's the same reason night photos from older phones looked like they were sprinkled with sand.</p>
+<p>And the phone made it worse on purpose. Every time a camera takes a photo, it collects light for a short moment. A longer moment lets more light in, which is what dark things need, but it's too much for bright ones. To keep the sunset from turning white, the phone collected light for only 1/{shutter}&nbsp;s, so almost no light from the rocks reached the sensor. We can brighten them afterwards, but that brightens the noise too. It's the same reason night photos from older phones looked like they were sprinkled with sand.</p>
 </div>
 </section>
 
@@ -143,6 +144,7 @@ To do so, we will look at a photo taken at sunset with a Nexus 6P (yeah, feeling
 
 <section class="beat cont" data-beat>
 <div class="reading">
+<p class="eyebrow slide-only">Cheat 2 / Neighboring moments</p>
 <h2 id="eight-photos">You never took one photo.</h2>
 <p>The good news is that there's one thing we can use against noise: it's randomness. Take the same photo again and the rocks come out the same, since the scene is constant, but the noise comes out different. So if we had several photos of the same moment, we could tell which part is which. And we do have them, because the phone didn't take one photo. It took {frames}.</p>
 </div>
@@ -161,14 +163,22 @@ To do so, we will look at a photo taken at sunset with a Nexus 6P (yeah, feeling
 </section>
 
 <section class="beat say" data-beat aria-hidden="true">
-<p>This scene has a <b>bright sky</b> and <b>dark rocks</b>, and a camera has to pick <b>one brightness</b> for both.</p>
+<p>A camera collects light for <b>a moment</b>. A longer moment, <b>more light</b>.</p>
+</section>
+
+<section class="beat say" data-beat aria-hidden="true">
+<p>To save the <b>sky</b>, the phone picked a short one: 1/{shutter}&nbsp;s. The <b>rocks</b> got almost no light.</p>
+</section>
+
+<section class="beat say" data-beat aria-hidden="true">
+<p>We can brighten the picture afterwards, but <b>one amount</b> has to work for both.</p>
 </section>
 
 <section class="beat" data-beat>
 <div class="reading">
 <p class="eyebrow">Cheat 3 / Area by area</p>
 <h2 id="cheat-three">One brightness doesn't fit this scene.</h2>
-<p>After the first two cheats we have clean color in every pixel. There's one thing left to decide, and it's how bright the picture should be. The problem is that this scene has a bright sky and dark rocks, and a camera has to pick one brightness for both. Try it yourself with the slider.</p>
+<p>After the first two cheats we have clean color in every pixel. There's one thing left to decide, and it's how bright the picture should be. Remember that the phone collected light for a very short moment to save the sky, so the rocks came out dark. We can brighten the picture afterwards, but one amount of brightening has to work for both the sky and the rocks. Try it yourself with the slider.</p>
 </div>
 
 <Tradeoff />
@@ -183,10 +193,15 @@ To do so, we will look at a photo taken at sunset with a Nexus 6P (yeah, feeling
 <p>So the phone doesn't pick. It gives <b>each area its own brightness</b>.</p>
 </section>
 
+<section class="beat say" data-beat aria-hidden="true">
+<p>It makes a <b>brighter copy</b> of the picture, then picks, area by area, <b>which copy looks better</b>.</p>
+</section>
+
 <Agenda at={3} />
 
 <section class="beat cont" data-beat>
 <div class="reading">
+<p class="eyebrow slide-only">Cheat 3 / Area by area</p>
 <h2 id="region-by-region">The rocks were never this bright.</h2>
 <p>So the phone doesn't pick. It gives each area of the picture its own brightness, and it does it in software, after the photo is taken. If you have ever wondered what the HDR in your camera app stands for, this is it: high dynamic range.</p>
 </div>

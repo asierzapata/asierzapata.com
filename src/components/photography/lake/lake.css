@@ -175,7 +175,10 @@ kbd{font:11px ui-monospace,monospace;border:1px solid var(--color-border-strong)
 .presenting .fig-pin{position:static;display:block;container-type:normal}
 .presenting .fig-frame{position:static;margin:0 auto;--w:min(100%,calc((100svh - 430px)*4/3))}
 .presenting .fig-steps li{min-height:5.6em;padding:12px 0 0;align-items:center;justify-content:center;text-align:center;opacity:1}
-.presenting .fig-steps li[data-active="false"],.presenting .fig-steps :is(.step-n,strong){display:none}
+.presenting .fig-steps li[data-active="false"],.presenting .fig-steps .step-n{display:none}
+/* On a slide with a picture the heading is the step's own title, so it changes with every click. The chapter's title steps back to a small label. */
+.presenting .fig-steps strong{margin:0 0 .5em;font-size:clamp(1.8rem,3.2vw,2.8rem);line-height:1.15;text-wrap:balance}
+.presenting .beat:has([data-fig]) .reading h2{font-size:clamp(1rem,1.3vw,1.4rem);line-height:1.3;margin:.3em 0 0;color:var(--color-muted-dark)}
 .presenting .fig-steps p{font-size:clamp(15px,1.5vw,22px);line-height:1.45;max-width:56em}
 .presenting .beat .thesis br{display:none}
 .presenting .beat .thesis{font-size:clamp(1.3rem,2.3vw,2rem);line-height:1.3;border:0;margin:0;padding:.6rem 0 0}
@@ -198,6 +201,8 @@ kbd{font:11px ui-monospace,monospace;border:1px solid var(--color-border-strong)
 .agenda li[data-when="now"] strong{opacity:0;translate:0 .3em}
 .agenda[data-current] li[data-when="now"] strong{opacity:1;translate:none;transition:opacity .4s cubic-bezier(.23,1,.32,1) .15s,translate .4s cubic-bezier(.23,1,.32,1) .15s}
 .agenda li[data-when="next"]{opacity:.7}
+/* A chapter's later slides repeat its eyebrow, so every slide says where we are. Readers of the post see it once. */
+.slide-only{display:none}.presenting .slide-only{display:block}
 /* The talk opens on a slide with only its title. Readers of the post never see it. */
 .title-slide{display:none}
 .presenting .title-slide{display:flex;align-items:center;text-align:center}
@@ -212,13 +217,16 @@ kbd{font:11px ui-monospace,monospace;border:1px solid var(--color-border-strong)
   .presenting .beat:has([data-fig]) .fig-pin{grid-column:1;grid-row:1/-1;align-self:center;container-type:inline-size}
   .presenting .beat:has([data-fig]) .fig-frame{--w:min(100cqi,calc((100svh - 6rem - 48px)*4/3));margin:0 auto}
   .presenting .beat:has([data-fig]) .reading{grid-column:2;margin:0;text-align:left}
-  .presenting .beat:has([data-fig]) .reading:first-child{grid-row:1;align-self:end}
+  /* The chapter label sits in the top left corner of the slide, on one line, in the space above the picture. */
+  .presenting .beat:has([data-fig]){position:relative;padding:4rem 0 2rem}
+  .presenting .beat:has([data-fig]) .reading:first-child{position:absolute;grid-column:1/-1;grid-row:1/-1;left:0;top:-2.8rem;display:flex;align-items:baseline;gap:1.2em;white-space:nowrap}
+  .presenting .beat:has([data-fig]) .reading:first-child :is(.eyebrow,h2){margin:0}
   .presenting .beat:has([data-fig]) .cheat-fig~.reading{grid-row:3;align-self:start}
   .presenting .beat:has([data-fig]) .fig-steps{grid-column:2;grid-row:2}
   /* A fixed height, so the heading above does not move as the step text changes length. */
-  .presenting .beat:has([data-fig]) .fig-steps li{min-height:17em;padding:1.2rem 0 0;align-items:flex-start;justify-content:flex-start;text-align:left}
+  .presenting .beat:has([data-fig]) .fig-steps li{min-height:17em;padding:0;align-items:flex-start;justify-content:flex-start;text-align:left}
   .presenting .beat:has([data-fig]) .fig-steps p{font-size:clamp(17px,1.45vw,26px);line-height:1.5}
-  .presenting .beat:has([data-fig]) h2{font-size:clamp(2rem,3vw,3.2rem);margin:.2em 0 0}
+  .presenting .beat:has([data-fig]) .fig-steps strong{font-size:clamp(2rem,3vw,3.2rem)}
   .presenting .beat:has([data-fig]) .thesis{padding-top:0}
 }
 /* A label that has the picture to itself may use its whole width. Only paired labels are held to their half. */
