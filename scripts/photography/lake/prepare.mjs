@@ -38,14 +38,8 @@ for(const ev of stops)await save(`ev-${ev}`,W,H,paint(W,H,i=>[0,1,2].map(c=>full
 const phone=await sharp(`${CACHE}/final.jpg`).resize(W,H).removeAlpha().raw().toBuffer();
 await sharp(`${CACHE}/final.jpg`).resize(W,H).webp({quality:88}).toFile(`${out}/phone.webp`);files['phone.webp']={width:W,height:H};
 
-// 1b. Our own small version of the trick: render the frame dark and bright, prefer whichever is closer to mid-grey, blend.
-// HDR+ fuses two synthetic exposures of the merged frame in the same spirit, with pyramid blending instead of one blurred mask.
-const LONG_EV=3,exposed=v=>Math.exp(-((encodeSrgb(clamp(v))-.38)**2)/(2*.15**2));
-const pick=new Uint8Array(W*H);
-for(let i=0;i<W*H;i++){const l=luma([0,1,2].map(c=>full[i*3+c])),dark=exposed(l),bright=exposed(l*2**LONG_EV);pick[i]=Math.round(255*bright/(bright+dark));}
-const mask=await sharp(Buffer.from(pick),{raw:{width:W,height:H,channels:1}}).blur(7).extractChannel(0).raw().toBuffer();
-await save('mask',W,H,Uint8Array.from({length:W*H*3},(_,k)=>mask[Math.floor(k/3)]),88);
-await save('fused',W,H,paint(W,H,i=>[0,1,2].map(c=>full[i*3+c]*(1+mask[i]/255*(2**LONG_EV-1)))),88);
+// 1b. The bright version the article sets beside the dark one is ×2^LONG_EV.
+const LONG_EV=3;
 
 // 2. How much brighter the phone made each region than a plain, even rendering of the same frame.
 const CELL=12,gw=W/CELL,gh=H/CELL,gainEv=new Float32Array(gw*gh);

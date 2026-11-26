@@ -49,7 +49,8 @@ function mountBurst(fig: HTMLElement) {
     preload(Array.from({ length: count }, (_, i) => `frame-${i}`))
     timer = window.setInterval(() => fig.isConnected ? show((frame + 1) % count) : stop(), 500)
   }
-  new IntersectionObserver(entries => { visible = entries.at(-1)!.isIntersecting; update() }).observe(fig)
+  // On slides the figure itself has no box (display: contents), so we watch its frame.
+  new IntersectionObserver(entries => { visible = entries.at(-1)!.isIntersecting; update() }).observe(fig.querySelector('.fig-frame')!)
   fig.addEventListener('fig:state', event => {
     update()
     if ((event as CustomEvent).detail === 3) preload(Array.from({ length: count }, (_, i) => `stack-${i + 1}`))
@@ -227,7 +228,7 @@ function mountExposure(fig: HTMLElement) {
     if (!entries.some(e => e.isIntersecting)) return
     observer.disconnect()
     preload(Array.from({ length: Number(range.max) + 1 }, (_, i) => `ev-${i}`))
-  }).observe(fig)
+  }).observe(fig.querySelector('.fig-frame')!)
 }
 
 /** Reading mode: the step that has reached the reading line decides what its figure shows. */
