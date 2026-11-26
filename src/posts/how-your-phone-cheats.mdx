@@ -2,9 +2,8 @@
 title: How your phone cheats when taking photos
 slug: how-your-phone-cheats
 description: We take one real phone photo apart, raw sensor data and all, to see three tricks behind it. Guessing color from neighboring pixels, merging a burst of frames, and brightening the picture region by region.
-date: 2026-11-12
-draft: true
-unlisted: true
+date: 2026-11-26
+draft: false
 immersive: true
 tags:
   - Photography
@@ -50,14 +49,14 @@ export const times = ev => (2 ** ev).toFixed(1).replace(/\.0$/, '')
 
 <section class="beat" data-beat>
 <div class="reading intro">
-<p class="eyebrow">Disecting a photograph</p>
+<p class="eyebrow">Dissecting a photograph</p>
 <h2 id="the-photo">What your camera truly sees</h2>
 
-Photography is one of my biggest hobbies, its one of my favorite ways to experiment a new place when traveling. And I always come back to thinking about how amazing phone photos are with such contrained hardware. We have all had a few phones on our lives, and over the years I'm sure you've noticed their photos going from <b>pretty bad</b> to <b>surprisingly good</b>. Good enough that most people never think about byuing a camera anymore.
+Photography is one of my biggest hobbies, its one of my favorite ways to experiment a new place when traveling. And I always come back to thinking about how amazing phone photos are with such constrained hardware. We have all had a few phones on our lives, and over the years I'm sure you've noticed their photos going from <b>pretty bad</b> to <b>surprisingly good</b>. Good enough that most people never think about buying a camera anymore.
 
 The incredible part is that the jump in quality didn't come from hardware mainly, <b>it came from software</b>! In this post, I wanted to explore how software is able to make such a difference in the final image and show you the tricks behind it.
 
-To do so, we will look at a photo taken at sunset with a Nexus 6P (yeah, feeling old?). I picked this one because Google later published the <b>raw data</b> from the sensore as part oof a research dataset, so we have both things to compare side by side: a <b>finished photo</b> and <b>what truly the camera "saw"</b>.
+To do so, we will look at a photo taken at sunset with a Nexus 6P (yeah, feeling old?). I picked this one because Google later published the <b>raw data</b> from the sensor as part of a research dataset, so we have both things to compare side by side: a <b>finished photo</b> and <b>what truly the camera "saw"</b>.
 
 </div>
 
